@@ -6,7 +6,6 @@
 /public/storage
 /public/uploads
 /storage/*.key
-
 /temp
 /.idea
 /.vscode
