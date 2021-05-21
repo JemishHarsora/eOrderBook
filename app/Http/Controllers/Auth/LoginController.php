@@ -35,10 +35,10 @@ class LoginController extends Controller
 
 
     /**
-      * Redirect the user to the Google authentication page.
-      *
-      * @return \Illuminate\Http\Response
-      */
+     * Redirect the user to the Google authentication page.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function redirectToProvider($provider)
     {
         return Socialite::driver($provider)->redirect();
@@ -52,10 +52,9 @@ class LoginController extends Controller
     public function handleProviderCallback(Request $request, $provider)
     {
         try {
-            if($provider == 'twitter'){
+            if ($provider == 'twitter') {
                 $user = Socialite::driver('twitter')->user();
-            }
-            else{
+            } else {
                 $user = Socialite::driver($provider)->stateless()->user();
             }
         } catch (\Exception $e) {
@@ -66,7 +65,7 @@ class LoginController extends Controller
         // check if they're an existing user
         $existingUser = User::where('provider_id', $user->id)->orWhere('email', $user->email)->first();
 
-        if($existingUser){
+        if ($existingUser) {
             // log them in
             auth()->login($existingUser, true);
         } else {
@@ -92,27 +91,26 @@ class LoginController extends Controller
 
             auth()->login($newUser, true);
         }
-        if(session('link') != null){
+        if (session('link') != null) {
             return redirect(session('link'));
-        }
-        else{
+        } else {
             return redirect()->route('dashboard');
         }
     }
 
     /**
-        * Get the needed authorization credentials from the request.
-        *
-        * @param  \Illuminate\Http\Request  $request
-        * @return array
-        */
-       protected function credentials(Request $request)
-       {
-           if(filter_var($request->get('email'), FILTER_VALIDATE_EMAIL)){
-               return $request->only($this->username(), 'password');
-           }
-           return ['phone'=>$request->get('email'),'password'=>$request->get('password')];
-       }
+     * Get the needed authorization credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function credentials(Request $request)
+    {
+        if (filter_var($request->get('email'), FILTER_VALIDATE_EMAIL)) {
+            return $request->only($this->username(), 'password');
+        }
+        return ['phone' => $request->get('email'), 'password' => $request->get('password')];
+    }
 
     /**
      * Check user's role and redirect user based on their role
@@ -120,16 +118,14 @@ class LoginController extends Controller
      */
     public function authenticated()
     {
-        if(auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff')
-        {
-            CoreComponentRepository::instantiateShopRepository();
+        if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff') {
+            // CoreComponentRepository::instantiateShopRepository();
             return redirect()->route('admin.dashboard');
         } else {
 
-            if(session('link') != null){
+            if (session('link') != null) {
                 return redirect(session('link'));
-            }
-            else{
+            } else {
                 return redirect()->route('dashboard');
             }
         }
@@ -157,10 +153,9 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        if(auth()->user() != null && (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff')){
+        if (auth()->user() != null && (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff')) {
             $redirect_route = 'login';
-        }
-        else{
+        } else {
             $redirect_route = 'home';
         }
 
