@@ -22,7 +22,7 @@ class AddonController extends Controller
      */
     public function index()
     {
-        CoreComponentRepository::instantiateShopRepository();
+        // CoreComponentRepository::instantiateShopRepository();
         return view('backend.addons.index');
     }
 
@@ -97,11 +97,9 @@ class AddonController extends Controller
                             foreach ($json['directory'][0]['name'] as $directory) {
                                 if (is_dir(base_path($directory)) == false) {
                                     mkdir(base_path($directory), 0777, true);
-
                                 } else {
                                     echo "error on creating directory";
                                 }
-
                             }
                         }
 
@@ -110,7 +108,6 @@ class AddonController extends Controller
                             foreach ($json['files'] as $file) {
                                 copy(base_path('temp/' . $random_dir . '/' . $file['root_directory']), base_path($file['update_directory']));
                             }
-
                         }
 
                         // Run sql modifications
@@ -128,11 +125,9 @@ class AddonController extends Controller
                             foreach ($json['directory'][0]['name'] as $directory) {
                                 if (is_dir(base_path($directory)) == false) {
                                     mkdir(base_path($directory), 0777, true);
-
                                 } else {
                                     echo "error on creating directory";
                                 }
-
                             }
                         }
 
@@ -141,7 +136,6 @@ class AddonController extends Controller
                             foreach ($json['files'] as $file) {
                                 copy(base_path('temp/' . $random_dir . '/' . $file['root_directory']), base_path($file['update_directory']));
                             }
-
                         }
 
                         $addon = Addon::where('unique_identifier', $json['unique_identifier'])->first();
@@ -165,8 +159,7 @@ class AddonController extends Controller
                     return redirect()->route('addons.index');
                 }
             }
-        }
-        else {
+        } else {
             flash(translate('Please enable ZipArchive extension.'))->error();
         }
     }
@@ -207,7 +200,6 @@ class AddonController extends Controller
      */
     public function update(Request $request, $id)
     {
-
     }
 
     /**
