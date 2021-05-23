@@ -694,6 +694,7 @@
                         <div class="p-3">
                             <div class="aiz-carousel gutters-5 half-outside-arrow" data-items="5" data-xl-items="3" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='true'>
                                 @php
+ $retated_product= array();
                                     if($area_seller['seller_ids'] != null){
                                         if($area_seller['seller_ids']['0'] != null){
                                             $retated_product = filter_products(\App\Product::where('category_id', $detailedProduct->category_id)->where('id', '!=', $detailedProduct->id)->whereIn('user_id', $area_seller->seller_ids))->limit(10)->get();
