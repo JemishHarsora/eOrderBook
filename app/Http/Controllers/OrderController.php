@@ -862,6 +862,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($request->order_id);
         $order->delivery_viewed = '0';
+        $order->delivery_status = $request->status;
         $order->save();
         if (Auth::user()->user_type == 'seller') {
             foreach ($order->orderDetails->where('seller_id', Auth::user()->id) as $key => $orderDetail) {

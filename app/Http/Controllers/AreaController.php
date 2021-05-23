@@ -15,11 +15,11 @@ class AreaController extends Controller
      */
     public function index(Request $request)
     {
-        $sort_search= null;
+        $sort_search = null;
         $areas = Area::orderBy('created_at', 'desc');
-        if ($request->has('search')){
+        if ($request->has('search')) {
             $sort_search = $request->search;
-            $areas = $areas->where('name', 'like', '%'.$sort_search.'%');
+            $areas = $areas->where('name', 'like', '%' . $sort_search . '%');
         }
         $areas = $areas->paginate(15);
         $cities = City::where('status', 1)->get();
@@ -61,13 +61,13 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-     public function edit(Request $request, $id)
-     {
-         $lang  = $request->lang;
-         $area  = Area::findOrFail($id);
-         $cities = City::where('status', 1)->get();
-         return view('backend.location.area.edit', compact('area', 'lang','cities'));
-     }
+    public function edit(Request $request, $id)
+    {
+        $lang  = $request->lang;
+        $area  = Area::findOrFail($id);
+        $cities = City::where('status', 1)->get();
+        return view('backend.location.area.edit', compact('area', 'lang', 'cities'));
+    }
 
 
     /**
@@ -80,7 +80,7 @@ class AreaController extends Controller
     public function update(Request $request, $id)
     {
         $area = Area::findOrFail($id);
-        if($request->lang == env("DEFAULT_LANGUAGE")){
+        if ($request->lang == env("DEFAULT_LANGUAGE")) {
             $area->name = $request->name;
         }
         $area->city_id = $request->city_id;
@@ -102,6 +102,6 @@ class AreaController extends Controller
         Area::destroy($id);
 
         flash(translate('Area has been deleted successfully'))->success();
-        return redirect()->route('Areas.index');
+        return redirect()->route('areas.index');
     }
 }

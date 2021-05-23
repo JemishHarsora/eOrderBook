@@ -9,6 +9,7 @@ use App\Shop;
 use App\Product;
 use App\Order;
 use App\OrderDetail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class SellerController extends Controller
@@ -36,6 +37,7 @@ class SellerController extends Controller
             $approved = $request->approved_status;
             $sellers = $sellers->where('verification_status', $approved);
         }
+
         $sellers = $sellers->paginate(15);
         return view('backend.sellers.index', compact('sellers', 'sort_search', 'approved'));
     }
@@ -146,6 +148,11 @@ class SellerController extends Controller
         Product::where('user_id', $seller->user_id)->delete();
         Order::where('user_id', $seller->user_id)->delete();
         OrderDetail::where('seller_id', $seller->user_id)->delete();
+        $blockUsers = DB::select("SELECT `block_users`.* FROM `block_users` WHERE `user_id` =" . $seller->user_id . " OR `blocker_id` =" . $seller->user_id);
+        if ($blockUsers) {
+            DB::table('block_users')->where('user_id', $seller->user_id)->delete();
+            DB::table('block_users')->where('blocker_id', $seller->user_id)->delete();
+        }
         User::destroy($seller->user->id);
         if (Seller::destroy($id)) {
             flash(translate('Seller has been deleted successfully'))->success();

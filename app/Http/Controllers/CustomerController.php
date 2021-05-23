@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Customer;
 use App\User;
 use App\Order;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -20,7 +21,7 @@ class CustomerController extends Controller
         $customers = Customer::orderBy('created_at', 'desc');
         if ($request->has('search')) {
             $sort_search = $request->search;
-            $user_ids = User::whereIn('user_type', ['customer','salesman','delivery'])->where(function ($user) use ($sort_search) {
+            $user_ids = User::whereIn('user_type', ['customer', 'salesman', 'delivery'])->where(function ($user) use ($sort_search) {
                 $user->where('name', 'like', '%' . $sort_search . '%')->orWhere('email', 'like', '%' . $sort_search . '%');
             })->pluck('id')->toArray();
             $customers = $customers->where(function ($customer) use ($user_ids) {
@@ -94,7 +95,13 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
+        $customer = Customer::findOrFail($id)->user->id;
         Order::where('user_id', Customer::findOrFail($id)->user->id)->delete();
+        $blockUsers = DB::select("SELECT `block_users`.* FROM `block_users` WHERE `user_id` =" . $customer . " OR `blocker_id` =" . $customer);
+        if ($blockUsers) {
+            DB::table('block_users')->where('user_id', $customer)->delete();
+            DB::table('block_users')->where('blocker_id', $customer)->delete();
+        }
         User::destroy(Customer::findOrFail($id)->user->id);
         if (Customer::destroy($id)) {
             flash(translate('Customer has been deleted successfully'))->success();
