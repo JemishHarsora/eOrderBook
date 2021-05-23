@@ -15,13 +15,12 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('user_type', 10)->default('customer');
-            $table->integer('created_by')->nullable();
             $table->string('name');
             $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->text('verification_code')->nullable();
             $table->text('new_email_verificiation_code')->nullable();
+            $table->string('user_type', 10)->default('customer');
             $table->string('password')->nullable();
             $table->rememberToken();
             $table->string('avatar', 256)->nullable();
@@ -39,6 +38,7 @@ class CreateUsersTable extends Migration
             $table->double('balance', 20, 2)->default(0.00);
             $table->boolean('banned')->default('0');
             $table->integer('referred_by')->nullable();
+            $table->integer('created_by')->nullable();
             $table->string('provider_id', 50)->nullable();
             $table->string('referral_code', 255)->nullable();
             $table->integer('customer_package_id')->nullable();
