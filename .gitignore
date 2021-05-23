@@ -23,3 +23,4 @@ composer.lock
 *.lock
 resources/lang/en.json
 .env
+package-lock.json
