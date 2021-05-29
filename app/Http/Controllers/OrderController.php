@@ -527,8 +527,8 @@ class OrderController extends Controller
             $address_data['name'] = $user->name;
             $address_data['email'] = $user->email;
             $address_data['address'] = $user->address;
-            $address_data['city'] = $user->areas->city->name;
-            $address_data['area'] = $user->areas->name;
+            $address_data['city'] = isset($user->areas->city->name) ? $user->areas->city->name : '';
+            $address_data['area'] = isset($user->areas->name) ? $user->areas->name : '';
             $address_data['phone'] = $user->phone;
 
             $order->shipping_address = json_encode($address_data);
@@ -681,8 +681,8 @@ class OrderController extends Controller
         $address_data['name'] = $user->name;
         $address_data['email'] = $user->email;
         $address_data['address'] = $user->address;
-        $address_data['city'] = $user->areas->city->name;
-        $address_data['area'] = $user->areas->name;
+        $address_data['city'] = isset($user->areas->city->name) ? $user->areas->city->name : '';
+        $address_data['area'] = isset($user->areas->name) ? $user->areas->name : '';
         $address_data['phone'] = $user->phone;
 
         $order->shipping_address = json_encode($address_data);
