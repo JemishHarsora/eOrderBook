@@ -55,7 +55,7 @@
                                     <label class="col-md-3 col-from-label">{{ translate('Role') }}</label>
                                     <div class="col-md-8">
                                         <select class="form-control aiz-selectpicker" name="user_type" id="user_type" required>
-                                            <option value="sales">Salesman</option>
+                                            <option value="salesman">Salesman</option>
                                             <option value="delivery">Delivery boy </option>
                                         </select>
                                     </div>
