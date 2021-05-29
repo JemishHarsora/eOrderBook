@@ -73,7 +73,7 @@
                                         <div class="form-group">
                                             <input type="password" required
                                                 class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
-                                                placeholder="{{ translate('Password') }}" name="password">
+                                                placeholder="{{ translate('Password') }}" value="{{ old('password') }}" name="password">
                                             @if ($errors->has('password'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('password') }}</strong>
@@ -82,16 +82,25 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <input type="password" class="form-control"
+                                            <input type="password" class="form-control" value="{{ old('password_confirmation') }}"
                                                 placeholder="{{ translate('Confirm Password') }}" required
                                                 name="password_confirmation">
                                         </div>
                                         <div class="form-group">
                                             <select name="user_type" id="user_type" class="form-control aiz-selectpicker"
                                                 required>
+
                                                 <option value="">{{ translate('Select Account type') }}</option>
-                                                <option value="customer">{{ translate('Customer') }}</option>
-                                                <option value="seller">{{ translate('Seller') }}</option>
+                                                @if (old('user_type') == 'customer')
+                                                    <option value="customer" selected>{{ translate('Customer') }}</option>
+                                                    <option value="seller">{{ translate('Seller') }}</option>
+                                                @elseif(old('user_type') == 'seller')
+                                                    <option value="customer">{{ translate('Customer') }}</option>
+                                                    <option value="seller" selected>{{ translate('Seller') }}</option>
+                                                @else
+                                                    <option value="customer">{{ translate('Customer') }}</option>
+                                                    <option value="seller">{{ translate('Seller') }}</option>
+                                                @endif
                                             </select>
                                         </div>
 
@@ -113,8 +122,8 @@
                                                 <div class="form-group is_shop">
                                                     {{-- <label>{{ translate('Shop Name')}} <span
                                                     class="text-primary">*</span></label> --}}
-                                                    <input type="text" class="form-control"
-                                                        placeholder="{{ translate('Outlet Name/Shop Name') }}"
+                                                    <input type="text" class="form-control" value="{{ old('shop_name') }}"
+                                                        placeholder=" {{ translate('Outlet Name/Shop Name') }}"
                                                         name="shop_name">
                                                 </div>
                                                 <div class="form-group is_shop">
@@ -130,7 +139,7 @@
                                                 </div>
 
                                                 <div class="form-group is_shop">
-                                                    <input type="text" class="form-control"
+                                                    <input type="text" class="form-control" value="{{ old('licence_no') }}"
                                                         placeholder="{{ translate('Shop Id/Licence no.') }}"
                                                         name="licence_no">
                                                 </div>
@@ -147,7 +156,7 @@
                                                 </div>
 
                                                 <div class="form-group is_shop">
-                                                    <input type="text" class="form-control"
+                                                    <input type="text" class="form-control" value="{{ old('gst_no') }}"
                                                         placeholder="{{ translate('GST Number') }}" name="gst_no">
                                                 </div>
 
@@ -168,12 +177,15 @@
                                                         <option value="">{{ translate('Select type of business') }}
                                                         </option>
                                                         @foreach ($categories as $category)
-                                                            <option value="{{ $category->id }}">
-                                                                {{ $category->getTranslation('name') }}</option>
+                                                            @if (old('business_category'))
+                                                                <option value="{{ $category->id }}" {{ in_array($category->id, old('business_category')) ? 'selected' : '' }}>
+                                                                @else
+                                                                <option value="{{ $category->id }}">
+                                                            @endif
+                                                            {{ $category->getTranslation('name') }}</option>
                                                             @foreach ($category->childrenCategories as $childCategory)
                                                                 @include('categories.child_category', ['child_category' =>
-                                                                $childCategory])
-                                                            @endforeach
+                                                                $childCategory]) @endforeach
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -183,7 +195,7 @@
                                                         required>
                                                         <option value="">{{ translate('Select City') }}</option>
                                                         @foreach ($cities as $key => $city)
-                                                            <option value="{{ $city->id }}">
+                                                            <option value="{{ $city->id }}" {{ old('business_category') ? 'selected' : '' }}>
                                                                 {{ translate($city->name) }}
                                                             </option>
                                                         @endforeach
@@ -201,22 +213,22 @@
                                                 <div class="form-group">
                                                     <textarea class="form-control mb-3"
                                                         placeholder="{{ translate('Full Address') }}" name="address"
-                                                        required></textarea>
+                                                        required>{{ old('address') }}</textarea>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control"
+                                                    <input type="text" class="form-control" value="{{ old('contact_name') }}"
                                                         placeholder="{{ translate('Contact Person Name') }}"
                                                         name="contact_name" required>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="number" class="form-control mb-3"
+                                                    <input type="number" class="form-control mb-3" value="{{ old('phone') }}"
                                                         placeholder="{{ translate('Contact No') }}" name="phone">
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control mb-3"
+                                                    <input type="text" class="form-control mb-3" value="{{ old('referred_by') }}"
                                                         placeholder="{{ translate('Refferal Code') }}" name="referred_by"
                                                         value="{{ $referral_code }}">
                                                 </div>
@@ -336,25 +348,25 @@
     </script>
     <script type="text/javascript">
         @if (\App\BusinessSetting::where('type', 'google_recaptcha')->first()->value == 1)
-        // making the CAPTCHA a required field for form submission
-        $(document).ready(function(){
-        // alert('helloman');
-        $("#reg-form").on("submit", function(evt)
-    {
-        var response = grecaptcha.getResponse();
-        if(response.length == 0)
-    {
-        //reCaptcha not verified
-        alert("please verify you are humann!");
-        evt.preventDefault();
-        return false;
-    }
-        //captcha verified
-        //do the rest of your validations here
-        $("#reg-form").submit();
-    });
-    });
-    @endif
+            // making the CAPTCHA a required field for form submission
+            $(document).ready(function(){
+            // alert('helloman');
+            $("#reg-form").on("submit", function(evt)
+            {
+            var response = grecaptcha.getResponse();
+            if(response.length == 0)
+            {
+            //reCaptcha not verified
+            alert("please verify you are humann!");
+            evt.preventDefault();
+            return false;
+            }
+            //captcha verified
+            //do the rest of your validations here
+            $("#reg-form").submit();
+            });
+            });
+        @endif
 
         var isPhoneShown = true,
             countryData = window.intlTelInputGlobals.getCountryData(),
@@ -370,13 +382,13 @@
         var iti = intlTelInput(input, {
             separateDialCode: true,
             utilsScript: "{{ static_asset('assets/js/intlTelutils.js') }}?1590403638580",
-            onlyCountries: @php
-    echo json_encode(
-        \App\Country::where('status', 1)
-            ->pluck('code')
-            ->toArray(),
-);
-    @endphp,
+            @php
+            echo json_encode(
+                \App\Country::where('status', 1)
+                    ->pluck('code')
+                    ->toArray(),
+            );
+            @endphp,
             customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
                 if (selectedCountryData.iso2 == 'bd') {
                     return "01xxxxxxxxx";
