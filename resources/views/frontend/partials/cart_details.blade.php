@@ -58,8 +58,7 @@
                                                 <input type="text" name="quantity[{{ $key }}]"
                                                     class="col border-0 text-center flex-grow-1 fs-16 input-number"
                                                     placeholder="1" value="{{ $cartItem['quantity'] }}" min="1"
-                                                    max="10" readonly
-                                                    onchange="updateQuantity({{ $key }}, this)">
+                                                    max="10" onchange="updateQuantity({{ $key }}, this)">
                                                 <button class="btn col-auto btn-icon btn-sm btn-circle btn-light"
                                                     type="button" data-type="plus"
                                                     data-field="quantity[{{ $key }}]">
