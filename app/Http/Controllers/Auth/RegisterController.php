@@ -24,9 +24,11 @@ use App\Models\Shop;
 use App\Notifications\EmailVerificationNotification;
 use App\Upload;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Nexmo;
 use Twilio\Rest\Client;
 use Mail;
+use Symfony\Component\Console\Input\Input;
 
 class RegisterController extends Controller
 {
@@ -251,7 +253,7 @@ class RegisterController extends Controller
             if ($request->is_shop == '1') {
                 if (User::where('licence_no', $request->licence_no)->first() != null) {
                     flash(translate('Shop Licence already exists.'));
-                    return back();
+                    return redirect()->back()->withInput();
                 }
             }
 
