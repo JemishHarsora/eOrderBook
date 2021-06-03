@@ -131,7 +131,7 @@
                                                     <div class="custom-file">
                                                         <label class="custom-file-label">
                                                             <input type="file" class="custom-file-input" name="proof1"
-                                                                accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf">
+                                                                accept="image/*">
                                                             <span
                                                                 class="custom-file-name">{{ translate('Choose Shop image') }}</span>
                                                         </label>
@@ -148,7 +148,7 @@
                                                     <div class="custom-file">
                                                         <label class="custom-file-label">
                                                             <input type="file" class="custom-file-input" name="proof2"
-                                                                accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf">
+                                                                accept="image/*">
                                                             <span
                                                                 class="custom-file-name">{{ translate('Choose Shop Proof') }}</span>
                                                         </label>
@@ -164,7 +164,7 @@
                                                     <div class="custom-file">
                                                         <label class="custom-file-label">
                                                             <input type="file" class="custom-file-input" name="proof3"
-                                                                accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf">
+                                                                accept="image/*">
                                                             <span
                                                                 class="custom-file-name">{{ translate('Choose GST Proof') }}</span>
                                                         </label>
