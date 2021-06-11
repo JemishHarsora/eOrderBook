@@ -13,6 +13,7 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         @php
+                            $cartItemCount = 0;
                             $total = 0;
                         @endphp
                         @foreach (Session::get('cart') as $key => $cartItem)
@@ -23,6 +24,7 @@
                                 if ($cartItem['variant'] != null) {
                                     $product_name_with_choice = $product->getTranslation('name') . ' - ' . $cartItem['variant'];
                                 }
+                                $cartItemCount = $cartItemCount + $cartItem['quantity'];
                             @endphp
                             <li class="list-group-item px-0 px-lg-3">
                                 <div class="row gutters-5">
@@ -93,7 +95,12 @@
                 </div> --}}
 
                 <div class="px-3 py-2 mb-4 border-top d-flex justify-content-between">
-                    <span class="opacity-60 fs-15">{{ translate('Subtotal Without Tax') }}</span>
+                    <span class="opacity-60 fs-15">{{ translate('Total Items') }}</span>
+                    <span class="fw-600 fs-17">{{ $cartItemCount }}</span>
+                </div>
+
+                <div class="px-3 py-2 mb-4 border-top d-flex justify-content-between">
+                    <span class="opacity-60 fs-15">{{ translate('Grand Total') }}</span>
                     <span class="fw-600 fs-17">{{ single_price($total) }}</span>
                 </div>
 

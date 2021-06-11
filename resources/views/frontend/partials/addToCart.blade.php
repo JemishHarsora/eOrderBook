@@ -190,7 +190,7 @@
                                             <i class="las la-plus"></i>
                                         </button>
                                     </div>
-                                    <div class="avialable-amount opacity-60">(<span id="available-quantity">{{ $qty }}</span> {{ translate('available') }})</div>
+                                    {{-- <div class="avialable-amount opacity-60">(<span id="available-quantity">{{ $qty }}</span> {{ translate('available') }})</div> --}}
                                 </div>
                             </div>
                         </div>

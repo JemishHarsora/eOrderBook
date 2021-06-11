@@ -275,7 +275,7 @@
                                                     <i class="las la-plus"></i>
                                                 </button>
                                             </div>
-                                            <div class="avialable-amount opacity-60">(<span id="available-quantity">{{ $qty }}</span> {{ translate('available') }})</div>
+                                            {{-- <div class="avialable-amount opacity-60">(<span id="available-quantity">{{ $qty }}</span> {{ translate('available') }})</div> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -394,7 +394,7 @@
                                         <circle style="fill:#FBD303;" cx="143.8" cy="143.8" r="143.8" />
                                         <circle style="fill:#F8B517;" cx="143.8" cy="143.8" r="93.6" />
                                         <polygon style="fill:#FCFCFD;" points="143.8,55.9 163.4,116.6 227.5,116.6 175.6,154.3 195.6,215.3 143.8,177.7 91.9,215.3 111.9,154.3
-                                            60,116.6 124.1,116.6 " />
+                                                                        60,116.6 124.1,116.6 " />
                                     </svg>
                                 </div>
                             @endif
@@ -494,7 +494,6 @@
                                                 ->get();
                                         }
                                     }
-                                    
                                 @endphp
                                 @foreach ($products_top_selling as $key => $top_product)
                                     <li class="py-3 px-0 list-group-item border-light">
