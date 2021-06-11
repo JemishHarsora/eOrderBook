@@ -217,7 +217,6 @@ class RegisterController extends Controller
             }
         }
 
-
         if (Cookie::has('referral_code') && $data['referred_by'] == '') {
             $referral_code = Cookie::get('referral_code');
         } else {
@@ -230,8 +229,14 @@ class RegisterController extends Controller
             $user->save();
         }
 
-        Mail::to($data['email'])->queue(new WelcomeMail($data));
+        unset($data['proof1']);
+        unset($data['proof2']);
+        unset($data['proof3']);
 
+        try {
+            Mail::to($data['email'])->queue(new WelcomeMail($data));
+        } catch (\Exception $e) {
+        }
         return $user;
     }
 
@@ -240,16 +245,6 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         if ($request->user_type != "0") {
-            // if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
-            //     if (User::where('email', $request->email)->first() != null) {
-            //         flash(translate('Email or Phone already exists.'));
-            //         return back();
-            //     }
-            // } if (User::where('phone', $request->phone)->first() != null) {
-            //     flash(translate('Phone already exists.'));
-            //     return back();
-            // }
-            // dd($request->all());
             if ($request->is_shop == '1') {
                 if (User::where('licence_no', $request->licence_no)->first() != null) {
                     flash(translate('Shop Licence already exists.'));

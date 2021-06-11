@@ -120,18 +120,15 @@
                                             </div>
                                             <div class="pt-3">
                                                 <div class="form-group is_shop">
-                                                    {{-- <label>{{ translate('Shop Name')}} <span
-                                                    class="text-primary">*</span></label> --}}
                                                     <input type="text" class="form-control" value="{{ old('shop_name') }}"
                                                         placeholder=" {{ translate('Outlet Name/Shop Name') }}"
                                                         name="shop_name">
                                                 </div>
                                                 <div class="form-group is_shop">
-                                                    {{-- <label>{{ translate('Logo/Visiting card')}}</label> --}}
                                                     <div class="custom-file">
                                                         <label class="custom-file-label">
                                                             <input type="file" class="custom-file-input" name="proof1"
-                                                                accept="image/*">
+                                                                accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf">
                                                             <span
                                                                 class="custom-file-name">{{ translate('Choose Shop image') }}</span>
                                                         </label>
@@ -148,7 +145,7 @@
                                                     <div class="custom-file">
                                                         <label class="custom-file-label">
                                                             <input type="file" class="custom-file-input" name="proof2"
-                                                                accept="image/*">
+                                                                accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf">
                                                             <span
                                                                 class="custom-file-name">{{ translate('Choose Shop Proof') }}</span>
                                                         </label>
@@ -164,7 +161,7 @@
                                                     <div class="custom-file">
                                                         <label class="custom-file-label">
                                                             <input type="file" class="custom-file-input" name="proof3"
-                                                                accept="image/*">
+                                                                accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf">
                                                             <span
                                                                 class="custom-file-name">{{ translate('Choose GST Proof') }}</span>
                                                         </label>
@@ -191,7 +188,7 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <select name="city" id="cityList" class="form-control aiz-selectpicker"
+                                                    <select name="city" id="cityList" class="form-control aiz-selectpicker {{ $errors->has('city') ? ' is-invalid' : '' }}"
                                                         required>
                                                         <option value="">{{ translate('Select City') }}</option>
                                                         @foreach ($cities as $key => $city)
@@ -200,6 +197,11 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                    @if ($errors->has('city'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('city') }}</strong>
+                                                        </span>
+                                                    @endif
                                                 </div>
 
                                                 <div class="form-group">
@@ -211,20 +213,35 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <textarea class="form-control mb-3"
+                                                    <textarea class="form-control mb-3 {{ $errors->has('address') ? ' is-invalid' : '' }}"
                                                         placeholder="{{ translate('Full Address') }}" name="address"
                                                         required>{{ old('address') }}</textarea>
+                                                    @if ($errors->has('address'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('address') }}</strong>
+                                                        </span>
+                                                    @endif
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" value="{{ old('contact_name') }}"
+                                                    <input type="text" class="form-control {{ $errors->has('contact_name') ? ' is-invalid' : '' }}" value="{{ old('contact_name') }}"
                                                         placeholder="{{ translate('Contact Person Name') }}"
                                                         name="contact_name" required>
+                                                    @if ($errors->has('contact_name'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('contact_name') }}</strong>
+                                                        </span>
+                                                    @endif
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="number" class="form-control mb-3" value="{{ old('phone') }}"
+                                                    <input type="number" class="form-control mb-3 {{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}"
                                                         placeholder="{{ translate('Contact No') }}" name="phone">
+                                                    @if ($errors->has('phone'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('phone') }}</strong>
+                                                        </span>
+                                                    @endif
                                                 </div>
 
                                                 <div class="form-group">
@@ -295,7 +312,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
