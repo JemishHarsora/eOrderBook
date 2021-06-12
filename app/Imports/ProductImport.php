@@ -41,8 +41,8 @@ class ProductImport implements ToCollection
                     $product->name = ucfirst($importData[2]);
                     $product->added_by = Auth::user()->user_type == 'seller' ? 'seller' : 'admin';
                     $product->user_id = Auth::user()->user_type == 'seller' ? Auth::user()->id : User::where('user_type', 'admin')->first()->id;
-                    $product->unit_price = $importData[3];
-                    $product->purchase_price = $importData[4] == null ? $importData[3] : $importData[4];
+                    $product->unit_price = ($importData[3])?$importData[3]:0;
+                    $product->purchase_price = $importData[4] == null ? ($importData[3])?$importData[3]:0 : $importData[4];
                     $product->unit = $importData[5];
                     $product->current_stock = $importData[6];
                     $product->sku = $importData[7];
