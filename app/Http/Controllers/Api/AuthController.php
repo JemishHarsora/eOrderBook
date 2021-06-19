@@ -47,12 +47,12 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-			return response()->json(['status' => false,'message' => implode(',', $validator->messages()->all())], 400);
+			return response()->json(['status' => false,'message' => implode(',', $validator->messages()->all())], 200);
 		}
 
         if ($request->is_shop == '1') {
             if (User::where('licence_no', $request->licence_no)->first() != null) {
-                return response()->json(['status' => false,'message' => 'Shop Licence already exists.'], 401);
+                return response()->json(['status' => false,'message' => 'Shop Licence already exists.'], 200);
             }
         }
 
@@ -175,7 +175,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Registration Successful. Please log in to your account.'
-        ], 201);
+        ], 200);
     }
 
     public function login(Request $request)
@@ -186,17 +186,17 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-			return response()->json(['status' => false,'message' => implode(',', $validator->messages()->all()),'data' =>[]], 400);
+			return response()->json(['status' => false,'message' => implode(',', $validator->messages()->all()),'data' =>[]], 200);
         }
 
         $credentials = $request->only('email', 'password');
         $token = $this->guard()->attempt($credentials);
         if (!$token) {
-            return response()->json(['status' => false, 'message' => 'Email or password does not match','data' =>[]], 401);
+            return response()->json(['status' => false, 'message' => 'Email or password does not match','data' =>[]], 200);
         }
         $user =User::where('email', $request->email)->first();
         if(isset($user) && $user->email_verified_at == null){
-            return response()->json(['status' => false,'message' => 'Please verify your account', 'data' => []], 401);
+            return response()->json(['status' => false,'message' => 'Please verify your account', 'data' => []], 200);
         }
         return $this->loginSuccess($token, $user);
     }
