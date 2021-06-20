@@ -25,7 +25,6 @@ use App\BusinessSetting;
 use App\City;
 use App\Http\Controllers\SearchController;
 use ImageOptimizer;
-use Cookie;
 use Illuminate\Support\Str;
 use App\Mail\SecondEmailVerifyMailManager;
 use App\Route;
@@ -36,7 +35,7 @@ use App\Utility\CategoryUtility;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Cookie;
 class HomeController extends Controller
 {
     public function login()
@@ -296,6 +295,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $cookie = Cookie::make('name', 'samip', 120);
+        dd($cookie);
         return view('frontend.index');
     }
 

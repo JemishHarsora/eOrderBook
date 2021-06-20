@@ -254,7 +254,7 @@ class AuthController extends Controller
                 'expires_at' => $this->guard()->factory()->getTTL() * 60,
                 'user' => [
                     'id' => $user->id,
-                    'type' => $user->user_type,
+                    'user_type' => $user->user_type,
                     'name' => $user->name,
                     'email' => $user->email,
                     'avatar' => $user->avatar,
