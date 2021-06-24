@@ -295,8 +295,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $cookie = Cookie::make('name', 'samip', 120);
-        dd($cookie);
+        // $cookie = Cookie::make('name', 'samip', 120);
+        // dd($cookie);
         return view('frontend.index');
     }
 
