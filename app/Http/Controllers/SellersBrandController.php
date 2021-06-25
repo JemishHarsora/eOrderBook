@@ -67,6 +67,7 @@ class SellersBrandController extends Controller
      */
     public function store(Request $request)
     {
+
         $sellersbrand = SellersBrand::where('seller_id', Auth::user()->id)->where('brand_id', $request->brand_id)->first();
         if($sellersbrand){
             flash(translate('This Brand already exist'))->error();
@@ -79,9 +80,12 @@ class SellersBrandController extends Controller
             $add_brand->brand_id = $request->brand_id;
             $add_brand->city_id = $request->city_id;
             $add_brand->area_id = $no;
+
             $add_brand->save();
+dd($add_brand);
         }
 
+dd('here');
         flash(translate('Brand inserted successfully'))->success();
         return redirect()->route('myBrands.index');
     }
