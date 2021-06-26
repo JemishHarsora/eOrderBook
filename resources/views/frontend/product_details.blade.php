@@ -126,6 +126,12 @@
                                     </div>
                                 @endif
 
+                                @if ($sellersData)
+                                    <div class="col-auto">
+                                        <button class="btn btn-sm btn-soft-primary" data-toggle="modal" data-target="#moreSellerModal">{{ translate('More Seller') }}</button>
+                                    </div>
+                                @endif
+
                                 @if ($detailedProduct->brand != null)
                                     <div class="col-auto">
                                         <img src="{{ uploaded_asset($detailedProduct->brand->logo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="{{ $detailedProduct->brand->getTranslation('name') }}" height="30">
@@ -312,8 +318,6 @@
                                     </button>
                                 @endif
                             </div>
-
-
 
                             <div class="d-table width-100 mt-3">
                                 <div class="d-table-cell">
@@ -768,6 +772,70 @@
 
 @endsection
 
+
+@section('modal')
+    <div class="modal fade" id="moreSellerModal" tabindex="-1" role="dialog" aria-labelledby="moreSellerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-zoom" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title fw-600">{{ translate('More sellers') }}</h6>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <form id="option-choice-form">
+                <ul class="list-group list-group-flush">
+                    @foreach($sellersData as $product)
+                    <li class="list-group-item px-0 px-lg-3">
+                        <div class="row">
+                            <div class="col-lg-2 d-flex">
+                                <span class="mr-2 ml-0">
+                                    <img src="{{ uploaded_asset($product->thumbnail_img) }}"
+                                        class="img-fit size-60px rounded" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                        alt="{{ $product->getTranslation('name') }}">
+                                </span>
+                            </div>
+                            <div class="col-lg-7">
+                                <span class="fs-14 opacity-60">{{ $product->getTranslation('name') }}</span>
+                                <br>
+                                <span class="fw-600 fs-12">
+                                    @if ($product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
+                                        <a href="{{ route('shop.visit', $product->user->shop->slug) }}">{{ $product->user->shop->name }}</a>
+                                    @else
+                                        {{ translate('Inhouse product') }}
+                                    @endif
+                                </span>
+                                <br>
+                                <span class="fw-600 fs-16">{{ home_discounted_price($product->id) }}
+                                    @if ($product->unit != null)
+                                    <span>/{{ $product->getTranslation('unit') }}</span>
+                                @endif
+                                </span>
+                            </div>
+                            <div class="col-lg-3 px-0">
+                                @if ($product->current_stock > 0)
+
+                                <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600" {{ !empty($product->isblock) ? 'disabled' : '' }} onclick="addToCartFromSellerPopup('{{$product->id.','.$product->min_qty}}')">
+                                    <span class="d-none d-md-inline-block"> {{ translate('Add to cart') }}</span>
+                                </button>
+                                @else
+                                    <button type="button" class="btn btn-secondary fw-600" disabled>
+                                         {{ translate('Out of Stock') }}
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    </li>
+                    @endforeach
+                </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection
+
+
+
 @section('modal')
     <div class="modal fade" id="chat_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-zoom product-modal" id="modal-size" role="document">
@@ -883,6 +951,7 @@
         </div>
     </div>
 @endsection
+
 
 @section('script')
     <script type="text/javascript">

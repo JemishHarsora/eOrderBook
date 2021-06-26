@@ -344,9 +344,17 @@ class HomeController extends Controller
     public function product(Request $request, $slug)
     {
         $isblock = '';
+        $sellersData=[];
         $detailedProduct  = Product::where('slug', $slug)->first();
+        $ProductSeller = Product::where('barcode', $detailedProduct->barcode)->where('id','!=', $detailedProduct->id)->get();
+
         if (isset(Auth::user()->id)) {
             $isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $detailedProduct->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $detailedProduct->user_id]])->first();
+            foreach($ProductSeller as $sellers){
+                $sellers->isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $sellers->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $sellers->user_id]])->first();
+
+                array_push($sellersData,$sellers);
+            }
         }
         if ($detailedProduct != null && $detailedProduct->published) {
             //updateCartSetup();
@@ -355,9 +363,9 @@ class HomeController extends Controller
                 Cookie::queue('referred_product_id', $detailedProduct->id, 43200);
             }
             if ($detailedProduct->digital == 1) {
-                return view('frontend.digital_product_details', compact('detailedProduct', 'isblock'));
+                return view('frontend.digital_product_details', compact('detailedProduct', 'isblock','sellersData'));
             } else {
-                return view('frontend.product_details', compact('detailedProduct', 'isblock'));
+                return view('frontend.product_details', compact('detailedProduct', 'isblock','sellersData'));
             }
             // return view('frontend.product_details', compact('detailedProduct'));
         }

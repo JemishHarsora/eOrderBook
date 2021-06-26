@@ -380,7 +380,7 @@
 
         function addToCart(){
             if(checkAddToCartValidity()) {
-                $('#addToCart').modal();
+                // $('#addToCart').modal();
                 $('.c-preloader').show();
                 $.ajax({
                    type:"POST",
@@ -410,6 +410,42 @@
                 AIZ.plugins.notify('warning', 'Please choose all the options');
             }
         }
+
+        function addToCartFromSellerPopup(datas){
+
+            let datass = datas.split(',');
+            if(checkAddToCartValidity()) {
+                $('.c-preloader').show();
+                $.ajax({
+                   type:"POST",
+                   url: '{{ route('cart.addToCart') }}',
+                   headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                   data: {id: datass[0],quantity:datass[1]},
+                   success: function(data){
+                       $('.c-preloader').hide();
+                       if(data.status){
+                        AIZ.plugins.notify('success', data.message);
+                        updateNavCart();
+                        $('#cart_items_sidenav').html(parseInt($('#cart_items_sidenav').html())+1);
+                       }
+                       else
+                       {
+                        AIZ.plugins.notify('warning', data.message);
+                       }
+
+                    //    $('#modal-size').removeClass('modal-lg');
+                    //    $('#addToCart-modal-body').html(data.view);
+
+                   }
+               });
+            }
+            else{
+                AIZ.plugins.notify('warning', 'Please choose all the options');
+            }
+        }
+
 
         function buyNow(){
             if(checkAddToCartValidity()) {
