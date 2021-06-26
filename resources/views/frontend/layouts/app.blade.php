@@ -387,12 +387,22 @@
                    url: '{{ route('cart.addToCart') }}',
                    data: $('#option-choice-form').serializeArray(),
                    success: function(data){
-                       $('#addToCart-modal-body').html(null);
+                    //    $('#addToCart-modal-body').html(null);
                        $('.c-preloader').hide();
-                       $('#modal-size').removeClass('modal-lg');
-                       $('#addToCart-modal-body').html(data.view);
-                       updateNavCart();
-                       $('#cart_items_sidenav').html(parseInt($('#cart_items_sidenav').html())+1);
+                       $('#addToCart').modal('hide');
+                       if(data.status){
+                        AIZ.plugins.notify('success', data.message);
+                        updateNavCart();
+                        $('#cart_items_sidenav').html(parseInt($('#cart_items_sidenav').html())+1);
+                       }
+                       else
+                       {
+                        AIZ.plugins.notify('warning', data.message);
+                       }
+
+                    //    $('#modal-size').removeClass('modal-lg');
+                    //    $('#addToCart-modal-body').html(data.view);
+
                    }
                });
             }

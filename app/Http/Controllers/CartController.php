@@ -148,14 +148,18 @@ class CartController extends Controller
                         if($cartItem['variant'] == $str && $str != null){
                             $product_stock = $product->stocks->where('variant', $str)->first();
                             $quantity = $product_stock->qty;
-
                             if($quantity < $cartItem['quantity'] + $request['quantity']){
-                                return array('status' => 0, 'view' => view('frontend.partials.outOfStockCart')->render());
+                                return array('status' => 0, 'message' => 'Out of stock');
                             }
                             else{
                                 $foundInCart = true;
                                 $cartItem['quantity'] += $request['quantity'];
                             }
+                        }
+                        else
+                        {
+                            $foundInCart = true;
+                            $cartItem['quantity'] += $request['quantity'];
                         }
                     }
                     $cart->push($cartItem);
@@ -170,10 +174,12 @@ class CartController extends Controller
                 $cart = collect([$data]);
                 $request->session()->put('cart', $cart);
             }
-            return array('status' => 1, 'view' => view('frontend.partials.addedToCart', compact('product', 'data'))->render());
+            return array('status' => 1, 'message' => 'Product added sucessfully.');
+            // return array('status' => 1, 'view' => view('frontend.partials.addedToCart', compact('product', 'data'))->render());
         }
         else{
-            return array('status' => 0, 'view' => view('frontend.partials.addedToCart', compact('product', 'data'))->render());
+            return array('status' => 1, 'message' => 'Product add fail.');
+            // return array('status' => 0, 'view' => view('frontend.partials.addedToCart', compact('product', 'data'))->render());
         }
     }
 
