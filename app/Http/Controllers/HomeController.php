@@ -352,10 +352,16 @@ class HomeController extends Controller
             $isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $detailedProduct->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $detailedProduct->user_id]])->first();
             foreach($ProductSeller as $sellers){
                 $sellers->isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $sellers->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $sellers->user_id]])->first();
-
                 array_push($sellersData,$sellers);
             }
         }
+        else{
+            foreach($ProductSeller as $sellers){
+                $sellers->isblock = false;
+                array_push($sellersData,$sellers);
+            }
+        }
+
         if ($detailedProduct != null && $detailedProduct->published) {
             //updateCartSetup();
             if ($request->has('product_referral_code')) {

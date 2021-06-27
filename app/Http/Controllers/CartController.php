@@ -23,12 +23,27 @@ class CartController extends Controller
 
     public function showCartModal(Request $request)
     {
-        $product = Product::find($request->id);
         $isblock='';
-        if(isset(Auth::user()->id)){
-            $isblock = BlockUser::where([['user_id', '=', Auth::user()->id],['blocker_id', '=', $product->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id],['user_id', '=', $product->user_id]])->first();
+        $sellersData=[];
+        $product = Product::find($request->id);
+        $ProductSeller = Product::where('barcode', $product->barcode)->where('id','!=', $product->id)->get();
+
+        if (isset(Auth::user()->id)) {
+            $isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $product->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $product->user_id]])->first();
+            foreach($ProductSeller as $sellers){
+                $sellers->isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $sellers->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $sellers->user_id]])->first();
+
+                array_push($sellersData,$sellers);
+            }
         }
-        return view('frontend.partials.addToCart', compact('product','isblock'));
+        else{
+            foreach($ProductSeller as $sellers){
+                $sellers->isblock = false;
+                array_push($sellersData,$sellers);
+            }
+        }
+
+        return view('frontend.partials.addToCart', compact('product','isblock','sellersData'));
     }
 
     public function updateNavCart(Request $request)

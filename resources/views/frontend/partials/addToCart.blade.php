@@ -1,6 +1,6 @@
 <div class="modal-body p-4 c-scrollbar-light">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-5">
             <div class="row gutters-10 flex-row-reverse">
                 @php
                     $photos = explode(',', $product->photos);
@@ -19,8 +19,8 @@
 
                     </div>
                 </div>
-                <div class="col-auto w-90px">
-                    <div class="aiz-carousel carousel-thumb product-gallery-thumb" data-items='5' data-nav-for='.product-gallery' data-vertical='true' data-focus-select='true'>
+                <div class="col-auto w-90px h-100px">
+                    <div class="aiz-carousel carousel-thumb product-gallery-thumb" data-items='3' data-nav-for='.product-gallery' data-vertical='true' data-focus-select='true'>
                         @foreach ($photos as $key => $photo)
                             <div class="carousel-box c-pointer border p-1 rounded">
                                 <img
@@ -35,41 +35,65 @@
             </div>
         </div>
 
-        <div class="col-lg-6">
+        <div class="col-lg-7">
             <div class="text-left">
                 <h2 class="mb-2 fs-20 fw-600">
                     {{ $product->getTranslation('name') }}
                 </h2>
 
-                @if (home_price($product->id) != home_discounted_price($product->id))
-                    <div class="row no-gutters mt-3">
-                        <div class="col-2">
-                            <div class="opacity-50 mt-2">{{ translate('Price') }}:</div>
-                        </div>
-                        <div class="col-10">
-                            <div class="fs-20 opacity-60">
-                                <del>
-                                    {{ home_price($product->id) }}
-                                    @if ($product->unit != null)
-                                        <span>/{{ $product->getTranslation('unit') }}</span>
-                                    @endif
-                                </del>
-                            </div>
-                        </div>
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <small class="mr-2 opacity-50">{{ translate('Sold by') }}: </small><br>
+                        @if ($product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
+                            <a href="{{ route('shop.visit', $product->user->shop->slug) }}" class="text-reset">{{ $product->user->shop->name }}</a>
+                        @else
+                            {{ translate('Inhouse product') }}
+                        @endif
                     </div>
 
-                    <div class="row no-gutters mt-2">
-                        <div class="col-2">
-                            <div class="opacity-50">{{ translate('Discount Price') }}:</div>
+                    @if ($sellersData)
+                        <div class="col-auto">
+                            <button class="btn btn-sm btn-soft-primary" id="moreSellerModal">{{ translate('More Seller') }}</button>
                         </div>
-                        <div class="col-10">
-                            <div class="">
-                                <strong class="h2 fw-600 text-primary">
-                                    {{ home_discounted_price($product->id) }}
-                                </strong>
-                                @if ($product->unit != null)
-                                    <span class="opacity-70">/{{ $product->getTranslation('unit') }}</span>
-                                @endif
+                    @endif
+
+                    @if ($product->brand != null)
+                        <div class="col-auto">
+                            <img src="{{ uploaded_asset($product->brand->logo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="{{ $product->brand->getTranslation('name') }}" height="30">
+                        </div>
+                    @endif
+                </div>
+
+                @if (home_price($product->id) != home_discounted_price($product->id))
+                    <div class="row no-gutters mt-3">
+                        <div class="col-md-6">
+                            <div class="col-12">
+                                <div class="opacity-50 mt-2">{{ translate('Price') }}:</div>
+                            </div>
+                            <div class="col-12">
+                                <div class="fs-16 opacity-60">
+                                    <del>
+                                        {{ home_price($product->id) }}
+                                        @if ($product->unit != null)
+                                            <span>/{{ $product->getTranslation('unit') }}</span>
+                                        @endif
+                                    </del>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-12">
+                                <div class="opacity-50">{{ translate('Discount Price') }}:</div>
+                            </div>
+                            <div class="col-12">
+                                <div class="">
+                                    <strong class="fs-16 fw-600 text-primary">
+                                        {{ home_discounted_price($product->id) }}
+                                    </strong>
+                                    @if ($product->unit != null)
+                                        <span class="opacity-70">/{{ $product->getTranslation('unit') }}</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -176,62 +200,114 @@
                         @endif
 
                         <div class="row no-gutters">
-                            <div class="col-2">
-                                <div class="opacity-50 mt-2">{{ translate('Quantity') }}:</div>
-                            </div>
-                            <div class="col-10">
-                                <div class="product-quantity d-flex align-items-center">
-                                    <div class="row no-gutters align-items-center aiz-plus-minus mr-3" style="width: 130px;">
-                                        <button class="btn col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="minus" data-field="quantity" disabled="">
-                                            <i class="las la-minus"></i>
-                                        </button>
-                                        <input type="text" name="quantity" class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $product->min_qty }}" min="{{ $product->min_qty }}" max="10">
-                                        <button class="btn  col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="plus" data-field="quantity">
-                                            <i class="las la-plus"></i>
-                                        </button>
+                            <div class="col-md-6">
+                                <div class="col-2">
+                                    <div class="opacity-50 mt-2">{{ translate('Quantity') }}:</div>
+                                </div>
+                                <div class="col-10">
+                                    <div class="product-quantity d-flex align-items-center">
+                                        <div class="row no-gutters align-items-center aiz-plus-minus mr-3" style="width: 130px;">
+                                            <button class="btn col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="minus" data-field="quantity" disabled="">
+                                                <i class="las la-minus"></i>
+                                            </button>
+                                            <input type="text" name="quantity" class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $product->min_qty }}" min="{{ $product->min_qty }}" max="10">
+                                            <button class="btn  col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="plus" data-field="quantity">
+                                                <i class="las la-plus"></i>
+                                            </button>
+                                        </div>
+                                        {{-- <div class="avialable-amount opacity-60">(<span id="available-quantity">{{ $qty }}</span> {{ translate('available') }})</div> --}}
                                     </div>
-                                    {{-- <div class="avialable-amount opacity-60">(<span id="available-quantity">{{ $qty }}</span> {{ translate('available') }})</div> --}}
                                 </div>
                             </div>
-                        </div>
 
-                        <hr>
-                    @endif
+                            <div class="col-md-6">
+                                <div class="row no-gutters pb-3 d-none" id="chosen_price_div">
+                                    <div class="col-md-6">
+                                        <div class="col-12">
+                                            <div class="opacity-50">{{ translate('Total Price') }}:</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="product-price">
+                                                <strong id="chosen_price" class="h4 fw-600 text-primary">
 
-                    <div class="row no-gutters pb-3 d-none" id="chosen_price_div">
-                        <div class="col-2">
-                            <div class="opacity-50">{{ translate('Total Price') }}:</div>
-                        </div>
-                        <div class="col-10">
-                            <div class="product-price">
-                                <strong id="chosen_price" class="h4 fw-600 text-primary">
+                                                </strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                </strong>
+                                @if ($product->digital == 1)
+                                    <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart" {{ !empty($isblock) ? 'disabled' : '' }} onclick="addToCart()">
+                                        <i class="la la-shopping-cart"></i>
+                                        <span class="d-none d-md-inline-block"> {{ translate('Add to cart') }}</span>
+                                    </button>
+                                @elseif($qty > 0)
+                                    <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart" {{ !empty($isblock) ? 'disabled' : '' }} onclick="addToCart()">
+                                        <i class="la la-shopping-cart"></i>
+                                        <span class="d-none d-md-inline-block"> {{ translate('Add to cart') }}</span>
+                                    </button>
+                                @else
+                                    <button type="button" class="btn btn-secondary fw-600" disabled>
+                                        <i class="la la-cart-arrow-down"></i> {{ translate('Out of Stock') }}
+                                    </button>
+                                @endif
                             </div>
                         </div>
-                    </div>
-
-                </form>
-                <div class="mt-3">
-                    @if ($product->digital == 1)
-                        <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart" {{ !empty($isblock) ? 'disabled' : '' }} onclick="addToCart()">
-                            <i class="la la-shopping-cart"></i>
-                            <span class="d-none d-md-inline-block"> {{ translate('Add to cart') }}</span>
-                        </button>
-                    @elseif($qty > 0)
-                        <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart" {{ !empty($isblock) ? 'disabled' : '' }} onclick="addToCart()">
-                            <i class="la la-shopping-cart"></i>
-                            <span class="d-none d-md-inline-block"> {{ translate('Add to cart') }}</span>
-                        </button>
-                    @else
-                        <button type="button" class="btn btn-secondary fw-600" disabled>
-                            <i class="la la-cart-arrow-down"></i> {{ translate('Out of Stock') }}
-                        </button>
+                        <hr>
                     @endif
-                </div>
-
+                </form>
             </div>
         </div>
+    </div>
+
+    <div class="d-none" id="more-seller">
+        <div class="modal-header">
+            <h6 class="modal-title fw-600">{{ translate('More sellers') }}</h6>
+        </div>
+        <ul class="list-group list-group-flush">
+            @foreach($sellersData as $product)
+            <li class="list-group-item px-0 px-lg-3">
+                <div class="row">
+                    <div class="col-xs-2 col-lg-2 d-flex">
+                        <span class="mr-2 ml-0">
+                            <img src="{{ uploaded_asset($product->thumbnail_img) }}"
+                                class="img-fit size-60px rounded" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                alt="{{ $product->getTranslation('name') }}">
+                        </span>
+                    </div>
+                    <div class="col-xs-7 col-lg-7">
+                        <span class="fs-14 opacity-60">{{ $product->getTranslation('name') }}</span>
+                        <br>
+                        <span class="fw-600 fs-12">
+                            @if ($product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
+                                <a href="{{ route('shop.visit', $product->user->shop->slug) }}">{{ $product->user->shop->name }}</a>
+                            @else
+                                {{ translate('Inhouse product') }}
+                            @endif
+                        </span>
+                        <br>
+                        <span class="fw-600 fs-16">{{ home_discounted_price($product->id) }}
+                            @if ($product->unit != null)
+                            <span>/{{ $product->getTranslation('unit') }}</span>
+                        @endif
+                        </span>
+                    </div>
+                    <div class="col-xs-3 col-lg-3 px-0">
+                        @if ($product->current_stock > 0)
+
+                        <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600" {{ !empty($product->isblock) ? 'disabled' : '' }} onclick="addToCartFromSellerPopup('{{$product->id.','.$product->min_qty}}')">
+                            <i class="la la-shopping-cart"></i> <span class="d-none d-md-inline-block"> {{ translate('Add to cart') }}</span>
+                        </button>
+                        @else
+                            <button type="button" class="btn btn-secondary fw-600" disabled>
+                                <i class="la la-cart-arrow-down"></i>  {{ translate('Out of Stock') }}
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </li>
+            @endforeach
+        </ul>
     </div>
 </div>
 
@@ -239,6 +315,11 @@
     cartQuantityInitialize();
     $('#option-choice-form input').on('change', function() {
         getVariantPrice();
+    });
+    $('#moreSellerModal').on('click', function(){
+        var element = document.getElementById("more-seller");
+        element.classList.toggle("d-none");
+        // $('.more-seller').toggle('d-none');
     });
 
 </script>
