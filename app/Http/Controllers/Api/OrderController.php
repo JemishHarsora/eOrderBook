@@ -28,30 +28,28 @@ class OrderController extends Controller
 
         if (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'flat_rate') {
             $shipping = \App\BusinessSetting::where('type', 'flat_rate_shipping_cost')->first()->value;
-        }
-        elseif (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'seller_wise_shipping') {
+        } elseif (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'seller_wise_shipping') {
             foreach ($cartItems as $cartItem) {
                 $product = \App\Product::find($cartItem->product_id);
-                if($product->added_by == 'admin'){
+                if ($product->added_by == 'admin') {
                     array_push($admin_products, $cartItem->product_id);
-                }
-                else{
+                } else {
                     $product_ids = array();
-                    if(array_key_exists($product->user_id, $seller_products)){
+                    if (array_key_exists($product->user_id, $seller_products)) {
                         $product_ids = $seller_products[$product->user_id];
                     }
                     array_push($product_ids, $cartItem->product_id);
                     $seller_products[$product->user_id] = $product_ids;
                 }
             }
-                if(!empty($admin_products)){
-                    $shipping = \App\BusinessSetting::where('type', 'shipping_cost_admin')->first()->value;
+            if (!empty($admin_products)) {
+                $shipping = \App\BusinessSetting::where('type', 'shipping_cost_admin')->first()->value;
+            }
+            if (!empty($seller_products)) {
+                foreach ($seller_products as $key => $seller_product) {
+                    $shipping += \App\Shop::where('user_id', $key)->first()->shipping_cost;
                 }
-                if(!empty($seller_products)){
-                    foreach ($seller_products as $key => $seller_product) {
-                        $shipping += \App\Shop::where('user_id', $key)->first()->shipping_cost;
-                    }
-                }
+            }
         }
 
         // create an order
@@ -79,20 +77,17 @@ class OrderController extends Controller
                 ]);
             }
 
-            $order_detail_shipping_cost= 0;
+            $order_detail_shipping_cost = 0;
 
             if (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'flat_rate') {
-                $order_detail_shipping_cost = $shipping/count($cartItems);
-            }
-            elseif (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'seller_wise_shipping') {
-                if($product->added_by == 'admin'){
-                    $order_detail_shipping_cost = \App\BusinessSetting::where('type', 'shipping_cost_admin')->first()->value/count($admin_products);
+                $order_detail_shipping_cost = $shipping / count($cartItems);
+            } elseif (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'seller_wise_shipping') {
+                if ($product->added_by == 'admin') {
+                    $order_detail_shipping_cost = \App\BusinessSetting::where('type', 'shipping_cost_admin')->first()->value / count($admin_products);
+                } else {
+                    $order_detail_shipping_cost = \App\Shop::where('user_id', $product->user_id)->first()->shipping_cost / count($seller_products[$product->user_id]);
                 }
-                else {
-                    $order_detail_shipping_cost = \App\Shop::where('user_id', $product->user_id)->first()->shipping_cost/count($seller_products[$product->user_id]);
-                }
-            }
-            else{
+            } else {
                 $order_detail_shipping_cost = $product->shipping_cost;
             }
 
@@ -125,7 +120,7 @@ class OrderController extends Controller
             if ($orderDetail->product->user->user_type == 'seller') {
                 $seller = $orderDetail->product->user->seller;
                 $price = $orderDetail->price + $orderDetail->tax + $orderDetail->shipping_cost;
-                $seller->admin_to_pay = ($request->payment_type == 'cash_on_delivery') ? $seller->admin_to_pay - ($price * $commission_percentage) / 100 : $seller->admin_to_pay + ($price * (100 - $commission_percentage)) / 100;
+                $seller->admin_to_pay = ($request->payment_type == 'as_per_yours_terms') ? $seller->admin_to_pay - ($price * $commission_percentage) / 100 : $seller->admin_to_pay + ($price * (100 - $commission_percentage)) / 100;
                 $seller->save();
             }
         }

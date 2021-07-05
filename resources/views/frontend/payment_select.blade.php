@@ -279,7 +279,7 @@
                                             @if($digital != 1)
                                                 <div class="col-6 col-md-4">
                                                     <label class="aiz-megabox d-block mb-3">
-                                                        <input value="cash_on_delivery" class="online_payment" type="radio" name="payment_option" checked>
+                                                        <input value="as_per_yours_terms" class="online_payment" type="radio" name="payment_option" checked>
                                                         <span class="d-block p-3 aiz-megabox-elem">
                                                             <img src="{{ static_asset('assets/img/cards/cod.png')}}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" class="img-fluid mb-2">
                                                             <span class="d-block text-center">

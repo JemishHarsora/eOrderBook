@@ -25,4 +25,9 @@ class Order extends Model
     {
         return $this->belongsTo(PickupPoint::class);
     }
+
+    public function area()
+    {
+        return $this->hasOne(Area::class, 'id', 'area_id');
+    }
 }

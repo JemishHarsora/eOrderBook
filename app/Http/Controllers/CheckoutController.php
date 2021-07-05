@@ -95,8 +95,7 @@ class CheckoutController extends Controller
                 } else if ($request->payment_option == 'bkash') {
                     $bkash = new BkashController;
                     return $bkash->pay();
-                }
-                 else if ($request->payment_option == 'flutterwave') {
+                } else if ($request->payment_option == 'flutterwave') {
                     $flutterwave = new FlutterwaveController();
                     return $flutterwave->pay();
                 } else if ($request->payment_option == 'mpesa') {
@@ -105,7 +104,7 @@ class CheckoutController extends Controller
                 } elseif ($request->payment_option == 'paytm') {
                     $paytm = new PaytmController;
                     return $paytm->index();
-                } elseif ($request->payment_option == 'cash_on_delivery') {
+                } elseif ($request->payment_option == 'as_per_yours_terms') {
                     $request->session()->put('cart', Session::get('cart')->where('owner_id', '!=', Session::get('owner_id')));
                     $request->session()->forget('owner_id');
                     $request->session()->forget('delivery_info');
@@ -296,8 +295,7 @@ class CheckoutController extends Controller
                 if (\App\Product::find($object['id'])->user_id == $request->owner_id) {
                     if ($object['shipping_type'] == 'home_delivery') {
                         $object['shipping'] = getShippingCost($key);
-                    }
-                    else {
+                    } else {
                         $object['shipping'] = 0;
                     }
                 } else {

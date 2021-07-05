@@ -41,21 +41,19 @@ class OrderController extends Controller
         $delivery_status = null;
         $sort_search = null;
         // $$orders = null;
+        $seller_id = "";
         if (Auth::user()->user_type === 'salesman' || Auth::user()->user_type === 'delivery') {
-            $orders = DB::table('orders')
-                ->orderBy('code', 'desc')
-                ->join('order_details', 'orders.id', '=', 'order_details.order_id')
-                ->where('order_details.seller_id', Auth::user()->created_by)
-                ->select('orders.id')
-                ->distinct();
+
+            $seller_id = Auth::user()->created_by;
         } else {
-            $orders = DB::table('orders')
-                ->orderBy('code', 'desc')
-                ->join('order_details', 'orders.id', '=', 'order_details.order_id')
-                ->where('order_details.seller_id', Auth::user()->id)
-                ->select('orders.id')
-                ->distinct();
+            $seller_id = Auth::user()->id;
         }
+        $orders = DB::table('orders')
+            ->orderBy('code', 'desc')
+            ->join('order_details', 'orders.id', '=', 'order_details.order_id')
+            ->where('order_details.seller_id', $seller_id)
+            ->select('orders.id')
+            ->distinct();
         if ($request->payment_status != null) {
             $orders = $orders->where('order_details.payment_status', $request->payment_status);
             $payment_status = $request->payment_status;
@@ -76,12 +74,14 @@ class OrderController extends Controller
             $order->viewed = 1;
             $order->save();
         }
-        $buyers = user::where('user_type', 'customer')->get();
+        $buyers = Order::where('seller_id', $seller_id)->with(['user'])->groupBy('user_id')->get();
+
+        $areas = Order::where('seller_id', $seller_id)->with(['area'])->groupBy('area_id')->get();
         if (Auth::user()->user_type === 'salesman' || Auth::user()->user_type === 'delivery') {
-            return view('frontend.user.sellerStaff.salesMan.manageOrders.orders', compact('orders', 'payment_status', 'delivery_status', 'sort_search'));
+            return view('frontend.user.sellerStaff.salesMan.manageOrders.orders', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'buyers', 'areas'));
         }
 
-        return view('frontend.user.seller.orders', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'buyers'));
+        return view('frontend.user.seller.orders', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'buyers', 'areas'));
     }
 
     public function orders_export(Request $request)
@@ -533,7 +533,9 @@ class OrderController extends Controller
 
             $order->shipping_address = json_encode($address_data);
 
-            $order->payment_type = 'cash_on_delivery';
+            $order->payment_type = 'as_per_yours_terms';
+            $order->area_id = $user->area;
+            $order->seller_id = $cart_product[0]['owner_id'];
             $order->delivery_viewed = '0';
             $order->payment_status_viewed = '0';
             $order->code = date('Ymd-His') . rand(10, 99);
@@ -676,6 +678,14 @@ class OrderController extends Controller
 
     public function addSellerOrder(Request $request)
     {
+        $seller_id = "";
+        if (Auth::user()->user_type === 'salesman' || Auth::user()->user_type === 'delivery') {
+
+            $seller_id = Auth::user()->created_by;
+        } else {
+            $seller_id = Auth::user()->id;
+        }
+
         $user = User::find($request->user_id);
         $order = new Order;
         $address_data['name'] = $user->name;
@@ -687,7 +697,9 @@ class OrderController extends Controller
 
         $order->shipping_address = json_encode($address_data);
         $order->user_id = $user->id;
-        $order->payment_type = 'cash_on_delivery';
+        $order->payment_type = 'as_per_yours_terms';
+        $order->area_id = $user->area;
+        $order->seller_id = $seller_id;
         $order->delivery_viewed = '0';
         $order->payment_status_viewed = '0';
         $order->code = date('Ymd-His') . rand(10, 99);
@@ -917,7 +929,7 @@ class OrderController extends Controller
 
         if ($order->payment_status == 'paid' && $order->commission_calculated == 0) {
             if (\App\Addon::where('unique_identifier', 'seller_subscription')->first() == null || !\App\Addon::where('unique_identifier', 'seller_subscription')->first()->activated) {
-                if ($order->payment_type == 'cash_on_delivery') {
+                if ($order->payment_type == 'as_per_yours_terms') {
                     if (BusinessSetting::where('type', 'category_wise_commission')->first()->value != 1) {
                         $commission_percentage = BusinessSetting::where('type', 'vendor_commission')->first()->value;
                         foreach ($order->orderDetails as $key => $orderDetail) {
