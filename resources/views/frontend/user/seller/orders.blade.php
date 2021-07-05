@@ -14,29 +14,40 @@
                                 <div class="col text-center text-md-left">
                                     <h5 class="mb-md-0 h6">{{ translate('Orders') }}</h5>
                                 </div>
-                                <div class="col-md-3 ml-auto">
+                                <div class="col-md-3 ml-auto mb-3">
                                     <select class="form-control aiz-selectpicker" name="party" id="party"
-                                        data-live-search="true">
+                                        data-live-search="true" onchange="sort_orders()">
                                         <option value="">{{ 'Select Party' }}</option>
                                         @foreach ($buyers as $party)
-                                            <option value="{{ $party->user->id }}">{{ $party->user->name }}
+                                            <option value="{{ $party->user->id }}" @isset($party_filter) @if ($party_filter == $party->user->id) selected @endif @endisset>{{ $party->user->name }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
 
-                                <div class="col-md-3 ml-auto">
+                                <div class="col-md-3 ml-auto mb-3">
                                     <select class="form-control aiz-selectpicker" name="area" id="area"
-                                        data-live-search="true">
+                                        data-live-search="true" onchange="sort_orders()">
                                         <option value="">{{ 'Select Area' }}</option>
                                         @foreach ($areas as $area)
-                                            <option value="{{ $area->area->id }}">{{ $area->area->name }}
+                                            <option value="{{ $area->area->id }}" @isset($area_filter) @if ($area_filter == $area->area->id) selected @endif @endisset>{{ $area->area->name }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
 
+                                <div class="col-md-3 ml-auto mb-3">
+                                    <div class="from-group mb-0">
+                                        <input type="text" class="aiz-date-range form-control" id="date_filter"
+                                            name="date_filter" placeholder="{{ translate('Filter by date') }}"
+                                            data-format="DD-MM-Y" data-separator=" to " data-advanced-range="true"
+                                            onchange="sort_orders()" autocomplete="off" @isset($date_filter)
+                                            value="{{ $date_filter }}" @endisset>
+                                    </div>
+                                </div>
                                 <div class="col-md-3 ml-auto">
+                                </div>
+                                <div class="col-md-3 ml-auto mb-3">
                                     <select class="form-control aiz-selectpicker"
                                         data-placeholder="{{ translate('Filter by Payment Status') }}"
                                         name="payment_status" onchange="sort_orders()">
@@ -48,7 +59,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3 ml-auto">
+                        <div class="col-md-3 ml-auto mb-3">
                             <select class="form-control aiz-selectpicker"
                                 data-placeholder="{{ translate('Filter by Payment Status') }}"
                                 name="delivery_status" onchange="sort_orders()">
@@ -60,11 +71,11 @@
                             <option value="delivered" @isset($delivery_status) @if ($delivery_status == 'delivered') selected @endif @endisset>{{ translate('Delivered') }}</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 ml-auto mb-3">
                         <div class="from-group mb-0">
                             <input type="text" class="form-control" id="search" name="search"
-                                @isset($sort_search) value="{{ $sort_search }}" @endisset
-                                placeholder="{{ translate('Type Order code & hit Enter') }}">
+                                onchange="sort_orders()" @isset($sort_search) value="{{ $sort_search }}"
+                                @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                         </div>
                     </div>
                 </div>
@@ -77,7 +88,7 @@
                         <div class="form-group">
                             <select class="form-control aiz-selectpicker" name="buyer" id="buyer"
                                 data-live-search="true">
-                                <option value="">{{ 'Select Buyers' }}</option>
+                                <option value="">{{ 'Select Party' }}</option>
                                 @foreach ($buyers as $buyers)
                                     <option value="{{ $buyers->user->id }}">{{ $buyers->user->name }}
                                     </option>
@@ -108,12 +119,12 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>{{ translate('Order Code') }}</th>
-                                <th data-breakpoints="lg">{{ translate('Num. of Products') }}</th>
-                                <th data-breakpoints="lg">{{ translate('Customer') }}</th>
+                                <th data-breakpoints="md">{{ translate('Customer') }}</th>
+                                <th data-breakpoints="md">{{ translate('Num. of Items') }}</th>
                                 <th data-breakpoints="md">{{ translate('Amount') }}</th>
-                                <th data-breakpoints="lg">{{ translate('Delivery Status') }}</th>
+                                <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
                                 <th>{{ translate('Payment Status') }}</th>
+                                <th>{{ translate('Invoice') }}</th>
                                 <th class="text-right">{{ translate('Options') }}</th>
                             </tr>
                         </thead>
@@ -127,19 +138,23 @@
                                         <td>
                                             {{ $key + 1 }}
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             <a href="#{{ $order->code }}"
                                                 onclick="show_order_details({{ $order->id }})">{{ $order->code }}</a>
+                                        </td> --}}
+
+                                        <td>
+                                            <a href="#{{ $order->code }}"
+                                                onclick="show_order_details({{ $order->id }})">
+                                                @if ($order->user_id != null)
+                                                    {{ !empty($order->user) ? $order->user->name : '' }}
+                                                @else
+                                                    Guest ({{ $order->guest_id }})
+                                                @endif
+                                            </a>
                                         </td>
                                         <td>
                                             {{ count($order->orderDetails->where('seller_id', Auth::user()->id)) }}
-                                        </td>
-                                        <td>
-                                            @if ($order->user_id != null)
-                                                {{ !empty($order->user) ? $order->user->name : '' }}
-                                            @else
-                                                Guest ({{ $order->guest_id }})
-                                            @endif
                                         </td>
                                         <td>
                                             {{ single_price($order->orderDetails->where('seller_id', Auth::user()->id)->sum('price')) }}
@@ -158,6 +173,10 @@
                                                 <span
                                                     class="badge badge-inline badge-danger">{{ translate('Unpaid') }}</span>
                                             @endif
+                                        </td>
+
+                                        <td>
+                                            {{ $order->view_invoice == 1 ? 'Downloaded' : '' }}
                                         </td>
                                         <td class="text-right">
                                             <a href="javascript:void(0)"

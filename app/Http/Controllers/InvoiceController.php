@@ -14,23 +14,25 @@ class InvoiceController extends Controller
     {
         $order = Order::findOrFail($id);
         $pdf = PDF::setOptions([
-                        'isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true,
-                        'logOutputFile' => storage_path('logs/log.htm'),
-                        'tempDir' => storage_path('logs/')
-                    ])->loadView('backend.invoices.customer_invoice', compact('order'));
-        return $pdf->download('order-'.$order->code.'.pdf');
+            'isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true,
+            'logOutputFile' => storage_path('logs/log.htm'),
+            'tempDir' => storage_path('logs/')
+        ])->loadView('backend.invoices.customer_invoice', compact('order'));
+        return $pdf->download('order-' . $order->code . '.pdf');
     }
 
     //downloads seller invoice
     public function seller_invoice_download($id)
     {
         $order = Order::findOrFail($id);
+        $order->view_invoice = 1;
+        $order->save();
         $pdf = PDF::setOptions([
-                        'isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true,
-                        'logOutputFile' => storage_path('logs/log.htm'),
-                        'tempDir' => storage_path('logs/')
-                    ])->loadView('backend.invoices.seller_invoice', compact('order'));
-        return $pdf->download('order-'.$order->code.'.pdf');
+            'isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true,
+            'logOutputFile' => storage_path('logs/log.htm'),
+            'tempDir' => storage_path('logs/')
+        ])->loadView('backend.invoices.seller_invoice', compact('order'));
+        return $pdf->download('order-' . $order->code . '.pdf');
     }
 
     //downloads admin invoice
@@ -38,10 +40,10 @@ class InvoiceController extends Controller
     {
         $order = Order::findOrFail($id);
         $pdf = PDF::setOptions([
-                        'isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true,
-                        'logOutputFile' => storage_path('logs/log.htm'),
-                        'tempDir' => storage_path('logs/')
-                    ])->loadView('backend.invoices.admin_invoice', compact('order'));
-        return $pdf->download('order-'.$order->code.'.pdf');
+            'isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true,
+            'logOutputFile' => storage_path('logs/log.htm'),
+            'tempDir' => storage_path('logs/')
+        ])->loadView('backend.invoices.admin_invoice', compact('order'));
+        return $pdf->download('order-' . $order->code . '.pdf');
     }
 }

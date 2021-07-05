@@ -40,6 +40,9 @@ class OrderController extends Controller
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;
+        $party_filter = null;
+        $area_filter = null;
+        $date_filter = null;
         // $$orders = null;
         $seller_id = "";
         if (Auth::user()->user_type === 'salesman' || Auth::user()->user_type === 'delivery') {
@@ -67,6 +70,20 @@ class OrderController extends Controller
             $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
         }
 
+        if ($request->party != null) {
+            $orders = $orders->where('user_id', $request->party);
+            $party_filter = $request->party;
+        }
+        if ($request->area != null) {
+            $orders = $orders->where('area_id', $request->area);
+            $area_filter = $request->area;
+        }
+
+        if ($request->date_filter != null) {
+            $orders = $orders->where('orders.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $request->date_filter)[0])))->where('orders.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $request->date_filter)[1])));
+            $date_filter = $request->date_filter;
+        }
+
         $orders = $orders->paginate(15);
 
         foreach ($orders as $key => $value) {
@@ -78,10 +95,10 @@ class OrderController extends Controller
 
         $areas = Order::where('seller_id', $seller_id)->with(['area'])->groupBy('area_id')->get();
         if (Auth::user()->user_type === 'salesman' || Auth::user()->user_type === 'delivery') {
-            return view('frontend.user.sellerStaff.salesMan.manageOrders.orders', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'buyers', 'areas'));
+            return view('frontend.user.sellerStaff.salesMan.manageOrders.orders', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'buyers', 'areas', 'party_filter', 'area_filter', 'date_filter'));
         }
 
-        return view('frontend.user.seller.orders', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'buyers', 'areas'));
+        return view('frontend.user.seller.orders', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'buyers', 'areas', 'party_filter', 'area_filter', 'date_filter'));
     }
 
     public function orders_export(Request $request)
