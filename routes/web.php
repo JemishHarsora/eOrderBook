@@ -51,6 +51,7 @@ Route::get('/register', 'HomeController@registration')->name('register');
 
 //Order Export
 Route::get('/all_orders/export', 'OrderController@orders_export')->name('all_orders.export');
+Route::get('/order_status/update', 'OrderController@bulk_status_update')->name('order_status.update');
 //Route::post('/users/login', 'HomeController@user_login')->name('user.login.submit');
 Route::post('/users/login/cart', 'HomeController@cart_login')->name('cart.login.submit');
 

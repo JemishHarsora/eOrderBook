@@ -83,7 +83,7 @@ class OrderController extends Controller
             $orders = $orders->where('orders.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $request->date_filter)[0])))->where('orders.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $request->date_filter)[1])));
             $date_filter = $request->date_filter;
         }
-
+        $orders = $orders->orderBy('orders.id','desc');
         $orders = $orders->paginate(15);
 
         foreach ($orders as $key => $value) {
@@ -101,6 +101,28 @@ class OrderController extends Controller
         return view('frontend.user.seller.orders', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'buyers', 'areas', 'party_filter', 'area_filter', 'date_filter'));
     }
 
+    public function bulk_status_update(Request $request)
+    {
+        $order_ids=json_decode($request->order_id);
+
+        $order = Order::whereIn('id',$order_ids);
+        if($request->payment_status !=''){
+            $order->update(['payment_status' => $request->payment_status]);
+        }
+        if($request->delivery_status !=''){
+            $order->update(['delivery_status' => $request->delivery_status]);
+        }
+
+        $order = OrderDetail::whereIn('order_id',$order_ids);
+        if($request->payment_status !=''){
+            $order->update(['payment_status' => $request->payment_status]);
+        }
+        if($request->delivery_status !=''){
+            $order->update(['delivery_status' => $request->delivery_status]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Status update successfully.'], 200);
+    }
     public function orders_export(Request $request)
     {
         $order_ids = '';
