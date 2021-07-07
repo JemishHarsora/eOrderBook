@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUndefinedClassInspection */
+<?php
+
+/** @noinspection PhpUndefinedClassInspection */
 
 namespace App\Http\Controllers\Api;
 
@@ -16,6 +18,8 @@ use App\Customer_shop;
 use App\Models\Seller;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Validator;
+use JWTAuth;
+
 class AuthController extends Controller
 {
     function uniqueStr($length)
@@ -47,12 +51,12 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-			return response()->json(['status' => false,'message' => implode(',', $validator->messages()->all())], 200);
-		}
+            return response()->json(['status' => false, 'message' => implode(',', $validator->messages()->all())], 200);
+        }
 
         if ($request->is_shop == '1') {
             if (User::where('licence_no', $request->licence_no)->first() != null) {
-                return response()->json(['status' => false,'message' => 'Shop Licence already exists.'], 200);
+                return response()->json(['status' => false, 'message' => 'Shop Licence already exists.'], 200);
             }
         }
 
@@ -186,19 +190,46 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-			return response()->json(['status' => false,'message' => implode(',', $validator->messages()->all()),'data' =>[]], 200);
+            return response()->json(['status' => false, 'message' => implode(',', $validator->messages()->all()), 'data' => []], 200);
         }
 
         $credentials = $request->only('email', 'password');
         $token = $this->guard()->attempt($credentials);
         if (!$token) {
-            return response()->json(['status' => false, 'message' => 'Email or password does not match','data' =>[]], 200);
+            return response()->json(['status' => false, 'message' => 'Email or password does not match', 'data' => []], 200);
         }
-        $user =User::where('email', $request->email)->first();
-        if(isset($user) && $user->email_verified_at == null){
-            return response()->json(['status' => false,'message' => 'Please verify your account', 'data' => []], 200);
+        $user = User::where('email', $request->email)->first();
+        if (isset($user) && $user->email_verified_at == null) {
+            return response()->json(['status' => false, 'message' => 'Please verify your account', 'data' => []], 200);
         }
         return $this->loginSuccess($token, $user);
+    }
+
+    public function user(Request $request)
+    {
+        $token = JWTAuth::gettoken();
+        $user = [];
+        if ($token) {
+            // $user = JWTAuth::parseToken()->authenticate();
+            try {
+                dd('sd');
+                $user = JWTAuth::parseToken()->authenticate();
+
+                return response()->json(['status' => true, 'message' => 'Success', 'data' => $user], 200);
+            } catch (Exception $e) {
+                if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
+                    return response()->json(['status' => false, 'message' => 'Token is Invalid'], 200);
+                } else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
+                    return response()->json(['status' => false, 'message' => 'Token is Expired'], 200);
+                } else {
+                    return response()->json(['status' => false, 'message' => 'Authorization Token not found'], 200);
+                }
+            }
+        } else {
+            return response()->json(['status' => false, 'message' => 'Token is not present'], 200);
+        }
+
+        // return response()->json($request->user());
     }
 
     protected function guard()
@@ -206,10 +237,7 @@ class AuthController extends Controller
         return Auth::guard('api');
     }
 
-    public function user(Request $request)
-    {
-        return response()->json($request->user());
-    }
+
 
     public function logout(Request $request)
     {

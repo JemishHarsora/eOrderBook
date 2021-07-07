@@ -5,9 +5,10 @@ Route::prefix('v1/auth')->group(function () {
     Route::post('signup', 'Api\AuthController@signup');
     Route::post('social-login', 'Api\AuthController@socialLogin');
     Route::post('password/create', 'Api\PasswordResetController@create');
+    Route::get('user', 'Api\AuthController@user');
     Route::middleware('auth:api')->group(function () {
         Route::get('logout', 'Api\AuthController@logout');
-        Route::get('user', 'Api\AuthController@user');
+        // Route::get('user', 'Api\AuthController@user');
     });
 });
 
@@ -101,7 +102,7 @@ Route::prefix('v1')->group(function () {
     Route::get('wallet/history/{id}', 'Api\WalletController@walletRechargeHistory')->middleware('auth:api');
 });
 
-Route::fallback(function() {
+Route::fallback(function () {
     return response()->json([
         'data' => [],
         'success' => false,
