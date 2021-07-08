@@ -210,11 +210,8 @@ class AuthController extends Controller
         $token = JWTAuth::gettoken();
         $user = [];
         if ($token) {
-            // $user = JWTAuth::parseToken()->authenticate();
             try {
-                dd('sd');
                 $user = JWTAuth::parseToken()->authenticate();
-
                 return response()->json(['status' => true, 'message' => 'Success', 'data' => $user], 200);
             } catch (Exception $e) {
                 if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
