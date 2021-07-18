@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
 use App\Product;
+use App\ProductPrice;
 use App\User;
 use Illuminate\Support\Str;
 use Auth;
@@ -33,19 +34,17 @@ class ProductImport implements ToCollection
         //
         foreach ($collection as $key => $importData) {
             if ($key != 0 && $importData[0] != null) {
-                $products = Product::where('user_id', Auth::user()->id)->where('barcode', $importData[1])->first();
+                $products = Product::where('barcode', $importData[1])->first();
                 if (!$products) {
 
                     $product = new Product;
                     $product->barcode = $importData[1];
                     $product->name = ucfirst($importData[2]);
                     $product->added_by = Auth::user()->user_type == 'seller' ? 'seller' : 'admin';
-                    $product->user_id = Auth::user()->user_type == 'seller' ? Auth::user()->id : User::where('user_type', 'admin')->first()->id;
-                    $product->unit_price = ($importData[3])?$importData[3]:0;
-                    $product->purchase_price = $importData[4] == null ? ($importData[3])?$importData[3]:0 : $importData[4];
+                    // $product->user_id = Auth::user()->user_type == 'seller' ? Auth::user()->id : User::where('user_type', 'admin')->first()->id;
+
                     $product->unit = $importData[5];
-                    $product->current_stock = $importData[6];
-                    $product->sku = $importData[7];
+
                     $product->description = "<p>" . ucfirst($importData[8]) . "</p>";
                     $product->meta_title = ucfirst($importData[2]);
                     $product->meta_description = ucfirst($importData[8]);
@@ -59,22 +58,61 @@ class ProductImport implements ToCollection
                     $product->thumbnail_img = $importData[11];
                     $product->category_id = $this->category;
                     $product->brand_id = $this->brand;
-                    $product->min_qty = $importData[12];
+
                     $product->tags = $importData[13];
                     $product->hsn_code = $importData[14];
 
-                    $product->discount = '0.00';
-                    $product->discount_type = 'amount';
-                    $product->tax = '0.00';
-                    $product->tax_type = 'amount';
 
                     $product->save();
 
-                    $product_stock              = new ProductStock();
-                    $product_stock->product_id  = $product->id;
-                    $product_stock->price       = $importData[3];
-                    $product_stock->qty         = $importData[6];
-                    $product_stock->save();
+                    $productPrice = new ProductPrice();
+
+                    if (Auth::user()->user_type = 'seller') {
+                        $productPrice->seller_id  = Auth::user()->id;
+                    } else {
+                        $productPrice->seller_id = \App\User::where('user_type', 'admin')->first()->id;
+                    }
+                    $productPrice->sku = $importData[7];
+                    $productPrice->min_qty = $importData[12];
+                    $productPrice->unit_price = ($importData[3]) ? $importData[3] : 0;
+                    $productPrice->purchase_price = $importData[4] == null ? ($importData[3]) ? $importData[3] : 0 : $importData[4];
+                    $productPrice->discount = '0.00';
+                    $productPrice->discount_type = 'amount';
+                    $productPrice->tax = '0.00';
+                    $productPrice->tax_type = 'amount';
+                    $productPrice->current_stock = $importData[6];
+                    $productPrice->product_id = $product->id;
+                    $productPrice->shipping_type = 'free';
+                    $productPrice->shipping_cost = '0.00';
+                    $productPrice->save();
+
+                    // $product_stock              = new ProductStock();
+                    // $product_stock->product_id  = $product->id;
+                    // $product_stock->price       = $importData[3];
+                    // $product_stock->qty         = $importData[6];
+                    // $product_stock->save();
+                } else {
+
+                    $productPrice = new ProductPrice();
+
+                    if (Auth::user()->user_type = 'seller') {
+                        $productPrice->seller_id  = Auth::user()->id;
+                    } else {
+                        $productPrice->seller_id = \App\User::where('user_type', 'admin')->first()->id;
+                    }
+                    $productPrice->sku = $importData[7];
+                    $productPrice->min_qty = $importData[12];
+                    $productPrice->unit_price = ($importData[3]) ? $importData[3] : 0;
+                    $productPrice->purchase_price = $importData[4] == null ? ($importData[3]) ? $importData[3] : 0 : $importData[4];
+                    $productPrice->discount = '0.00';
+                    $productPrice->discount_type = 'amount';
+                    $productPrice->tax = '0.00';
+                    $productPrice->tax_type = 'amount';
+                    $productPrice->current_stock = $importData[6];
+                    $productPrice->product_id = $products->id;
+                    $productPrice->shipping_type = 'free';
+                    $productPrice->shipping_cost = '0.00';
+                    $productPrice->save();
                 }
             }
         }
