@@ -31,6 +31,24 @@
                                 <h5 class="mb-0 h6">{{ translate('Order Information') }}</h5>
                             </div>
                             <div class="card-body">
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-from-label">{{ translate('Brand') }}</label>
+                                    <div class="col-md-8">
+
+                                        {{-- {{ dd($brands, $selected_brand) }} --}}
+                                        <select class="form-control aiz-selectpicker" name="brand_id" id="brand_id"
+                                            data-live-search="true" required>
+                                            <option value="">Select Brand</option>
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->brands->id }}" @isset($selected_brand) @if ($selected_brand == $brand->brands->id) selected @endif @endisset>
+                                                    {{ $brand->brands->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{ translate('Area') }}</label>
                                     <div class="col-md-8">
@@ -58,10 +76,10 @@
                                         <thead>
                                             <tr>
                                                 <th>{{ translate('Product') }}</th>
-                                                <th>{{ translate('sku') }}</th>
+                                                {{-- <th>{{ translate('sku') }}</th> --}}
                                                 <th>{{ translate('MRP') }}</th>
                                                 <th>{{ translate('Quantity') }}</th>
-                                                <th>{{ translate('Tax') }}</th>
+                                                {{-- <th>{{ translate('Tax') }}</th> --}}
                                                 <th>{{ translate('Total Price') }}</th>
                                                 <th class="float-right">{{ translate('Action') }}</th>
                                             </tr>
@@ -108,7 +126,7 @@ $htmlSelectProduct =
 if (count($products)) {
     foreach ($products as $pId => $product) {
         //   dd($product);
-        $htmlSelectProduct .= '<option  value="' . $product['id'] . '" >' . $product['name'] . '(' . $product['sku'] . ')</option>';
+        $htmlSelectProduct .= '<option  value="' . $product['id'] . '" >' . $product['sku'] . '</option>';
     }
 }
 $htmlSelectProduct .= '
@@ -116,10 +134,9 @@ $htmlSelectProduct .= '
 
               <span class="add_attr"></span>
             </td>
-              <td style="width: 20%"><input type="text" readonly class="w-auto add_sku form-control" value=""></td>
+
               <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_price form-control" name="add_price[]" value="0" ></td>
               <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_qty form-control" name="add_qty[]" value="0"></td>
-              <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" readonly class="w-auto add_tax form-control" name="add_tax[]" value="0"></td>
               <td style="width: 10%"><input type="text" readonly name="add_total[]" class="w-auto add_total form-control" value="0"></td>
               <td style="width: 10%"><button onClick="$(this).parent().parent().remove();" class="w-auto btn btn-soft-danger btn-icon btn-circle btn-sm" data-title="Delete"><i class="las la-trash" aria-hidden="true"></i></button></td>
             </tr>
@@ -134,6 +151,13 @@ $htmlSelectProduct = str_replace("'", '"', $htmlSelectProduct);
 @section('script')
     <script type="text/javascript">
         $(document).ready(function() {
+
+            $('#brand_id').on('change', function() {
+                var currentURL = window.location.href.split('?')[0];
+                currentURL = currentURL + '?brand=' + this.value;
+                window.location.href = currentURL;
+            });
+
             $('#area_id').on('change', function() {
                 var area_id = this.value;
                 $("#user_id").html('');
@@ -180,7 +204,7 @@ $htmlSelectProduct = str_replace("'", '"', $htmlSelectProduct);
                 node.find('.add_qty').eq(0).val('');
                 node.find('.add_price').eq(0).val('');
                 node.find('.add_attr').html('');
-                node.find('.add_tax').eq(0).val('');
+                // node.find('.add_tax').eq(0).val('');
 
             } else {
 
@@ -201,7 +225,7 @@ $htmlSelectProduct = str_replace("'", '"', $htmlSelectProduct);
                         node.find('.add_price').eq(0).val(returnedData.unit_price);
                         node.find('.add_total').eq(0).val(returnedData.discounted_price);
                         // node.find('.add_attr').eq(0).html(returnedData.renderAttDetails);
-                        node.find('.add_tax').eq(0).val(returnedData.taxs);
+                        // node.find('.add_tax').eq(0).val(returnedData.taxs);
 
                         $('#loading').hide();
                     }

@@ -7,15 +7,9 @@ use App\Product;
 use App\ProductTranslation;
 use App\ProductStock;
 use App\Category;
-use App\Language;
 use App\ProductPrice;
 use Auth;
-use App\SubSubCategory;
-use Session;
-use ImageOptimizer;
-use DB;
 use Combinations;
-use CoreComponentRepository;
 use Illuminate\Support\Str;
 use Artisan;
 

@@ -10,6 +10,7 @@ use App\OtpConfiguration;
 use App\Upload;
 use App\Translation;
 use App\City;
+use App\ProductPrice;
 use App\SellersBrand;
 use App\Utility\TranslationUtility;
 use App\Utility\CategoryUtility;
@@ -349,20 +350,20 @@ if (!function_exists('home_price')) {
 if (!function_exists('home_discounted_price')) {
     function home_discounted_price($id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductPrice::where('product_id', $id)->first();
         $lowest_price = $product->purchase_price;
         $highest_price = $product->purchase_price;
 
-        if ($product->variant_product) {
-            foreach ($product->stocks as $key => $stock) {
-                if ($lowest_price > $stock->price) {
-                    $lowest_price = $stock->price;
-                }
-                if ($highest_price < $stock->price) {
-                    $highest_price = $stock->price;
-                }
-            }
-        }
+        // if ($product->variant_product) {
+        //     foreach ($product->stocks as $key => $stock) {
+        //         if ($lowest_price > $stock->price) {
+        //             $lowest_price = $stock->price;
+        //         }
+        //         if ($highest_price < $stock->price) {
+        //             $highest_price = $stock->price;
+        //         }
+        //     }
+        // }
 
         $flash_deals = \App\FlashDeal::where('status', 1)->get();
         $inFlashDeal = false;

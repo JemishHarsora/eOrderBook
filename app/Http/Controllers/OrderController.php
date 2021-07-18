@@ -24,6 +24,8 @@ use DB;
 use PDF;
 use Mail;
 use App\Mail\InvoiceEmailManager;
+use App\ProductPrice;
+use App\SellersBrand;
 use CoreComponentRepository;
 use Excel;
 
@@ -83,7 +85,7 @@ class OrderController extends Controller
             $orders = $orders->where('orders.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $request->date_filter)[0])))->where('orders.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $request->date_filter)[1])));
             $date_filter = $request->date_filter;
         }
-        $orders = $orders->orderBy('orders.id','desc');
+        $orders = $orders->orderBy('orders.id', 'desc');
         $orders = $orders->paginate(15);
 
         foreach ($orders as $key => $value) {
@@ -103,21 +105,21 @@ class OrderController extends Controller
 
     public function bulk_status_update(Request $request)
     {
-        $order_ids=json_decode($request->order_id);
+        $order_ids = json_decode($request->order_id);
 
-        $order = Order::whereIn('id',$order_ids);
-        if($request->payment_status !=''){
+        $order = Order::whereIn('id', $order_ids);
+        if ($request->payment_status != '') {
             $order->update(['payment_status' => $request->payment_status]);
         }
-        if($request->delivery_status !=''){
+        if ($request->delivery_status != '') {
             $order->update(['delivery_status' => $request->delivery_status]);
         }
 
-        $order = OrderDetail::whereIn('order_id',$order_ids);
-        if($request->payment_status !=''){
+        $order = OrderDetail::whereIn('order_id', $order_ids);
+        if ($request->payment_status != '') {
             $order->update(['payment_status' => $request->payment_status]);
         }
-        if($request->delivery_status !=''){
+        if ($request->delivery_status != '') {
             $order->update(['delivery_status' => $request->delivery_status]);
         }
 
@@ -365,8 +367,9 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $selected_brand = '';
         $seller_id = (Auth::user()->user_type == 'seller') ? Auth::user()->id : Auth::user()->created_by;
 
         $areas = DB::table('routes')
@@ -375,8 +378,20 @@ class OrderController extends Controller
             ->groupBy('routes.area_id')
             ->select('areas.id', 'areas.name')
             ->get();
-        $products = Product::where('user_id', $seller_id)->get();
-        return view('frontend.user.sellerStaff.salesMan.manageOrders.create_order', compact('areas', 'products'));
+        $products = ProductPrice::where('seller_id', $seller_id);
+        if ($request->has('brand')) {
+            $selected_brand = $request->brand;
+            $product_id = Product::where('brand_id', $request->brand)->get()->pluck(['id']);
+            $products = $products->whereIn('product_id', $product_id);
+        }
+        $products = $products->get();
+
+        $brands = SellersBrand::where('seller_id', $seller_id)
+            ->with(['brands'])
+            ->groupBy('brand_id')
+            ->get();
+        // dd($brands);
+        return view('frontend.user.sellerStaff.salesMan.manageOrders.create_order', compact('areas', 'products', 'brands', 'selected_brand'));
     }
 
     public function getUsers(Request $request)
@@ -1048,9 +1063,9 @@ class OrderController extends Controller
     public function getInfoProduct()
     {
         $id = request('id');
-        $product = Product::where('id', $id)->first();
-        // dd($product->id);
-        $product->discounted_price = substr(home_discounted_price($product->id), 2);
+        $product = ProductPrice::where('id', $id)->first();
+
+        $product->discounted_price = substr(home_discounted_price($product->product_id), 2);
         $price = $product->unit_price;
         if ($product->discount_type == 'percent') {
             $price -= ($price * $product->discount) / 100;
