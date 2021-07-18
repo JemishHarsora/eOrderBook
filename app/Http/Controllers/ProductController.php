@@ -8,6 +8,7 @@ use App\ProductTranslation;
 use App\ProductStock;
 use App\Category;
 use App\Language;
+use App\ProductPrice;
 use Auth;
 use App\SubSubCategory;
 use Session;
@@ -152,17 +153,17 @@ class ProductController extends Controller
         $product = new Product;
         $product->name = ucfirst($request->name);
         $product->added_by = $request->added_by;
-        if (Auth::user()->user_type == 'seller') {
-            $product->user_id = Auth::user()->id;
-        } else {
-            $product->user_id = \App\User::where('user_type', 'admin')->first()->id;
-        }
+        // if (Auth::user()->user_type == 'seller') {
+        //     $product->user_id = Auth::user()->id;
+        // } else {
+        //     $product->user_id = \App\User::where('user_type', 'admin')->first()->id;
+        // }
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
-        $product->current_stock = $request->current_stock;
+        // $product->current_stock = $request->current_stock;
         $product->barcode = $request->barcode;
         $product->hsn_code = $request->hsn_code;
-        $product->sku = $request->sku;
+        // $product->sku = $request->sku;
         $product->mfd_by = $request->mfd_by;
         $product->marketed_by = $request->marketed_by;
 
@@ -176,7 +177,7 @@ class ProductController extends Controller
         $product->photos = $request->photos;
         $product->thumbnail_img = $request->thumbnail_img;
         $product->unit = $request->unit;
-        $product->min_qty = $request->min_qty;
+        // $product->min_qty = $request->min_qty;
 
         $tags = array();
         if ($request->tags[0] != null) {
@@ -189,13 +190,6 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->video_provider = $request->video_provider;
         $product->video_link = $request->video_link;
-        $product->unit_price = $request->unit_price;
-        $product->purchase_price = $request->purchase_price;
-        $product->tax = $request->tax;
-        $product->tax_type = $request->tax_type;
-        $product->discount = $request->discount;
-        $product->discount_type = $request->discount_type;
-        $product->shipping_type = $request->shipping_type;
 
         if ($request->has('shipping_type')) {
             if ($request->shipping_type == 'free') {
@@ -264,6 +258,25 @@ class ProductController extends Controller
 
         $product->save();
 
+        $productPrice = new ProductPrice();
+
+        if (Auth::user()->user_type = 'seller') {
+            $productPrice->seller_id  = Auth::user()->id;
+        } else {
+            $productPrice->seller_id = \App\User::where('user_type', 'admin')->first()->id;
+        }
+        $productPrice->product_id = $product->id;
+        $productPrice->sku = $request->sku;
+        $productPrice->min_qty = $request->min_qty;
+        $productPrice->unit_price = $request->unit_price;
+        $productPrice->purchase_price = $request->purchase_price;
+        $productPrice->tax = $request->tax;
+        $productPrice->tax_type = $request->tax_type;
+        $productPrice->discount = $request->discount;
+        $productPrice->discount_type = $request->discount_type;
+        $productPrice->shipping_type = $request->shipping_type;
+        $productPrice->current_stock = $request->current_stock;
+        $productPrice->save();
         //combinations start
         $options = array();
         if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
@@ -307,18 +320,20 @@ class ProductController extends Controller
                 }
 
                 $product_stock->variant = $str;
+                $product_stock->seller_id = Auth::user()->id;
                 $product_stock->price = $request['price_' . str_replace('.', '_', $str)];
                 $product_stock->sku = $request['sku_' . str_replace('.', '_', $str)];
                 $product_stock->qty = $request['qty_' . str_replace('.', '_', $str)];
                 $product_stock->save();
             }
-        } else {
-            $product_stock = new ProductStock;
-            $product_stock->product_id = $product->id;
-            $product_stock->price = $request->unit_price;
-            $product_stock->qty = $request->current_stock;
-            $product_stock->save();
         }
+        //  else {
+        //     $product_stock = new ProductStock;
+        //     $product_stock->product_id = $product->id;
+        //     $product_stock->price = $request->unit_price;
+        //     $product_stock->qty = $request->current_stock;
+        //     $product_stock->save();
+        // }
         //combinations end
 
         $product->save();
@@ -402,13 +417,13 @@ class ProductController extends Controller
     {
         $refund_request_addon       = \App\Addon::where('unique_identifier', 'refund_request')->first();
         $product                    = Product::findOrFail($id);
-        $product->category_id       = $request->category_id;
-        $product->brand_id          = $request->brand_id;
-        $product->current_stock     = $request->current_stock;
+        // $product->category_id       = $request->category_id;
+        // $product->brand_id          = $request->brand_id;
+        // $product->current_stock     = $request->current_stock;
         $product->barcode           = $request->barcode;
         $product->hsn_code           = $request->hsn_code;
 
-        $product->sku = $request->sku;
+        // $product->sku = $request->sku;
         $product->mfd_by = $request->mfd_by;
         $product->marketed_by = $request->marketed_by;
 
@@ -429,7 +444,7 @@ class ProductController extends Controller
 
         $product->photos         = $request->photos;
         $product->thumbnail_img  = $request->thumbnail_img;
-        $product->min_qty        = $request->min_qty;
+        // $product->min_qty        = $request->min_qty;
 
         $tags = array();
         if ($request->tags[0] != null) {
@@ -441,20 +456,20 @@ class ProductController extends Controller
 
         $product->video_provider = $request->video_provider;
         $product->video_link     = $request->video_link;
-        $product->unit_price     = $request->unit_price;
-        $product->purchase_price = $request->purchase_price;
-        $product->tax            = $request->tax;
-        $product->tax_type       = $request->tax_type;
-        $product->discount       = $request->discount;
-        $product->shipping_type  = $request->shipping_type;
-        if ($request->has('shipping_type')) {
-            if ($request->shipping_type == 'free') {
-                $product->shipping_cost = 0;
-            } elseif ($request->shipping_type == 'flat_rate') {
-                $product->shipping_cost = $request->flat_shipping_cost;
-            }
-        }
-        $product->discount_type     = $request->discount_type;
+        // $product->unit_price     = $request->unit_price;
+        // $product->purchase_price = $request->purchase_price;
+        // $product->tax            = $request->tax;
+        // $product->tax_type       = $request->tax_type;
+        // $product->discount       = $request->discount;
+        // $product->shipping_type  = $request->shipping_type;
+        // if ($request->has('shipping_type')) {
+        //     if ($request->shipping_type == 'free') {
+        //         $product->shipping_cost = 0;
+        //     } elseif ($request->shipping_type == 'flat_rate') {
+        //         $product->shipping_cost = $request->flat_shipping_cost;
+        //     }
+        // }
+        // $product->discount_type     = $request->discount_type;
         $product->meta_title        = ucfirst($request->meta_title);
         $product->meta_description  = ucfirst($request->meta_description);
         $product->meta_img          = $request->meta_img;
@@ -524,6 +539,20 @@ class ProductController extends Controller
             }
         }
 
+        $productPrice = ProductPrice::where('product_id', $product->id)->where('seller_id', Auth::user()->id)->first();
+
+        $productPrice->sku = $request->sku;
+        $productPrice->min_qty = $request->min_qty;
+        $productPrice->unit_price = $request->unit_price;
+        $productPrice->purchase_price = $request->purchase_price;
+        $productPrice->tax = $request->tax;
+        $productPrice->tax_type = $request->tax_type;
+        $productPrice->discount = $request->discount;
+        $productPrice->discount_type = $request->discount_type;
+        $productPrice->shipping_type = $request->shipping_type;
+        $productPrice->current_stock = $request->current_stock;
+        $productPrice->save();
+
         $combinations = Combinations::makeCombinations($options);
         if (count($combinations[0]) > 0) {
             $product->variant_product = 1;
@@ -549,18 +578,12 @@ class ProductController extends Controller
                 }
 
                 $product_stock->variant = $str;
+                $product_stock->seller_id = Auth::user()->id;
                 $product_stock->price = $request['price_' . str_replace('.', '_', $str)];
                 $product_stock->sku = $request['sku_' . str_replace('.', '_', $str)];
                 $product_stock->qty = $request['qty_' . str_replace('.', '_', $str)];
-
                 $product_stock->save();
             }
-        } else {
-            $product_stock              = new ProductStock;
-            $product_stock->product_id  = $product->id;
-            $product_stock->price       = $request->unit_price;
-            $product_stock->qty         = $request->current_stock;
-            $product_stock->save();
         }
         $product->save();
 
@@ -587,12 +610,14 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
-        foreach ($product->product_translations as $key => $product_translations) {
-            $product_translations->delete();
-        }
-        if (Product::destroy($id)) {
+        // $product = ProductPrice::findOrFail($id);
+        // foreach ($product->product_translations as $key => $product_translations) {
+        //     $product_translations->delete();
+        // }
 
+        $product = ProductPrice::where('product_id', $id)->where('seller_id', Auth::user()->id)->first();
+        if ($product) {
+            $product->delete();
             flash(translate('Product has been deleted successfully'))->success();
 
             Artisan::call('view:clear');
@@ -657,8 +682,10 @@ class ProductController extends Controller
 
     public function adminDisableProductStatus(Request $request)
     {
-        Product::where('user_id', $request->seller_id)
-            ->where('brand_id', $request->brand_id)
+        $product = Product::where('user_id', $request->seller_id)
+            ->where('brand_id', $request->brand_id)->all()->pluck('id');
+
+        ProductPrice::whereIn('product_id', $product)->where('seller_id', $request->seller_id)
             ->update(['published' => $request->action]);
 
         return back();
@@ -666,7 +693,9 @@ class ProductController extends Controller
 
     public function updatePublished(Request $request)
     {
-        $product = Product::findOrFail($request->id);
+        // $product = ProductPrice::findOrFail($request->id);
+        $product = ProductPrice::where('product_id', $request->id)->where('seller_id', Auth::user()->id)->first();
+
         $product->published = $request->status;
 
         if ($product->added_by == 'seller' && \App\Addon::where('unique_identifier', 'seller_subscription')->first() != null && \App\Addon::where('unique_identifier', 'seller_subscription')->first()->activated) {
@@ -692,7 +721,8 @@ class ProductController extends Controller
 
     public function updateSellerFeatured(Request $request)
     {
-        $product = Product::findOrFail($request->id);
+        // $product = Product::findOrFail($request->id);
+        $product = ProductPrice::where('product_id', $request->id)->where('seller_id', Auth::user()->id)->first();
         $product->seller_featured = $request->status;
         if ($product->save()) {
             return 1;

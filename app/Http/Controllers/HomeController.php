@@ -27,6 +27,7 @@ use App\Http\Controllers\SearchController;
 use ImageOptimizer;
 use Illuminate\Support\Str;
 use App\Mail\SecondEmailVerifyMailManager;
+use App\ProductPrice;
 use App\Route;
 use App\SellersBrand;
 use Mail;
@@ -36,6 +37,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cookie;
+
 class HomeController extends Controller
 {
     public function login()
@@ -344,21 +346,20 @@ class HomeController extends Controller
     public function product(Request $request, $slug)
     {
         $isblock = '';
-        $sellersData=[];
+        $sellersData = [];
         $detailedProduct  = Product::where('slug', $slug)->first();
-        $ProductSeller = Product::where('barcode', $detailedProduct->barcode)->where('id','!=', $detailedProduct->id)->get();
+        $ProductSeller = Product::where('barcode', $detailedProduct->barcode)->where('id', '!=', $detailedProduct->id)->get();
 
         if (isset(Auth::user()->id)) {
             $isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $detailedProduct->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $detailedProduct->user_id]])->first();
-            foreach($ProductSeller as $sellers){
+            foreach ($ProductSeller as $sellers) {
                 $sellers->isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $sellers->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $sellers->user_id]])->first();
-                array_push($sellersData,$sellers);
+                array_push($sellersData, $sellers);
             }
-        }
-        else{
-            foreach($ProductSeller as $sellers){
+        } else {
+            foreach ($ProductSeller as $sellers) {
                 $sellers->isblock = false;
-                array_push($sellersData,$sellers);
+                array_push($sellersData, $sellers);
             }
         }
 
@@ -369,9 +370,9 @@ class HomeController extends Controller
                 Cookie::queue('referred_product_id', $detailedProduct->id, 43200);
             }
             if ($detailedProduct->digital == 1) {
-                return view('frontend.digital_product_details', compact('detailedProduct', 'isblock','sellersData'));
+                return view('frontend.digital_product_details', compact('detailedProduct', 'isblock', 'sellersData'));
             } else {
-                return view('frontend.product_details', compact('detailedProduct', 'isblock','sellersData'));
+                return view('frontend.product_details', compact('detailedProduct', 'isblock', 'sellersData'));
             }
             // return view('frontend.product_details', compact('detailedProduct'));
         }
@@ -453,34 +454,42 @@ class HomeController extends Controller
 
     public function show_product_edit_form(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductPrice::where('product_id', $id)->where('seller_id', Auth::user()->id)->with(['product'])->first();
+        // $product = Product::findOrFail($id);
         $lang = $request->lang;
-        $business_category = explode(',', Auth::user()->business_category);
-        $getbrands = SellersBrand::where('seller_id', Auth::user()->id)
-            ->groupBy('brand_id')
-            ->get(["brand_id"]);
+        // $business_category = explode(',', Auth::user()->business_category);
+        // $getbrands = SellersBrand::where('seller_id', Auth::user()->id)
+        //     ->groupBy('brand_id')
+        //     ->get(["brand_id"]);
         // dd($getbrands[0]->id);
-        $brand_id = '';
-        foreach ($getbrands as $key => $value) {
-            $brand_id .= $value['brand_id'] . ",";
-        }
-        $brand_id = explode(',', rtrim($brand_id, ','));
-        $brands = Brand::whereIn('id', $brand_id)->get();
+        // $brand_id = '';
+        // foreach ($getbrands as $key => $value) {
+        //     $brand_id .= $value['brand_id'] . ",";
+        // }
+        // $brand_id = explode(',', rtrim($brand_id, ','));
+        $brand = Brand::where('id', $product->product->brand_id)->first();
+        $category = Category::where('id', $product->product->category_id)->first();
+        $tags = json_decode($product->product->tags);
+        // $category = Category::where('parent_id', 0)
+        //     ->where('digital', 0)
+        //     ->whereIn('id', $business_category)
+        //     ->with('childrenCategories')
+        //     ->get();
 
-        $tags = json_decode($product->tags);
-        $categories = Category::where('parent_id', 0)
-            ->where('digital', 0)
-            ->whereIn('id', $business_category)
-            ->with('childrenCategories')
-            ->get();
-
-        return view('frontend.user.seller.product_edit', compact('product', 'categories', 'tags', 'brands', 'lang'));
+        return view('frontend.user.seller.product_edit', compact('product', 'category', 'tags', 'brand', 'lang'));
     }
 
     public function seller_product_list(Request $request)
     {
         $search = null;
-        $products = Product::where('user_id', Auth::user()->id)->where('digital', 0)->orderBy('created_at', 'desc');
+
+
+        $products = ProductPrice::where('seller_id', Auth::user()->id)->with(['product.category', 'product' => function ($q) {
+            $q->where('products.digital', 0);
+        }]);
+
+        $products = $products->orderBy('created_at', 'desc');
+
         if ($request->has('search')) {
             $search = $request->search;
             $products = $products->where('name', 'like', '%' . $search . '%');
@@ -494,10 +503,9 @@ class HomeController extends Controller
         $area_seller = getAreaWiseBrand();
         $keywords = array();
         if ($area_seller['seller_ids'] != null) {
-            if($area_seller['seller_ids']['0'] != null){
+            if ($area_seller['seller_ids']['0'] != null) {
                 $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids)->get();
-            }else
-            {
+            } else {
                 $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->where('id', $area_seller['seller_ids']['0'])->get();
             }
         } else {
@@ -520,11 +528,10 @@ class HomeController extends Controller
 
         $shops = Shop::whereIn('user_id', verified_sellers_id())->where('name', 'like', '%' . $request->search . '%')->get()->take(3);
         if ($area_seller['seller_ids'] != null) {
-            if($area_seller['seller_ids']['0'] != null){
+            if ($area_seller['seller_ids']['0'] != null) {
                 $products = filter_products(Product::where('published', 1)->where('name', 'like', '%' . $request->search . '%')->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids))->get()->take(3);
                 $shops = Shop::whereIn('user_id', $area_seller->seller_ids)->where('name', 'like', '%' . $request->search . '%')->get()->take(3);
-            }else
-            {
+            } else {
                 $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->where('id', $area_seller['seller_ids']['0'])->get()->take(3);
                 $shops = Shop::where('user_id', $area_seller['seller_ids']['0'])->where('name', 'like', '%' . $request->search . '%')->get()->take(3);
             }
@@ -584,10 +591,9 @@ class HomeController extends Controller
             $conditions = array_merge($conditions, ['user_id' => Seller::findOrFail($seller_id)->user->id]);
         }
         if ($seller_id == null && $request->brand == null && $area_seller['seller_ids'] != null) {
-            if($area_seller['seller_ids']['0']!= null){
+            if ($area_seller['seller_ids']['0'] != null) {
                 $products = Product::where($conditions)->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids);
-            }
-            else{
+            } else {
                 $products = Product::where($conditions)->where('id', $area_seller['seller_ids']['0']);
             }
         } else {
@@ -600,9 +606,9 @@ class HomeController extends Controller
 
             $products = $products->whereIn('category_id', $category_ids);
             if ($area_seller['seller_ids'] != null) {
-                if($area_seller['seller_ids']['0'] != null){
-                $products = $products->whereIn('category_id', $category_ids)->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids);
-                }else{
+                if ($area_seller['seller_ids']['0'] != null) {
+                    $products = $products->whereIn('category_id', $category_ids)->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids);
+                } else {
                     $products = $products->whereIn('category_id', $category_ids)->where('id', $area_seller['seller_ids']['0']);
                 }
             }
@@ -775,7 +781,6 @@ class HomeController extends Controller
                 }
             }
         }
-
 
 
         if ($str != null && $product->variant_product) {
