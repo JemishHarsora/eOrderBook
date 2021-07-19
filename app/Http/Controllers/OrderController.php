@@ -378,7 +378,7 @@ class OrderController extends Controller
             ->groupBy('routes.area_id')
             ->select('areas.id', 'areas.name')
             ->get();
-        $products = ProductPrice::where('seller_id', $seller_id);
+        $products = ProductPrice::where('seller_id', $seller_id)->where('published', 1);
         if ($request->has('brand')) {
             $selected_brand = $request->brand;
             $product_id = Product::where('brand_id', $request->brand)->get()->pluck(['id']);
@@ -396,7 +396,7 @@ class OrderController extends Controller
 
     public function getUsers(Request $request)
     {
-        $data['users'] = User::where("area", $request->area_id)->where("user_type", "customer")->get(["name", "id"]);
+        $data['users'] = User::where("area", $request->area_id)->where("user_type", "customer")->where('banned', 0)->get(["name", "id"]);
         return response()->json($data);
     }
 
@@ -785,7 +785,7 @@ class OrderController extends Controller
         foreach ($addIds as $key => $id) {
             //where exits id and qty > 0
             if ($id && $add_qty[$key]) {
-                $product = Product::find($id);
+                $product = ProductPrice::find($id);
                 if (!$product) {
                     return response()->json(['error' => 1, 'msg' => trans('admin.data_not_found_detail', ['msg' => '#' . $id]), 'detail' => '']);
                 }
@@ -809,8 +809,8 @@ class OrderController extends Controller
 
                 $order_detail = new OrderDetail;
                 $order_detail->order_id  = $orderId;
-                $order_detail->seller_id = $product->user_id;
-                $order_detail->product_id = $product->id;
+                $order_detail->seller_id = $product->seller_id;
+                $order_detail->product_id = $product->product_id;
                 $order_detail->variation = '';
                 $order_detail->price = $price * $add_qty[$key];
                 $order_detail->tax = $tax * $add_qty[$key];

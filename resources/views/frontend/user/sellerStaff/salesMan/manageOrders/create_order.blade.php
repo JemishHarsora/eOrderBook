@@ -77,7 +77,8 @@
                                             <tr>
                                                 <th>{{ translate('Product') }}</th>
                                                 {{-- <th>{{ translate('sku') }}</th> --}}
-                                                <th>{{ translate('MRP') }}</th>
+                                                <th>{{ translate('Price') }}</th>
+                                                <th>{{ translate('Available Qty') }}</th>
                                                 <th>{{ translate('Quantity') }}</th>
                                                 {{-- <th>{{ translate('Tax') }}</th> --}}
                                                 <th>{{ translate('Total Price') }}</th>
@@ -135,8 +136,9 @@ $htmlSelectProduct .= '
               <span class="add_attr"></span>
             </td>
 
-              <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_price form-control" name="add_price[]" value="0" ></td>
-              <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_qty form-control" name="add_qty[]" value="0"></td>
+              <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_price form-control" style="width: 70px!important" name="add_price[]" value="0" ></td>
+              <td style="width: 10%"><p class="available_qty mb-0 mt-2">0</p></td>
+              <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_qty form-control" name="add_qty[]" style="width: 70px!important" value="0"></td>
               <td style="width: 10%"><input type="text" readonly name="add_total[]" class="w-auto add_total form-control" value="0"></td>
               <td style="width: 10%"><button onClick="$(this).parent().parent().remove();" class="w-auto btn btn-soft-danger btn-icon btn-circle btn-sm" data-title="Delete"><i class="las la-trash" aria-hidden="true"></i></button></td>
             </tr>
@@ -203,7 +205,10 @@ $htmlSelectProduct = str_replace("'", '"', $htmlSelectProduct);
                 node.find('.add_sku').val('');
                 node.find('.add_qty').eq(0).val('');
                 node.find('.add_price').eq(0).val('');
-                node.find('.add_attr').html('');
+                node.find('.available_qty').eq(0).html('');
+                node.find('.add_total').eq(0).val('');
+
+
                 // node.find('.add_tax').eq(0).val('');
 
             } else {
@@ -222,8 +227,9 @@ $htmlSelectProduct = str_replace("'", '"', $htmlSelectProduct);
                     success: function(returnedData) {
                         node.find('.add_sku').val(returnedData.sku);
                         node.find('.add_qty').eq(0).val(1);
-                        node.find('.add_price').eq(0).val(returnedData.unit_price);
+                        node.find('.add_price').eq(0).val(returnedData.purchase_price);
                         node.find('.add_total').eq(0).val(returnedData.discounted_price);
+                        node.find('.available_qty').eq(0).html(returnedData.current_stock);
                         // node.find('.add_attr').eq(0).html(returnedData.renderAttDetails);
                         // node.find('.add_tax').eq(0).val(returnedData.taxs);
 
