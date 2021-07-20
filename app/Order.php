@@ -30,4 +30,8 @@ class Order extends Model
     {
         return $this->hasOne(Area::class, 'id', 'area_id');
     }
+    public function seller()
+    {
+        return $this->hasOne(User::class, 'id', 'seller_id');
+    }
 }

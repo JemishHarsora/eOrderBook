@@ -136,7 +136,7 @@ $htmlSelectProduct .= '
               <span class="add_attr"></span>
             </td>
 
-              <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_price form-control" style="width: 70px!important" name="add_price[]" value="0" ></td>
+              <td style="width: 10%"><input onChange="update_total($(this));" type="text" min="0" class="w-auto add_price form-control" style="width: 70px!important" name="add_price[]" value="0" ></td>
               <td style="width: 10%"><p class="available_qty mb-0 mt-2">0</p></td>
               <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_qty form-control" name="add_qty[]" style="width: 70px!important" value="0"></td>
               <td style="width: 10%"><input type="text" readonly name="add_total[]" class="w-auto add_total form-control" value="0"></td>
@@ -227,7 +227,7 @@ $htmlSelectProduct = str_replace("'", '"', $htmlSelectProduct);
                     success: function(returnedData) {
                         node.find('.add_sku').val(returnedData.sku);
                         node.find('.add_qty').eq(0).val(1);
-                        node.find('.add_price').eq(0).val(returnedData.purchase_price);
+                        node.find('.add_price').eq(0).val(returnedData.discounted_price);
                         node.find('.add_total').eq(0).val(returnedData.discounted_price);
                         node.find('.available_qty').eq(0).html(returnedData.current_stock);
                         // node.find('.add_attr').eq(0).html(returnedData.renderAttDetails);

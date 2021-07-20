@@ -740,6 +740,17 @@ class OrderController extends Controller
             $seller_id = Auth::user()->id;
         }
 
+        $addIds = request('add_id');
+        $add_qty = request('add_qty');
+        foreach ($addIds as $key => $id) {
+            $product = ProductPrice::find($id);
+            if ($product->current_stock <= intval($add_qty[$key])) {
+                flash(translate($product->sku . ' not more Qty available'))->error();
+                return back();
+                // return response()->json(['error' => 1, 'msg' => trans('admin.data_not_found_detail', ['msg' => '#' . $id]), 'detail' => '']);
+            }
+        }
+
         $user = User::find($request->user_id);
         $order = new Order;
         $address_data['name'] = $user->name;
@@ -818,7 +829,8 @@ class OrderController extends Controller
                 $order_detail->shipping_cost = 0;
                 $order_detail->quantity = $add_qty[$key];
                 $order_detail->save();
-                $product->num_of_sale++;
+                $product->num_of_sale = $product->num_of_sale->$add_qty[$key];
+                $product->current_stock = $product->current_stock - $add_qty[$key];
                 $product->save();
             }
             $Order->grand_total = $Order->grand_total + $subtotal + $shipping;;
@@ -831,6 +843,7 @@ class OrderController extends Controller
 
         try {
 
+            Mail::to($Order->seller->email)->queue(new InvoiceEmailManager($array));
             Mail::to(\App\User::find($request->user_id)->email)->queue(new InvoiceEmailManager($array));
         } catch (\Exception $e) {
             dd('catch');
