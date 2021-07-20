@@ -53,7 +53,7 @@
                                     <label class="col-md-3 col-from-label">{{ translate('Area') }}</label>
                                     <div class="col-md-8">
                                         <select class="form-control aiz-selectpicker" name="area_id" id="area_id"
-                                            data-live-search="true" required>
+                                            data-live-search="true" value='{{ old('area_id') }}' required>
                                             <option value="">Select Area</option>
                                             @foreach ($areas as $area)
                                                 <option value="{{ $area->id }}">{{ $area->name }}</option>
@@ -119,9 +119,9 @@ $htmlSelectProduct =
     '<tr>
 
               <td style="width: 20%">
-                <select onChange="selectProduct($(this));" name="add_id[]" class="add_id form-control aiz-selectpicker" data-live-search="true">
+                <select onChange="selectProduct($(this));" name="add_id[]" class="add_id form-control aiz-selectpicker" data-live-search="true" required>
 
-                <option value="0">' .
+                <option value="">' .
     translate('select product') .
     '</option>';
 if (count($products)) {

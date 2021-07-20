@@ -746,7 +746,7 @@ class OrderController extends Controller
             $product = ProductPrice::find($id);
             if ($product->current_stock <= intval($add_qty[$key])) {
                 flash(translate($product->sku . ' not more Qty available'))->error();
-                return back();
+                return back()->withInput($request->all());
                 // return response()->json(['error' => 1, 'msg' => trans('admin.data_not_found_detail', ['msg' => '#' . $id]), 'detail' => '']);
             }
         }
