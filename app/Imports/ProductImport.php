@@ -71,7 +71,7 @@ class ProductImport implements ToCollection
                     $product->save();
 
                     $productPrice = new ProductPrice();
-
+                    $productPrice->added_by = Auth::user()->user_type == 'seller' ? 'seller' : 'admin';
                     $productPrice->seller_id = $seller_id;
                     $productPrice->sku = $importData[7];
                     $productPrice->min_qty = $importData[12];
@@ -97,6 +97,7 @@ class ProductImport implements ToCollection
                     $product = ProductPrice::where('seller_id', $seller_id)->where('product_id', $products->id)->first();
                     if (!$product) {
                         $productPrice = new ProductPrice();
+                        $productPrice->added_by = Auth::user()->user_type == 'seller' ? 'seller' : 'admin';
                         $productPrice->seller_id = $seller_id;
                         $productPrice->sku = $importData[7];
                         $productPrice->min_qty = $importData[12];

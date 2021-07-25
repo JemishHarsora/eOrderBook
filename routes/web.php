@@ -291,6 +291,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/product_stock/index', 'ProductStockUpdateController@index')->name('product_stock.index');
     Route::post('/product-stock-update', 'ProductStockUpdateController@stock_update')->name('product_stock_update');
 
+    //Product detail update
+    Route::get('/product_detail/index', 'ProductStockUpdateController@detailView')->name('product_detail.index');
+    Route::post('/product-detail-update', 'ProductStockUpdateController@detail_update')->name('product_detail_update');
+
     Route::get('/product-csv-download/{type}', 'ProductBulkUploadController@import_product')->name('product_csv.download');
     Route::get('/vendor-product-csv-download/{id}', 'ProductBulkUploadController@import_vendor_product')->name('import_vendor_product.download');
     Route::group(['prefix' => 'bulk-upload/download'], function () {

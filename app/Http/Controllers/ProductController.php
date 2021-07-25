@@ -158,7 +158,7 @@ class ProductController extends Controller
             $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')->first();
             $product = new Product;
             $product->name = ucfirst($request->name);
-            $product->added_by = $request->added_by;
+
             // if (Auth::user()->user_type == 'seller') {
             //     $product->user_id = Auth::user()->id;
             // } else {
@@ -337,6 +337,7 @@ class ProductController extends Controller
 
         $productPrice = new ProductPrice();
         $productPrice->seller_id = $seller_id;
+        $productPrice->added_by = $request->added_by;
         $productPrice->product_id = $product_id;
         $productPrice->sku = $request->sku;
         $productPrice->min_qty = $request->min_qty;

@@ -22,8 +22,7 @@
             <div class="">
                 <a href="{{ static_asset('download/product_stock_update_sku_demo.xlsx') }}" download><button
                         class="btn btn-info">{{ translate('Download SKU Demo CSV') }}</button></a>
-                <a href="{{ static_asset('download/product_stock_update_demo.xlsx') }}" download><button
-                        class="btn btn-info">{{ translate('Download Barcode Demo CSV') }}</button></a>
+
             </div>
 
         </div>

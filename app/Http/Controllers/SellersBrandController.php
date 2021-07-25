@@ -85,6 +85,7 @@ class SellersBrandController extends Controller
             $price = ProductPrice::where('product_id', $product->id)->first();
             $productPrice = new ProductPrice();
             $productPrice->seller_id = Auth::user()->id;
+            $productPrice->added_by = Auth::user()->user_type == 'seller' ? 'seller' : 'admin';
             $productPrice->product_id = $product->id;
             $productPrice->sku = $price->sku;
             $productPrice->min_qty = 1;

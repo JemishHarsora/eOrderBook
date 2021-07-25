@@ -213,8 +213,8 @@ if (!function_exists('filter_products')) {
         $verified_sellers = verified_sellers_id();
         if (BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1) {
             return $products->where('published', '1')->orderBy('created_at', 'desc')->where(function ($p) use ($verified_sellers) {
-                $p->where('added_by', 'admin')->orWhere(function ($q) use ($verified_sellers) {
-                    $q->whereIn('user_id', $verified_sellers);
+                $p->where('added_by', 'seller')->orWhere(function ($q) use ($verified_sellers) {
+                    $q->whereIn('seller_id', $verified_sellers);
                 });
             });
         } else {
@@ -227,27 +227,30 @@ if (!function_exists('filter_products')) {
 if (!function_exists('get_cached_products')) {
     function get_cached_products($category_id = null)
     {
-        $products = \App\Product::where('published', 1);
+        $products = ProductPrice::with(['product'])->where('published', 1)->groupBy('product_id');
+        
         $verified_sellers = verified_sellers_id();
         if (BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1) {
             $products =  $products->where(function ($p) use ($verified_sellers) {
-                $p->where('added_by', 'admin')->orWhere(function ($q) use ($verified_sellers) {
-                    $q->whereIn('user_id', $verified_sellers);
+                $p->where('added_by', 'seller')->orWhere(function ($q) use ($verified_sellers) {
+                    $q->whereIn('seller_id', $verified_sellers);
                 });
             });
         } else {
             $products = $products->where('added_by', 'admin');
         }
-
+        
         if ($category_id != null) {
-            return Cache::remember('products-category-' . $category_id, 86400, function () use ($category_id, $products) {
+           
                 $category_ids = CategoryUtility::children_ids($category_id);
                 $category_ids[] = $category_id;
-                return $products->whereIn('category_id', $category_ids)->latest()->take(12)->get();
-            });
+                return $products->whereHas('product', function($query) use($category_ids) {
+                    $query->whereIn('category_id', $category_ids);
+                })->latest()->take(12)->get();
+                      
         } else {
-            return Cache::remember('products', 86400, function () use ($products) {
-                return $products->latest()->get();
+            return Cache::remember('product_prices', 86400, function () use ($products) {
+                return $products->latest()->take(12)->get();
             });
         }
     }
@@ -312,7 +315,7 @@ if (!function_exists('single_price')) {
 if (!function_exists('home_price')) {
     function home_price($id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductPrice::findOrFail($id);
         $lowest_price = $product->unit_price;
         $highest_price = $product->unit_price;
 
@@ -415,7 +418,7 @@ if (!function_exists('home_discounted_price')) {
 if (!function_exists('home_base_price')) {
     function home_base_price($id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductPrice::findOrFail($id);
         $price = $product->unit_price;
         if ($product->tax_type == 'percent') {
             $price += ($price * $product->tax) / 100;
@@ -430,7 +433,7 @@ if (!function_exists('home_base_price')) {
 if (!function_exists('home_discounted_base_price')) {
     function home_discounted_base_price($id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductPrice::findOrFail($id);
         $price = $product->purchase_price;
 
         $flash_deals = \App\FlashDeal::where('status', 1)->get();
@@ -503,7 +506,7 @@ if (!function_exists('renderStarRating')) {
 if (!function_exists('homeBasePrice')) {
     function homeBasePrice($id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductPrice::findOrFail($id);
         $price = $product->unit_price;
         if ($product->tax_type == 'percent') {
             $price += ($price * $product->tax) / 100;
@@ -517,7 +520,7 @@ if (!function_exists('homeBasePrice')) {
 if (!function_exists('homeDiscountedBasePrice')) {
     function homeDiscountedBasePrice($id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductPrice::findOrFail($id);
         $price = $product->unit_price;
 
         $flash_deals = FlashDeal::where('status', 1)->get();
@@ -555,7 +558,7 @@ if (!function_exists('homeDiscountedBasePrice')) {
 if (!function_exists('homePrice')) {
     function homePrice($id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductPrice::findOrFail($id);
         $lowest_price = $product->unit_price;
         $highest_price = $product->unit_price;
 
@@ -588,7 +591,7 @@ if (!function_exists('homePrice')) {
 if (!function_exists('homeDiscountedPrice')) {
     function homeDiscountedPrice($id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductPrice::findOrFail($id);
         $lowest_price = $product->unit_price;
         $highest_price = $product->unit_price;
 

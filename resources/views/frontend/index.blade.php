@@ -11,18 +11,36 @@
 
                 @php
                     $area_seller = getAreaWiseBrand();
+                    $num_todays_deal = count(filter_products(\App\ProductPrice::with(['product'])->whereHas('product', function($query) {
+                            $query->where('todays_deal', 1);
+                        })->where('published', 1)->groupBy('product_id'))->get());
+                    $todays_deal_product = filter_products(\App\ProductPrice::with(['product'])->whereHas('product', function($query) {
+                            $query->where('todays_deal', 1);
+                        })->where('published', 1)->groupBy('product_id'))->get();
 
-                    $num_todays_deal = count(filter_products(\App\Product::where('published', 1)->where('todays_deal', 1 ))->get());
-                    $todays_deal_product = filter_products(\App\Product::where('published', 1)->where('todays_deal', 1 ))->get();
                     $featured_categories = \App\Category::where('featured', 1)->get();
                     if($area_seller['seller_ids'] !=''){
                         if($area_seller['seller_ids']['0'] != null){
-                            $num_todays_deal = count(filter_products(\App\Product::where('published', 1)->where('todays_deal', 1 )->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids))->get());
-                            $todays_deal_product = filter_products(\App\Product::where('published', 1)->where('todays_deal', 1 )->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids))->get();
-                        }else
+                            $num_todays_deal = count(filter_products(\App\ProductPrice::with(['product' => function($query) use($area_seller){
+                                $query->whereIn('brand_id', $area_seller->brand_ids);
+                                $query->where('todays_deal', 1);
+                            }])->where('published', 1)->whereIn('seller_id', $area_seller->seller_ids)->groupBy('product_id'))->get());
+
+                            $todays_deal_product = filter_products(\App\ProductPrice::with(['product' => function($query) use($area_seller){
+                                $query->whereIn('brand_id', $area_seller->brand_ids);
+                                $query->where('todays_deal', 1);
+                            }])->where('published', 1)->whereIn('seller_id', $area_seller->seller_ids)->groupBy('product_id'))->get();
+                        }
+                        else
                         {
-                            $num_todays_deal = count(filter_products(\App\Product::where('published', 1)->where('todays_deal', 1 )->where('user_id', $area_seller['seller_ids']['0'])->where('brand_id', $area_seller['brand_ids']['0']))->get());
-                            $todays_deal_product = filter_products(\App\Product::where('published', 1)->where('todays_deal', 1 )->where('user_id', $area_seller['seller_ids']['0'])->where('brand_id', $area_seller['brand_ids']['0']))->get();
+                            $num_todays_deal = count(filter_products(\App\ProductPrice::with(['product' => function($query) use($area_seller){
+                            $query->where('todays_deal', 1);
+                            $query->where('brand_id', $area_seller['brand_ids']);
+                        }])->where('published', 1)->where('todays_deal', 1 )->where('seller_id', $area_seller['seller_ids'])->groupBy('product_id'))->get());
+                            $todays_deal_product = filter_products(\App\ProductPrice::with(['product' => function($query) use($area_seller){
+                            $query->where('todays_deal', 1);
+                            $query->where('brand_id', $area_seller['brand_ids']);
+                        }])->where('published', 1)->where('todays_deal', 1 )->where('seller_id', $area_seller['seller_ids'])->groupBy('product_id'))->get();
                         }
                     }
                     // dd($todays_deal_product);
@@ -85,17 +103,17 @@
                         <div class="c-scrollbar-light overflow-auto h-lg-400px p-2 bg-primary rounded-bottom">
                             <div class="gutters-5 lg-no-gutters row row-cols-2 row-cols-lg-1">
                             @foreach ($todays_deal_product as $key => $product)
-                                @if ($product != null)
+                                @if ($product->product != null)
                                 <div class="col mb-2">
-                                    <a href="{{ route('product', $product->slug) }}" class="d-block p-2 text-reset bg-white h-100 rounded">
+                                    <a href="{{ route('product', $product->product->slug) }}" class="d-block p-2 text-reset bg-white h-100 rounded">
                                         <div class="row gutters-5 align-items-center">
                                             <div class="col-lg">
                                                 <div class="img">
                                                     <img
                                                         class="lazyload img-fit h-140px h-lg-80px"
                                                         src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                        data-src="{{ uploaded_asset($product->thumbnail_img) }}"
-                                                        alt="{{ $product->getTranslation('name') }}"
+                                                        data-src="{{ uploaded_asset($product->product->thumbnail_img) }}"
+                                                        alt="{{ $product->product->getTranslation('name') }}"
                                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                                     >
                                                 </div>

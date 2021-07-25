@@ -7,29 +7,30 @@
                 </h3>
             </div>
             <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='true'>
-                @php
+            @php
                 $area_seller = getAreaWiseBrand();
-
-                $products= filter_products(\App\Product::where('published', 1)->where('featured', '1'))->limit(12)->get();
+                $products= filter_products(\App\ProductPrice::with(['product'])->where('published', 1)->where('seller_featured', '1')->groupBy('product_id'))->limit(12)->get();
                 if($area_seller['seller_ids'] != null){
                     if($area_seller['seller_ids']['0'] != null){
-                        $products= filter_products(\App\Product::where('published', 1)->where('featured', '1')->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids))->limit(12)->get();
+                        $products= filter_products(\App\ProductPrice::with(['product' => function($query) use($area_seller){
+                            $query->whereIn('brand_id', $area_seller->brand_ids);
+                        }])->where('published', 1)->whereIn('seller_id', $area_seller->seller_ids)->where('seller_featured', '1')->groupBy('product_id'))->limit(12)->get();
                     }else{
-                        $products= filter_products(\App\Product::where('published', 1)->where('featured', '1')->where('user_id', $area_seller['seller_ids']))->limit(12)->get();
+                        $products= filter_products(\App\ProductPrice::with(['product'])->where('published', 1)->where('seller_featured', '1')->where('seller_id', $area_seller['seller_ids'])->groupBy('product_id'))->limit(12)->get();
                     }
                 }
-                @endphp
+            @endphp
                 @foreach ($products as $key => $product)
 
                 <div class="carousel-box">
                     <div class="aiz-card-box border border-light rounded hov-shadow-md my-2 has-transition">
                         <div class="position-relative">
-                            <a href="{{ route('product', $product->slug) }}" class="d-block">
+                            <a href="{{ route('product', $product->product->slug) }}" class="d-block">
                                 <img
                                     class="img-fit lazyload mx-auto h-140px h-md-210px"
                                     src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                    data-src="{{ uploaded_asset($product->thumbnail_img) }}"
-                                    alt="{{  $product->getTranslation('name')  }}"
+                                    data-src="{{ uploaded_asset($product->product->thumbnail_img) }}"
+                                    alt="{{  $product->product->getTranslation('name')  }}"
                                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                 >
                             </a>
@@ -53,16 +54,16 @@
                                 <span class="fw-700 text-primary">{{ home_discounted_base_price($product->id) }}</span>
                             </div>
                             <div class="rating rating-sm mt-1">
-                                {{ renderStarRating($product->rating) }}
+                                {{ renderStarRating($product->product->rating) }}
                             </div>
                             <h3 class="fw-600 fs-13 text-truncate-2 lh-1-4 mb-0 h-35px">
-                                <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{  $product->getTranslation('name')  }}</a>
+                                <a href="{{ route('product', $product->product->slug) }}" class="d-block text-reset">{{  $product->product->getTranslation('name')  }}</a>
                             </h3>
 
                             @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated)
                                 <div class="rounded px-2 mt-2 bg-soft-primary border-soft-primary border">
                                     {{ translate('Club Point') }}:
-                                    <span class="fw-700 float-right">{{ $product->earn_point }}</span>
+                                    <span class="fw-700 float-right">{{ $product->product->earn_point }}</span>
                                 </div>
                             @endif
                         </div>
