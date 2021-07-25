@@ -22,7 +22,8 @@
                         </div>
                     </div>
 
-                    <form class="" action="{{ route('myBrands.store') }}" method="POST" enctype="multipart/form-data" id="choice_form">
+                    <form class="" action="{{ route('myBrands.store') }}" method="POST" enctype="multipart/form-data"
+                        id="choice_form">
                         @csrf
                         <input type="hidden" name="created_by" value={{ Auth::user()->id }}>
                         <div class="card">
@@ -34,7 +35,8 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{ translate('Brand') }}</label>
                                     <div class="col-md-8">
-                                        <select class="form-control aiz-selectpicker" name="brand_id" data-live-search="true" required>
+                                        <select class="form-control aiz-selectpicker" name="brand_id"
+                                            data-live-search="true" required>
                                             <option value="">Select Brand</option>
                                             @foreach ($brands as $brand)
                                                 <option value="{{ $brand->id }}">{{ $brand->name }}</option>
@@ -46,7 +48,8 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{ translate('City') }}</label>
                                     <div class="col-md-8">
-                                        <select class="form-control aiz-selectpicker" name="city_id" id="city_id" data-live-search="true" required>
+                                        <select class="form-control aiz-selectpicker" name="city_id" id="city_id"
+                                            data-live-search="true" required>
                                             <option value="">Select City</option>
                                             @foreach ($cities as $city)
                                                 <option value="{{ $city->id }}" @if (Auth::user()->city == $city->id) selected @endif>{{ $city->name }}</option>
@@ -58,8 +61,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{ translate('Area') }}</label>
                                     <div class="col-md-8">
-                                        <select class="form-control aiz-selectpicker" name="area_id[]" id="area_id" multiple data-live-search="true" required>
-
+                                        <select class="form-control" name="area_id[]" id="area_id" multiple required>
                                             @foreach ($areas as $area)
                                                 <option value="{{ $area->id }}">{{ $area->name }}</option>
                                             @endforeach
@@ -69,7 +71,8 @@
                             </div>
                         </div>
                         <div class="mar-all text-right">
-                            <button type="submit" name="button" class="btn btn-primary">{{ translate('Save Brand') }}</button>
+                            <button type="submit" name="button"
+                                class="btn btn-primary">{{ translate('Save Brand') }}</button>
                         </div>
 
                     </form>
@@ -77,7 +80,8 @@
             </div>
         </div>
     </section>
-    <div class="modal fade" id="addBrand" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="addBrand" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -91,13 +95,16 @@
                         @csrf
                         <div class="form-group mb-3">
                             <label for="name">{{ translate('Name') }}</label>
-                            <input type="text" placeholder="{{ translate('Name') }}" name="name" class="form-control text-capitalize" required>
+                            <input type="text" placeholder="{{ translate('Name') }}" name="name"
+                                class="form-control text-capitalize" required>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="name">{{ translate('Logo') }} <small>({{ translate('120x80') }})</small></label>
+                            <label for="name">{{ translate('Logo') }}
+                                <small>({{ translate('120x80') }})</small></label>
                             <div class="input-group" data-toggle="aizuploader" data-type="image">
                                 <div class="input-group-prepend">
-                                    <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse') }}</div>
+                                    <div class="input-group-text bg-soft-secondary font-weight-medium">
+                                        {{ translate('Browse') }}</div>
                                 </div>
                                 <div class="form-control file-amount">{{ translate('Choose File') }}</div>
                                 <input type="hidden" name="logo" class="selected-files">
@@ -107,7 +114,8 @@
                         </div>
                         <div class="form-group mb-3">
                             <label for="name">{{ translate('Meta Title') }}</label>
-                            <input type="text" class="form-control text-capitalize" name="meta_title" placeholder="{{ translate('Meta Title') }}">
+                            <input type="text" class="form-control text-capitalize" name="meta_title"
+                                placeholder="{{ translate('Meta Title') }}">
                         </div>
                         <div class="form-group mb-3">
                             <label for="name">{{ translate('Meta Description') }}</label>
@@ -124,8 +132,16 @@
 @endsection
 
 @section('script')
+    <script src="{{ static_asset('assets/js/jquery.multiselect.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+
+            $('#area_id').multiselect({
+                columns: 2,
+                search: true,
+                selectAll: true
+            });
+
             $('#city_id').on('change', function() {
                 var city_id = this.value;
                 $("#area_id").html('');
@@ -139,7 +155,8 @@
                     dataType: 'json',
                     success: function(result) {
                         $.each(result.states, function(key, value) {
-                            $("#area_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                            $("#area_id").append('<option value="' + value.id + '">' +
+                                value.name + '</option>');
                         });
                     }
                 });

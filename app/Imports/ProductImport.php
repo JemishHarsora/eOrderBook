@@ -35,6 +35,11 @@ class ProductImport implements ToCollection
         foreach ($collection as $key => $importData) {
             if ($key != 0 && $importData[0] != null) {
                 $products = Product::where('barcode', $importData[1])->first();
+                if (Auth::user()->user_type = 'seller') {
+                    $seller_id  = Auth::user()->id;
+                } else {
+                    $seller_id = \App\User::where('user_type', 'admin')->first()->id;
+                }
                 if (!$products) {
 
                     $product = new Product;
@@ -67,11 +72,7 @@ class ProductImport implements ToCollection
 
                     $productPrice = new ProductPrice();
 
-                    if (Auth::user()->user_type = 'seller') {
-                        $productPrice->seller_id  = Auth::user()->id;
-                    } else {
-                        $productPrice->seller_id = \App\User::where('user_type', 'admin')->first()->id;
-                    }
+                    $productPrice->seller_id = $seller_id;
                     $productPrice->sku = $importData[7];
                     $productPrice->min_qty = $importData[12];
                     $productPrice->unit_price = ($importData[3]) ? $importData[3] : 0;
@@ -93,26 +94,39 @@ class ProductImport implements ToCollection
                     // $product_stock->save();
                 } else {
 
-                    $productPrice = new ProductPrice();
-
-                    if (Auth::user()->user_type = 'seller') {
-                        $productPrice->seller_id  = Auth::user()->id;
+                    $product = ProductPrice::where('seller_id', $seller_id)->where('product_id', $products->id)->first();
+                    if (!$product) {
+                        $productPrice = new ProductPrice();
+                        $productPrice->seller_id = $seller_id;
+                        $productPrice->sku = $importData[7];
+                        $productPrice->min_qty = $importData[12];
+                        $productPrice->unit_price = ($importData[3]) ? $importData[3] : 0;
+                        $productPrice->purchase_price = $importData[4] == null ? ($importData[3]) ? $importData[3] : 0 : $importData[4];
+                        $productPrice->discount = '0.00';
+                        $productPrice->discount_type = 'amount';
+                        $productPrice->tax = '0.00';
+                        $productPrice->tax_type = 'amount';
+                        $productPrice->current_stock = $importData[6];
+                        $productPrice->product_id = $products->id;
+                        $productPrice->shipping_type = 'free';
+                        $productPrice->shipping_cost = '0.00';
+                        $productPrice->save();
                     } else {
-                        $productPrice->seller_id = \App\User::where('user_type', 'admin')->first()->id;
+                        $product->seller_id = $seller_id;
+                        $product->sku = $importData[7];
+                        $product->min_qty = $importData[12];
+                        $product->unit_price = ($importData[3]) ? $importData[3] : 0;
+                        $product->purchase_price = $importData[4] == null ? ($importData[3]) ? $importData[3] : 0 : $importData[4];
+                        $product->discount = '0.00';
+                        $product->discount_type = 'amount';
+                        $product->tax = '0.00';
+                        $product->tax_type = 'amount';
+                        $product->current_stock = $importData[6];
+                        $product->product_id = $products->id;
+                        $product->shipping_type = 'free';
+                        $product->shipping_cost = '0.00';
+                        $product->save();
                     }
-                    $productPrice->sku = $importData[7];
-                    $productPrice->min_qty = $importData[12];
-                    $productPrice->unit_price = ($importData[3]) ? $importData[3] : 0;
-                    $productPrice->purchase_price = $importData[4] == null ? ($importData[3]) ? $importData[3] : 0 : $importData[4];
-                    $productPrice->discount = '0.00';
-                    $productPrice->discount_type = 'amount';
-                    $productPrice->tax = '0.00';
-                    $productPrice->tax_type = 'amount';
-                    $productPrice->current_stock = $importData[6];
-                    $productPrice->product_id = $products->id;
-                    $productPrice->shipping_type = 'free';
-                    $productPrice->shipping_cost = '0.00';
-                    $productPrice->save();
                 }
             }
         }
