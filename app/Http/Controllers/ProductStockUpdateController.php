@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Imports\ProductStockUpdate;
+use App\Imports\ProductDetailUpdate;
 use Excel;
 
 class ProductStockUpdateController extends Controller
@@ -40,7 +41,7 @@ class ProductStockUpdateController extends Controller
     public function detail_update(Request $request)
     {
         if ($request->hasFile('bulk_file')) {
-            Excel::import(new ProductStockUpdate($request->is_barcode), request()->file('bulk_file'));
+            Excel::import(new ProductDetailUpdate($request->is_barcode), request()->file('bulk_file'));
         }
         flash(translate('Stock updated successfully'))->success();
         return back();

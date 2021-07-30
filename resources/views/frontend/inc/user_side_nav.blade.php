@@ -193,6 +193,14 @@
                         </li>
 
                         <li class="aiz-side-nav-item">
+                            <a href="{{ route('product_detail.index') }}"
+                                class="aiz-side-nav-link {{ areActiveRoutes(['product_detail.index']) }}">
+                                <i class="las la-upload aiz-side-nav-icon"></i>
+                                <span class="aiz-side-nav-text">{{ translate('Bluk Product Update') }}</span>
+                            </a>
+                        </li>
+
+                        <li class="aiz-side-nav-item">
                             <a href="{{ route('seller.digitalproducts') }}"
                                 class="aiz-side-nav-link {{ areActiveRoutes(['seller.digitalproducts', 'seller.digitalproducts.upload', 'seller.digitalproducts.edit']) }}">
                                 <i class="lab la-sketch aiz-side-nav-icon"></i>

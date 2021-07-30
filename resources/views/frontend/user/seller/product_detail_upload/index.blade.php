@@ -39,7 +39,7 @@
                             </table>
                             <a href="{{ static_asset('download/product_details_update_demo.xlsx') }}" download><button
                                     class="btn btn-primary mt-2">{{ translate('Download Demo CSV') }}</button></a>
-                            {{-- <a href="{{ static_asset('download/product_stock_update_demo.xlsx') }}" download><button class="btn btn-primary mt-2">{{ translate('Download Barcode Demo CSV')}}</button></a> --}}
+                            <a href="{{ static_asset('download/product_details_update_barcode_demo.xlsx') }}" download><button class="btn btn-primary mt-2">{{ translate('Download Barcode Demo CSV')}}</button></a>
                         </div>
                     </div>
 
@@ -47,7 +47,7 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="mb-0 h6"><strong>{{ translate('Update Bulk Product Update') }}</strong></h5>
+                            <h5 class="mb-0 h6"><strong>{{ translate('Update Bulk Products') }}</strong></h5>
                         </div>
                         <div class="card-body">
                             <form class="form-horizontal" action="{{ route('product_detail_update') }}" method="POST"
@@ -68,6 +68,19 @@
                                                             class="custom-file-name">{{ translate('Choose File') }}</span>
                                                     </label>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-md-4 col-from-label">{{ translate('Product update with barcode?') }}</label>
+                                            <div class="col-md-8">
+                                                <label class="aiz-switch aiz-switch-success mb-0">
+                                                    <input type="checkbox" name="is_barcode">
+                                                    <span></span>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
