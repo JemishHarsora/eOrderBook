@@ -504,12 +504,29 @@ class HomeController extends Controller
         $keywords = array();
         if ($area_seller['seller_ids'] != null) {
             if ($area_seller['seller_ids']['0'] != null) {
-                $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids)->get();
+                $products = ProductPrice::with(['product' => function($query) use($area_seller,$request){
+                    $query->whereIn('brand_id', $area_seller->brand_ids)
+                    ->where('tags', 'like', '%' . $request->search . '%');
+                }])->where('published', 1)->groupBy('product_id')->whereIn('seller_id', $area_seller->seller_ids)->get();
+
             } else {
-                $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->where('id', $area_seller['seller_ids']['0'])->get();
+
+                $products = ProductPrice::with(['product' => function($query) use($request,$area_seller){
+                    $query->where('tags', 'like', '%' . $request->search . '%');
+                    $query->where('id', $area_seller['seller_ids']['0']);
+                }])->where('published', 1)->groupBy('product_id')->get();
+                
+
+                // $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->where('id', $area_seller['seller_ids']['0'])->get();
             }
         } else {
-            $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->get();
+
+            $products = ProductPrice::with(['product' => function($query) use($request){
+                $query->where('tags', 'like', '%' . $request->search . '%');
+            }])->where('published', 1)->groupBy('product_id')->get();
+            
+
+            // $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->get();
         }
 
         foreach ($products as $key => $product) {
@@ -529,14 +546,32 @@ class HomeController extends Controller
         $shops = Shop::whereIn('user_id', verified_sellers_id())->where('name', 'like', '%' . $request->search . '%')->get()->take(3);
         if ($area_seller['seller_ids'] != null) {
             if ($area_seller['seller_ids']['0'] != null) {
-                $products = filter_products(Product::where('published', 1)->where('name', 'like', '%' . $request->search . '%')->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids))->get()->take(3);
+                $products = filter_products(
+                        ProductPrice::with(['product' => function($query) use($request){
+                            $query->whereIn('brand_id', $area_seller->brand_ids)
+                            ->where('tags', 'like', '%' . $request->search . '%');
+                    }])->where('published', 1)->where('seller_id', $area_seller['seller_ids']['0'])->groupBy('product_id'))->get()->take(3);
+
+                    // Product::where('published', 1)->where('name', 'like', '%' . $request->search . '%')->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids))->get()->take(3);
                 $shops = Shop::whereIn('user_id', $area_seller->seller_ids)->where('name', 'like', '%' . $request->search . '%')->get()->take(3);
             } else {
-                $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->where('id', $area_seller['seller_ids']['0'])->get()->take(3);
+
+                $products = ProductPrice::with(['product' => function($query) use($request,$area_seller){
+                    $query->where('tags', 'like', '%' . $request->search . '%');
+                    $query->where('id', $area_seller['seller_ids']['0']);
+                }])->where('published', 1)->groupBy('product_id')->get();                
+
+                // $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->where('id', $area_seller['seller_ids']['0'])->get()->take(3);
                 $shops = Shop::where('user_id', $area_seller['seller_ids']['0'])->where('name', 'like', '%' . $request->search . '%')->get()->take(3);
             }
         } else {
-            $products = filter_products(Product::where('published', 1)->where('name', 'like', '%' . $request->search . '%'))->get()->take(3);
+            $products = filter_products(
+                
+                ProductPrice::with(['product' => function($query) use($request){
+                    $query->where('name', 'like', '%' . $request->search . '%');
+                }])->where('published', 1)->groupBy('product_id'))->get()->take(3);
+
+                // Product::where('published', 1)->where('name', 'like', '%' . $request->search . '%'))->get()->take(3);
         }
         $categories = Category::where('name', 'like', '%' . $request->search . '%')->get()->take(3);
 
@@ -578,38 +613,67 @@ class HomeController extends Controller
         $max_price = $request->max_price;
         $seller_id = $request->seller_id;
         $area_seller = getAreaWiseBrand();
-        $conditions = ['published' => 1];
-
+        $conditions = [];
+        $seller_query =[];
+      
+        $products = ProductPrice::with(['product'])->where('published', 1)->groupBy('product_id');
+      
         if ($brand_id != null) {
             $conditions = array_merge($conditions, ['brand_id' => $brand_id]);
-        } elseif ($request->brand != null) {
+        }
+         elseif ($request->brand != null) {
             $brand_id = (Brand::where('slug', $request->brand)->first() != null) ? Brand::where('slug', $request->brand)->first()->id : null;
             $conditions = array_merge($conditions, ['brand_id' => $brand_id]);
         }
 
         if ($seller_id != null) {
-            $conditions = array_merge($conditions, ['user_id' => Seller::findOrFail($seller_id)->user->id]);
+            $sellers_id = Seller::findOrFail($seller_id)->user->id;
+            $products = $products->where('seller_id', $sellers_id);
         }
         if ($seller_id == null && $request->brand == null && $area_seller['seller_ids'] != null) {
             if ($area_seller['seller_ids']['0'] != null) {
-                $products = Product::where($conditions)->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids);
+                $products = $products->whereHas('product', function($query) use($conditions,$area_seller){
+                    $query->where($conditions)->whereIn('brand_id', $area_seller->brand_ids);
+                })->whereIn('seller_id', $area_seller->seller_ids);
+
+                // $products = Product::where($conditions)->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids);
             } else {
-                $products = Product::where($conditions)->where('id', $area_seller['seller_ids']['0']);
-            }
+                $products = $products->whereHas('product', function($query) use($conditions,$area_seller){
+                    $query->where($conditions)->whereIn('brand_id', $area_seller->brand_ids);
+                })->where('product_id', $area_seller['seller_ids']['0']);
+                // $products = Product::where($conditions)->where('id', $area_seller['seller_ids']['0']);
+            }            
         } else {
-            $products = Product::where($conditions);
+            $products = $products->whereHas('product', function($query) use($conditions){
+                $query->where($conditions);
+            });
+            // $products = Product::where($conditions);
         }
 
         if ($category_id != null) {
             $category_ids = CategoryUtility::children_ids($category_id);
             $category_ids[] = $category_id;
+            
+            // $products = $products->whereIn('category_id', $category_ids);
 
-            $products = $products->whereIn('category_id', $category_ids);
+            $products = $products->whereHas('product', function($query) use($category_ids){
+                $query->whereIn('category_id', $category_ids);
+            });
+
             if ($area_seller['seller_ids'] != null) {
                 if ($area_seller['seller_ids']['0'] != null) {
-                    $products = $products->whereIn('category_id', $category_ids)->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids);
+
+                    $products = $products->whereHas('product', function($query) use($category_ids,$area_seller){
+                        $query->whereIn('category_id', $area_seller->category_ids)->whereIn('brand_id', $area_seller->brand_ids)->whereIn('seller_id', $area_seller->seller_ids);
+                    });
+
+                    // $products = $products->whereIn('category_id', $category_ids)->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids);
                 } else {
-                    $products = $products->whereIn('category_id', $category_ids)->where('id', $area_seller['seller_ids']['0']);
+                    $products = $products->whereHas('product', function($query) use($category_ids,$area_seller){
+                        $query->whereIn('category_id', $category_ids);
+                    })->where('product_id', $area_seller['seller_ids']['0']);
+
+                    // $products = $products->whereIn('category_id', $category_ids)->where('id', $area_seller['seller_ids']['0']);
                 }
             }
         }
@@ -621,7 +685,13 @@ class HomeController extends Controller
         if ($query != null) {
             $searchController = new SearchController;
             $searchController->store($request);
-            $products = $products->where('name', 'like', '%' . $query . '%')->orWhere('tags', 'like', '%' . $query . '%');
+            //aa query baki fdggf
+
+            $products = $products->whereHas('product', function($q) use($query){
+                $q->where('name', 'like', '%' . $query . '%')->orWhere('tags', 'like', '%' . $query . '%');
+            });
+
+            // $products = $products->where('name', 'like', '%' . $query . '%')->orWhere('tags', 'like', '%' . $query . '%');
         }
 
         if ($sort_by != null) {
@@ -646,11 +716,12 @@ class HomeController extends Controller
 
 
         $non_paginate_products = filter_products($products)->get();
-
+        // dd($non_paginate_products);
         //Attribute Filter
 
         $attributes = array();
         foreach ($non_paginate_products as $key => $product) {
+            $product = $product->product;
             if ($product->attributes != null && is_array(json_decode($product->attributes))) {
                 foreach (json_decode($product->attributes) as $key => $value) {
                     $flag = false;
@@ -693,7 +764,10 @@ class HomeController extends Controller
             if ($request->has('attribute_' . $attribute['id'])) {
                 foreach ($request['attribute_' . $attribute['id']] as $key => $value) {
                     $str = '"' . $value . '"';
-                    $products = $products->where('choice_options', 'like', '%' . $str . '%');
+                    // $products = $products->where('choice_options', 'like', '%' . $str . '%');
+                    $products = $products->whereHas('product', function($q) use($str){
+                        $q->where('choice_options', 'like', '%' . $str . '%');
+                    });
                 }
 
                 $item['id'] = $attribute['id'];
@@ -720,13 +794,18 @@ class HomeController extends Controller
 
         if ($request->has('color')) {
             $str = '"' . $request->color . '"';
-            $products = $products->where('colors', 'like', '%' . $str . '%');
+            // $products = $products->where('colors', 'like', '%' . $str . '%');
+            
+            $products = $products->whereHas('product', function($q) use($str){
+                $q->where('colors', 'like', '%' . $str . '%');
+            });
+
             $selected_color = $request->color;
         }
 
-
+        
         $products = filter_products($products)->paginate(12)->appends(request()->query());
-
+        // dd(request()->query());
         return view('frontend.product_listing', compact('products', 'query', 'category_id', 'brand_id', 'sort_by', 'seller_id', 'min_price', 'max_price', 'attributes', 'selected_attributes', 'all_colors', 'selected_color'));
     }
 

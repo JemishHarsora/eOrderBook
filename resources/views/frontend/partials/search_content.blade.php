@@ -27,15 +27,16 @@
         <div class="px-2 py-1 text-uppercase fs-10 text-right text-muted bg-soft-secondary">{{translate('Products')}}</div>
         <ul class="list-group list-group-raw">
             @foreach ($products as $key => $product)
+            @if(isset($product->product))
                 <li class="list-group-item">
-                    <a class="text-reset" href="{{ route('product', $product->slug) }}">
+                    <a class="text-reset" href="{{ route('product', $product->product->slug) }}">
                         <div class="d-flex search-product align-items-center">
                             <div class="mr-3">
-                                <img class="size-40px img-fit rounded" src="{{ uploaded_asset($product->thumbnail_img) }}">
+                                <img class="size-40px img-fit rounded" src="{{ uploaded_asset($product->product->thumbnail_img) }}">
                             </div>
                             <div class="flex-grow-1 overflow--hidden minw-0">
                                 <div class="product-name text-truncate fs-14 mb-5px">
-                                    {{  $product->getTranslation('name')  }}
+                                    {{  $product->product->getTranslation('name')  }}
                                 </div>
                                 <div class="">
                                     @if(home_base_price($product->id) != home_discounted_base_price($product->id))
@@ -47,6 +48,7 @@
                         </div>
                     </a>
                 </li>
+            @endif
             @endforeach
         </ul>
     @endif
