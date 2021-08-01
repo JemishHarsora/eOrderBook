@@ -21,7 +21,7 @@
                 <div class="row gutters-5 row-cols-xxl-5 row-cols-lg-4 row-cols-md-3 row-cols-2">
                     @foreach ($flash_deal->flash_deal_products as $key => $flash_deal_product)
                         @php
-                            $product = \App\Product::find($flash_deal_product->product_id);
+                            $product = \App\ProductPrice::with(['product'])->where('id',$flash_deal_product->product_id)->first();
                         @endphp
                         @if ($product->published != 0)
                             <div class="col mb-2">
@@ -31,8 +31,8 @@
                                             <img
                                                 class="img-fit lazyload mx-auto h-160px h-sm-200px h-md-220px h-xl-270px"
                                                 src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                data-src="{{ uploaded_asset($product->thumbnail_img) }}"
-                                                alt="{{  $product->getTranslation('name')  }}"
+                                                data-src="{{ uploaded_asset($product->product->thumbnail_img) }}"
+                                                alt="{{  $product->product->getTranslation('name')  }}"
                                                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                             >
                                         </a>
@@ -56,16 +56,16 @@
                                             <span class="fw-700 text-primary">{{ home_discounted_base_price($product->id) }}</span>
                                         </div>
                                         <div class="rating rating-sm mt-1">
-                                            {{ renderStarRating($product->rating) }}
+                                            {{ renderStarRating($product->product->rating) }}
                                         </div>
                                         <h3 class="fw-600 fs-13 text-truncate-2 lh-1-4 mb-0">
-                                            <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{  $product->getTranslation('name')  }}</a>
+                                            <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{  $product->product->getTranslation('name')  }}</a>
                                         </h3>
 
                                         @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated)
                                             <div class="rounded px-2 mt-2 bg-soft-primary border-soft-primary border">
                                                 {{ translate('Club Point') }}:
-                                                <span class="fw-700 float-right">{{ $product->earn_point }}</span>
+                                                <span class="fw-700 float-right">{{ $product->product->earn_point }}</span>
                                             </div>
                                         @endif
                                     </div>

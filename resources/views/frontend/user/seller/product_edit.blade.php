@@ -519,7 +519,7 @@
                                     <label class="col-lg-3 col-form-label">{{ translate('Slug') }}</label>
                                     <div class="col-lg-8">
                                         <input type="text" readonly placeholder="{{ translate('Slug') }}" id="slug"
-                                            name="slug" value="{{ $product->product->slug }}" class="form-control">
+                                            name="slug" value="{{ $product->slug }}" class="form-control">
                                     </div>
                                 </div>
                             </div>

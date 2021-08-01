@@ -282,7 +282,7 @@
                                     <div class="col mb-3">
                                         <div class="aiz-card-box h-100 border border-light rounded shadow-sm hov-shadow-md has-transition bg-white">
                                             <div class="position-relative">
-                                                <a href="{{ route('product', $product->product->slug) }}" class="d-block">
+                                                <a href="{{ route('product', $product->slug) }}" class="d-block">
                                                     <img
                                                         class="img-fit lazyload mx-auto h-160px h-md-220px h-xl-270px h-xxl-250px"
                                                         src="{{ static_asset('assets/img/placeholder.jpg') }}"
@@ -314,7 +314,7 @@
                                                     {{ renderStarRating($product->product->rating) }}
                                                 </div>
                                                 <h3 class="fw-600 fs-13 text-truncate-2 lh-1-4 mb-0">
-                                                    <a href="{{ route('product', $product->product->slug) }}" class="d-block text-reset">{{ $product->product->getTranslation('name') }}</a>
+                                                    <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{ $product->product->getTranslation('name') }}</a>
                                                 </h3>
 
                                                 @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated)

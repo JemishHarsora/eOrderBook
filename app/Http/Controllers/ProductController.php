@@ -225,7 +225,7 @@ class ProductController extends Controller
                 $product->pdf = $request->pdf->store('uploads/products/pdf');
             }
 
-            $product->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->name)) . '-' . Str::random(5);
+            // $product->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->name)) . '-' . Str::random(5);
 
             if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
                 $product->colors = json_encode($request->colors);
@@ -349,6 +349,7 @@ class ProductController extends Controller
         $productPrice->discount_type = $request->discount_type;
         $productPrice->shipping_type = $request->shipping_type;
         $productPrice->current_stock = $request->current_stock;
+        $productPrice->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->name)) . '-' . Str::random(7);
         $productPrice->save();
 
 
@@ -446,7 +447,7 @@ class ProductController extends Controller
             $product->name          = strtoupper($request->name);
             $product->unit          = $request->unit;
             $product->description   = $request->description;
-            $product->slug          = strtolower($request->slug);
+            // $product->slug          = strtolower($request->slug);
         }
 
         $product->photos         = $request->photos;
@@ -558,6 +559,7 @@ class ProductController extends Controller
         $productPrice->discount_type = $request->discount_type;
         $productPrice->shipping_type = $request->shipping_type;
         $productPrice->current_stock = $request->current_stock;
+        $productPrice->slug = strtolower($request->slug);
         $productPrice->save();
 
         $combinations = Combinations::makeCombinations($options);
@@ -649,9 +651,9 @@ class ProductController extends Controller
      */
     public function duplicate(Request $request, $id)
     {
-        $product = Product::find($id);
+        $product = ProductPrice::find($id);
         $product_new = $product->replicate();
-        $product_new->slug = substr($product_new->slug, 0, -5) . Str::random(5);
+        $product_new->slug = substr($product_new->slug, 0, -7) . Str::random(7);
 
         if ($product_new->save()) {
             flash(translate('Product has been duplicated successfully'))->success();

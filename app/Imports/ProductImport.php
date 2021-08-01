@@ -56,7 +56,7 @@ class ProductImport implements ToCollection
                     $product->colors = json_encode(array());
                     $product->choice_options = json_encode(array());
                     $product->variations = json_encode(array());
-                    $product->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $importData[2])) . '-' . Str::random(5);
+                    // $product->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $importData[2])) . '-' . Str::random(5);
                     $product->mfd_by = $importData[9];
                     $product->marketed_by = $importData[10];
                     $product->photos = $importData[11];
@@ -85,6 +85,7 @@ class ProductImport implements ToCollection
                     $productPrice->product_id = $product->id;
                     $productPrice->shipping_type = 'free';
                     $productPrice->shipping_cost = '0.00';
+                    $productPrice->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $importData[2])) . '-' . Str::random(7);
                     $productPrice->save();
 
                     // $product_stock              = new ProductStock();
@@ -111,6 +112,7 @@ class ProductImport implements ToCollection
                         $productPrice->product_id = $products->id;
                         $productPrice->shipping_type = 'free';
                         $productPrice->shipping_cost = '0.00';
+                        $productPrice->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $importData[2])) . '-' . Str::random(7);
                         $productPrice->save();
                     } else {
                         $product->seller_id = $seller_id;

@@ -105,7 +105,7 @@
                             @foreach ($todays_deal_product as $key => $product)
                                 @if ($product->product != null)
                                 <div class="col mb-2">
-                                    <a href="{{ route('product', $product->product->slug) }}" class="d-block p-2 text-reset bg-white h-100 rounded">
+                                    <a href="{{ route('product', $product->slug) }}" class="d-block p-2 text-reset bg-white h-100 rounded">
                                         <div class="row gutters-5 align-items-center">
                                             <div class="col-lg">
                                                 <div class="img">
@@ -166,6 +166,7 @@
     {{-- Flash Deal --}}
     @php
         $flash_deal = \App\FlashDeal::where('status', 1)->where('featured', 1)->first();
+        // dd($flash_deal);
     @endphp
     @if($flash_deal != null && strtotime(date('Y-m-d H:i:s')) >= $flash_deal->start_date && strtotime(date('Y-m-d H:i:s')) <= $flash_deal->end_date)
     <section class="mb-4">
@@ -183,7 +184,8 @@
                 <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='true'>
                     @foreach ($flash_deal->flash_deal_products as $key => $flash_deal_product)
                         @php
-                            $product = \App\Product::find($flash_deal_product->product_id);
+                            $product = \App\ProductPrice::with(['product'])->where('id',$flash_deal_product->product_id)->first();
+                            // dd($product);
                         @endphp
                         @if ($product != null && $product->published != 0)
                             <div class="carousel-box">
@@ -193,8 +195,8 @@
                                             <img
                                                 class="img-fit lazyload mx-auto h-140px h-md-210px"
                                                 src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                data-src="{{ uploaded_asset($product->thumbnail_img) }}"
-                                                alt="{{  $product->getTranslation('name')  }}"
+                                                data-src="{{ uploaded_asset($product->product->thumbnail_img) }}"
+                                                alt="{{  $product->product->getTranslation('name')  }}"
                                                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                             >
                                         </a>
@@ -218,15 +220,15 @@
                                             <span class="fw-700 text-primary">{{ home_discounted_base_price($product->id) }}</span>
                                         </div>
                                         <div class="rating rating-sm mt-1">
-                                            {{ renderStarRating($product->rating) }}
+                                            {{ renderStarRating($product->product->rating) }}
                                         </div>
                                         <h3 class="fw-600 fs-13 text-truncate-2 lh-1-4 mb-0 h-35px">
-                                            <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{  $product->getTranslation('name')  }}</a>
+                                            <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{  $product->product->getTranslation('name')  }}</a>
                                         </h3>
                                         @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated)
                                             <div class="rounded px-2 mt-2 bg-soft-primary border-soft-primary border">
                                                 {{ translate('Club Point') }}:
-                                                <span class="fw-700 float-right">{{ $product->earn_point }}</span>
+                                                <span class="fw-700 float-right">{{ $product->product->earn_point }}</span>
                                             </div>
                                         @endif
                                     </div>

@@ -40,7 +40,11 @@
                                     </th>
                                     @foreach (Session::get('compare') as $key => $item)
                                         <th scope="col" style="width:28%" class="font-weight-bold">
-                                            <a class="text-reset fs-15" href="{{ route('product', \App\Product::find($item)->slug) }}">{{ \App\Product::find($item)->getTranslation('name') }}</a>
+                                            <a class="text-reset fs-15" href="{{ route('product', \App\ProductPrice::find($item)->slug) }}">
+                                                @php $name = \App\ProductPrice::with(['product'])->find($item);
+                                                   echo $name->product->getTranslation('name');
+                                                @endphp
+                                            </a>
                                         </th>
                                     @endforeach
                                 </tr>
@@ -50,57 +54,71 @@
                                     <th scope="row">{{ translate('Image')}}</th>
                                     @foreach (Session::get('compare') as $key => $item)
                                         <td>
-                                            <img loading="lazy" src="{{ uploaded_asset(\App\Product::find($item)->thumbnail_img) }}" alt="{{ translate('Product Image') }}" class="img-fluid py-4">
+                                            @php $thumb = \App\ProductPrice::with(['product'])->find($item); @endphp
+                                            <img loading="lazy" src="{{ uploaded_asset($thumb->thumbnail_img) }}" alt="{{ translate('Product Image') }}" class="img-fluid py-4"
+                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                         </td>
                                     @endforeach
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ translate('Price')}}</th>
                                     @foreach (Session::get('compare') as $key => $item)
-                                        <td>{{ single_price(\App\Product::find($item)->unit_price) }}</td>
+                                        <td>{{ single_price(\App\ProductPrice::find($item)->unit_price) }}</td>
                                     @endforeach
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ translate('Brand')}}</th>
                                     @foreach (Session::get('compare') as $key => $item)
                                         <td>
-                                            @if (\App\Product::find($item)->brand != null)
-                                                {{ \App\Product::find($item)->brand->getTranslation('name') }}
-                                            @endif
+                                            @php $brand = \App\ProductPrice::with('product.brand')->find($item);
+                                                if ($brand->product->brand != null)
+                                                {
+                                                    echo $brand->product->brand->getTranslation('name');
+                                                }
+                                            @endphp
                                         </td>
                                     @endforeach
                                 </tr>
-                                <tr>
+                               <tr>
                                     <th scope="row">{{ translate('Category')}}</th>
                                     @foreach (Session::get('compare') as $key => $item)
                                         <td>
-                                            @if (\App\Product::find($item)->category != null)
-                                                {{ \App\Product::find($item)->category->getTranslation('name') }}
-                                            @endif
+                                            @php $category = \App\ProductPrice::with('product.category')->find($item);
+                                                if ($category->product->category != null)
+                                                {
+                                                    echo $category->product->category->getTranslation('name');
+                                                }
+                                            @endphp
                                         </td>
                                     @endforeach
                                 </tr>
-                                <tr>
+                                {{-- <tr>
                                     <th scope="row">{{ translate('Sub Category')}}</th>
                                     @foreach (Session::get('compare') as $key => $item)
                                         <td>
-                                            @if (\App\Product::find($item)->subsubcategory != null)
-                                                {{ \App\Product::find($item)->subsubcategory->getTranslation('name') }}
-                                            @endif
-                                        </td>
-                                    @endforeach
-                                </tr>
-
-                                {{-- <tr>
-                                    <th scope="row">{{ translate('Description')}}</th>
-                                    @foreach (Session::get('compare') as $key => $item)
-                                        <td>
-                                            @if (\App\Product::find($item)->description != null)
-                                                {{ \App\Product::find($item)->description->getTranslation('description') }}
-                                            @endif
+                                            @php $subsubcategory = \App\ProductPrice::with('product','product.subsubcategory')->find($item);
+                                                if ($subsubcategory->product->subsubcategory != null)
+                                                {
+                                                    echo $subsubcategory->product->subsubcategory->getTranslation('name');
+                                                }
+                                            @endphp
                                         </td>
                                     @endforeach
                                 </tr> --}}
+
+                                <tr>
+                                    <th scope="row">{{ translate('Description')}}</th>
+                                    @foreach (Session::get('compare') as $key => $item)
+                                        <td>
+                                            @php $description = \App\ProductPrice::with('product')->find($item);
+                                                if ($description->product->description != null)
+                                                {
+                                                    echo $description->product->description;
+                                                }
+                                            @endphp
+                                        </td>
+                                    @endforeach
+                                </tr>
 
 
                                 <tr>

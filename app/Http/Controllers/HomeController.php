@@ -345,6 +345,7 @@ class HomeController extends Controller
 
     public function product(Request $request, $slug)
     {
+        // dd($request->all(),$slug);
         $isblock = '';
         $sellersData = [];
         $detailedProduct  = Product::where('slug', $slug)->first();

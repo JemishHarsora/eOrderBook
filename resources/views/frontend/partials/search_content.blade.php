@@ -29,7 +29,7 @@
             @foreach ($products as $key => $product)
             @if(isset($product->product))
                 <li class="list-group-item">
-                    <a class="text-reset" href="{{ route('product', $product->product->slug) }}">
+                    <a class="text-reset" href="{{ route('product', $product->slug) }}">
                         <div class="d-flex search-product align-items-center">
                             <div class="mr-3">
                                 <img class="size-40px img-fit rounded" src="{{ uploaded_asset($product->product->thumbnail_img) }}">
