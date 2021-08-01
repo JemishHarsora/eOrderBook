@@ -44,7 +44,7 @@ class ProductImport implements ToCollection
 
                     $product = new Product;
                     $product->barcode = $importData[1];
-                    $product->name = ucfirst($importData[2]);
+                    $product->name = strtoupper($importData[2]);
                     $product->added_by = Auth::user()->user_type == 'seller' ? 'seller' : 'admin';
                     // $product->user_id = Auth::user()->user_type == 'seller' ? Auth::user()->id : User::where('user_type', 'admin')->first()->id;
 

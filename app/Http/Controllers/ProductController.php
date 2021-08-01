@@ -157,7 +157,7 @@ class ProductController extends Controller
         if (!$products) {
             $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')->first();
             $product = new Product;
-            $product->name = ucfirst($request->name);
+            $product->name = strtoupper($request->name);
 
             // if (Auth::user()->user_type == 'seller') {
             //     $product->user_id = Auth::user()->id;
@@ -443,7 +443,7 @@ class ProductController extends Controller
         }
 
         if ($request->lang == env("DEFAULT_LANGUAGE")) {
-            $product->name          = ucfirst($request->name);
+            $product->name          = strtoupper($request->name);
             $product->unit          = $request->unit;
             $product->description   = $request->description;
             $product->slug          = strtolower($request->slug);
