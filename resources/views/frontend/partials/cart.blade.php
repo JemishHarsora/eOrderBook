@@ -21,7 +21,7 @@
                 @endphp
                 @foreach($cart as $key => $cartItem)
                     @php
-                        $product = \App\Product::find($cartItem['id']);
+                        $product = \App\ProductPrice::with(['product'])->find($cartItem['id']);
                         $total = $total + $cartItem['price']*$cartItem['quantity'];
                     @endphp
                     @if ($product != null)
@@ -30,13 +30,14 @@
                                 <a href="{{ route('product', $product->slug) }}" class="text-reset d-flex align-items-center flex-grow-1">
                                     <img
                                         src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                        data-src="{{ uploaded_asset($product->thumbnail_img) }}"
+                                        data-src="{{ uploaded_asset($product->product->thumbnail_img) }}"
+                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                         class="img-fit lazyload size-60px rounded"
-                                        alt="{{  $product->getTranslation('name')  }}"
+                                        alt="{{  $product->product->getTranslation('name')  }}"
                                     >
                                     <span class="minw-0 pl-2 flex-grow-1">
                                         <span class="fw-600 mb-1 text-truncate-2">
-                                                {{  $product->getTranslation('name')  }}
+                                                {{  $product->product->getTranslation('name')  }}
                                         </span>
                                         <span class="">{{ $cartItem['quantity'] }}x</span>
                                         <span class="">{{ single_price($cartItem['price']) }}</span>
