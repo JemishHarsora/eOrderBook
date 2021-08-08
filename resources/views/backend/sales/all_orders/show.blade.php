@@ -272,7 +272,7 @@
     if (count($products)) {
         foreach ($products as $pId => $product) {
             //   dd($product);
-            $htmlSelectProduct .= '<option  value="' . $product['id'] . '" >' . $product['name'] . '(' . $product['sku'] . ')</option>';
+            $htmlSelectProduct .= '<option  value="' . $product['id'] . '" >' . $product['sku'] . '</option>';
         }
     }
     $htmlSelectProduct .= '
@@ -371,7 +371,7 @@
                     success: function(returnedData) {
                         node.find('.add_sku').val(returnedData.sku);
                         node.find('.add_qty').eq(0).val(1);
-                        node.find('.add_price').eq(0).val(returnedData.unit_price);
+                        node.find('.add_price').eq(0).val(returnedData.discounted_price);
                         node.find('.add_total').eq(0).val(returnedData.discounted_price);
                         // node.find('.add_attr').eq(0).html(returnedData.renderAttDetails);
                         node.find('.add_tax').eq(0).val(returnedData.taxs);

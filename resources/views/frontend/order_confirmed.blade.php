@@ -126,7 +126,7 @@
                                                     <td>
                                                         @if ($orderDetail->product != null)
                                                             <a href="{{ route('product', $orderDetail->product->slug) }}" target="_blank" class="text-reset">
-                                                                {{ $orderDetail->product->getTranslation('name') }}
+                                                                {{ $orderDetail->product->product->getTranslation('name') }}
                                                             </a>
                                                         @else
                                                             <strong>{{  translate('Product Unavailable') }}</strong>

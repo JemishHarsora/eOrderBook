@@ -18,11 +18,11 @@
                         @endphp
                         @foreach (Session::get('cart') as $key => $cartItem)
                             @php
-                                $product = \App\Product::find($cartItem['id']);
+                                $product = \App\ProductPrice::with(['product'])->find($cartItem['id']);
                                 $total = $total + ($cartItem['price'] + $cartItem['tax']) * $cartItem['quantity'];
-                                $product_name_with_choice = $product->getTranslation('name');
+                                $product_name_with_choice = $product->product->getTranslation('name');
                                 if ($cartItem['variant'] != null) {
-                                    $product_name_with_choice = $product->getTranslation('name') . ' - ' . $cartItem['variant'];
+                                    $product_name_with_choice = $product->product->getTranslation('name') . ' - ' . $cartItem['variant'];
                                 }
                                 $cartItemCount = $cartItemCount + $cartItem['quantity'];
                             @endphp
@@ -30,10 +30,10 @@
                                 <div class="row gutters-5">
                                     <div class="col-lg-5 d-flex">
                                         <span class="mr-2 ml-0">
-                                            <img src="{{ uploaded_asset($product->thumbnail_img) }}"
+                                            <img src="{{ uploaded_asset($product->product->thumbnail_img) }}"
                                                 class="img-fit size-60px rounded"
                                                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
-                                                alt="{{ $product->getTranslation('name') }}">
+                                                alt="{{ $product->product->getTranslation('name') }}">
                                         </span>
                                         <span class="fs-14 opacity-60">{{ $product_name_with_choice }}</span>
                                     </div>

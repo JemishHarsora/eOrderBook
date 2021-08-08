@@ -56,7 +56,7 @@
                                             data-live-search="true" value='{{ old('area_id') }}' required>
                                             <option value="">Select Area</option>
                                             @foreach ($areas as $area)
-                                                <option value="{{ $area->id }}">{{ $area->name }}</option>
+                                                <option value="{{ $area->areas->id }}">{{ $area->areas->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

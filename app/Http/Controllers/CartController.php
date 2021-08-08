@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BlockUser;
 use Illuminate\Http\Request;
 use App\Product;
+use App\ProductPrice;
 use App\SubSubCategory;
 use App\Category;
 use Session;
@@ -25,13 +26,13 @@ class CartController extends Controller
     {
         $isblock='';
         $sellersData=[];
-        $product = Product::find($request->id);
-        $ProductSeller = Product::where('barcode', $product->barcode)->where('id','!=', $product->id)->get();
+        $product = ProductPrice::with(['product','user'])->find($request->id);
+        $ProductSeller = ProductPrice::with(['product','user'])->where('product_id', $product->product_id)->where('seller_id','!=', $product->seller_id)->get();
 
         if (isset(Auth::user()->id)) {
-            $isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $product->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $product->user_id]])->first();
+            $isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $product->seller_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $product->seller_id]])->first();
             foreach($ProductSeller as $sellers){
-                $sellers->isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $sellers->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $sellers->user_id]])->first();
+                $sellers->isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $sellers->seller_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $sellers->seller_id]])->first();
 
                 array_push($sellersData,$sellers);
             }
@@ -53,20 +54,20 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
-        $product = Product::find($request->id);
+        $product = ProductPrice::with(['product'])->find($request->id);
         $isblock='';
         if(isset(Auth::user()->id)){
-            $isblock = BlockUser::where([['user_id', '=', Auth::user()->id],['blocker_id', '=', $product->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id],['user_id', '=', $product->user_id]])->first();
+            $isblock = BlockUser::where([['user_id', '=', Auth::user()->id],['blocker_id', '=', $product->seller_id]])->orWhere([['blocker_id', '=', Auth::user()->id],['user_id', '=', $product->seller_id]])->first();
         }
 
         $data = array();
         if(!$isblock){
             $data['id'] = $product->id;
-            $data['owner_id'] = $product->user_id;
+            $data['owner_id'] = $product->seller_id;
             $str = '';
             $tax = 0;
 
-            if($product->digital != 1 && $request->quantity < $product->min_qty) {
+            if($product->product->digital != 1 && $request->quantity < $product->min_qty) {
                 return array('status' => 0, 'view' => view('frontend.partials.minQtyNotSatisfied', [
                     'min_qty' => $product->min_qty
                 ])->render());
@@ -79,9 +80,9 @@ class CartController extends Controller
                 $str = Color::where('code', $request['color'])->first()->name;
             }
 
-            if ($product->digital != 1) {
+            if ($product->product->digital != 1) {
                 //Gets all the choice values of customer choice option and generate a string like Black-S-Cotton
-                foreach (json_decode(Product::find($request->id)->choice_options) as $key => $choice) {
+                foreach (json_decode(Product::find($product->product_id)->choice_options) as $key => $choice) {
                     if($str != null){
                         $str .= '-'.str_replace(' ', '', $request['attribute_id_'.$choice->attribute_id]);
                     }
@@ -93,8 +94,8 @@ class CartController extends Controller
 
             $data['variant'] = $str;
 
-            if($str != null && $product->variant_product){
-                $product_stock = $product->stocks->where('variant', $str)->first();
+            if($str != null && $product->product->variant_product){
+                $product_stock = $product->product->stocks->where('variant', $str)->first();
                 $price = $product_stock->price;
                 $quantity = $product_stock->qty;
 
@@ -153,7 +154,7 @@ class CartController extends Controller
             if(Cookie::has('referred_product_id') && Cookie::get('referred_product_id') == $product->id) {
                 $data['product_referral_code'] = Cookie::get('product_referral_code');
             }
-
+            // dd($data);
             if($request->session()->has('cart')){
                 $foundInCart = false;
                 $cart = collect();
@@ -161,7 +162,7 @@ class CartController extends Controller
                 foreach ($request->session()->get('cart') as $key => $cartItem){
                     if($cartItem['id'] == $request->id){
                         if($cartItem['variant'] == $str && $str != null){
-                            $product_stock = $product->stocks->where('variant', $str)->first();
+                            $product_stock = $product->product->stocks->where('variant', $str)->first();
                             $quantity = $product_stock->qty;
                             if($quantity < $cartItem['quantity'] + $request['quantity']){
                                 return array('status' => 0, 'message' => 'Out of stock');
@@ -216,9 +217,9 @@ class CartController extends Controller
         $cart = $request->session()->get('cart', collect([]));
         $cart = $cart->map(function ($object, $key) use ($request) {
             if($key == $request->key){
-                $product = \App\Product::find($object['id']);
+                $product = \App\ProductPrice::with(['product'])->find($object['id']);
                 if($object['variant'] != null && $product->variant_product){
-                    $product_stock = $product->stocks->where('variant', $object['variant'])->first();
+                    $product_stock = $product->product->stocks->where('variant', $object['variant'])->first();
                     $quantity = $product_stock->qty;
                     if($quantity >= $request->quantity){
                         if($request->quantity >= $product->min_qty){

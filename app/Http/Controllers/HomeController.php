@@ -348,13 +348,12 @@ class HomeController extends Controller
         // dd($request->all(),$slug);
         $isblock = '';
         $sellersData = [];
-        $detailedProduct  = Product::where('slug', $slug)->first();
-        $ProductSeller = Product::where('barcode', $detailedProduct->barcode)->where('id', '!=', $detailedProduct->id)->get();
-
+        $detailedProduct  = ProductPrice::with(['product','user','orderDetails'])->where('slug', $slug)->first();
+        $ProductSeller = ProductPrice::with(['product'])->where('product_id', $detailedProduct->product_id)->where('id', '!=', $detailedProduct->id)->get();
         if (isset(Auth::user()->id)) {
-            $isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $detailedProduct->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $detailedProduct->user_id]])->first();
+            $isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $detailedProduct->seller_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $detailedProduct->seller_id]])->first();
             foreach ($ProductSeller as $sellers) {
-                $sellers->isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $sellers->user_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $sellers->user_id]])->first();
+                $sellers->isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $sellers->seller_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $sellers->seller_id]])->first();
                 array_push($sellersData, $sellers);
             }
         } else {
@@ -370,7 +369,7 @@ class HomeController extends Controller
                 Cookie::queue('product_referral_code', $request->product_referral_code, 43200);
                 Cookie::queue('referred_product_id', $detailedProduct->id, 43200);
             }
-            if ($detailedProduct->digital == 1) {
+            if ($detailedProduct->product->digital == 1) {
                 return view('frontend.digital_product_details', compact('detailedProduct', 'isblock', 'sellersData'));
             } else {
                 return view('frontend.product_details', compact('detailedProduct', 'isblock', 'sellersData'));
@@ -526,10 +525,9 @@ class HomeController extends Controller
                 $query->where('tags', 'like', '%' . $request->search . '%');
             }])->where('published', 1)->groupBy('product_id')->get();
             
-
+            
             // $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->get();
         }
-
         foreach ($products as $key => $product) {
             foreach (explode(',', $product->tags) as $key => $tag) {
                 if (stripos($tag, $request->search) !== false) {
@@ -543,7 +541,7 @@ class HomeController extends Controller
                 }
             }
         }
-
+        
         $shops = Shop::whereIn('user_id', verified_sellers_id())->where('name', 'like', '%' . $request->search . '%')->get()->take(3);
         if ($area_seller['seller_ids'] != null) {
             if ($area_seller['seller_ids']['0'] != null) {
@@ -575,7 +573,7 @@ class HomeController extends Controller
                 // Product::where('published', 1)->where('name', 'like', '%' . $request->search . '%'))->get()->take(3);
         }
         $categories = Category::where('name', 'like', '%' . $request->search . '%')->get()->take(3);
-
+        
         if (sizeof($keywords) > 0 || sizeof($categories) > 0 || sizeof($products) > 0 || sizeof($shops) > 0) {
             return view('frontend.partials.search_content', compact('products', 'categories', 'keywords', 'shops'));
         }
@@ -843,7 +841,7 @@ class HomeController extends Controller
 
     public function variant_price(Request $request)
     {
-        $product = Product::find($request->id);
+        $product = ProductPrice::with(['product'])->find($request->id);
         $str = '';
         $quantity = 0;
 
@@ -852,8 +850,8 @@ class HomeController extends Controller
             $str = Color::where('code', $request['color'])->first()->name;
         }
 
-        if (json_decode(Product::find($request->id)->choice_options) != null) {
-            foreach (json_decode(Product::find($request->id)->choice_options) as $key => $choice) {
+        if (json_decode(Product::find($product->product_id)->choice_options) != null) {
+            foreach (json_decode(Product::find($product->product_id)->choice_options) as $key => $choice) {
                 if ($str != null) {
                     $str .= '-' . str_replace(' ', '', $request['attribute_id_' . $choice->attribute_id]);
                 } else {
@@ -863,8 +861,8 @@ class HomeController extends Controller
         }
 
 
-        if ($str != null && $product->variant_product) {
-            $product_stock = $product->stocks->where('variant', $str)->first();
+        if ($str != null && $product->product->variant_product) {
+            $product_stock = $product->product->stocks->where('variant', $str)->first();
             $price = $product_stock->price;
             $quantity = $product_stock->qty;
         } else {

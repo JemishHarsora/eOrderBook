@@ -11,4 +11,12 @@ class ProductPrice extends Model
     {
         return $this->hasOne(Product::class, 'id', 'product_id');
     }
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'seller_id');
+    }
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class,'product_id','id');
+    }
 }

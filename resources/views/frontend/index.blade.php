@@ -10,40 +10,33 @@
                 </div>
 
                 @php
+                    $todays_deal_product_id = \App\Product::where('todays_deal', 1)->get()->pluck(['id']);
                     $area_seller = getAreaWiseBrand();
-                    $num_todays_deal = count(filter_products(\App\ProductPrice::with(['product'])->whereHas('product', function($query) {
-                            $query->where('todays_deal', 1);
-                        })->where('published', 1)->groupBy('product_id'))->get());
-                    $todays_deal_product = filter_products(\App\ProductPrice::with(['product'])->whereHas('product', function($query) {
-                            $query->where('todays_deal', 1);
-                        })->where('published', 1)->groupBy('product_id'))->get();
+                    $num_todays_deal = count(filter_products(\App\ProductPrice::with(['product'])->where('published', 1)->whereIn('product_id', $todays_deal_product_id)->groupBy('product_id'))->get());
+                    $todays_deal_product = filter_products(\App\ProductPrice::with(['product'])->whereIn('product_id', $todays_deal_product_id)->where('published', 1)->groupBy('product_id'))->get();
 
                     $featured_categories = \App\Category::where('featured', 1)->get();
                     if($area_seller['seller_ids'] !=''){
                         if($area_seller['seller_ids']['0'] != null){
                             $num_todays_deal = count(filter_products(\App\ProductPrice::with(['product' => function($query) use($area_seller){
                                 $query->whereIn('brand_id', $area_seller->brand_ids);
-                                $query->where('todays_deal', 1);
-                            }])->where('published', 1)->whereIn('seller_id', $area_seller->seller_ids)->groupBy('product_id'))->get());
+                            }])->where('published', 1)->whereIn('product_id', $todays_deal_product_id)->whereIn('seller_id', $area_seller->seller_ids)->groupBy('product_id'))->get());
 
                             $todays_deal_product = filter_products(\App\ProductPrice::with(['product' => function($query) use($area_seller){
                                 $query->whereIn('brand_id', $area_seller->brand_ids);
-                                $query->where('todays_deal', 1);
-                            }])->where('published', 1)->whereIn('seller_id', $area_seller->seller_ids)->groupBy('product_id'))->get();
+                            }])->where('published', 1)->whereIn('seller_id', $area_seller->seller_ids)->whereIn('product_id', $todays_deal_product_id)->groupBy('product_id'))->get();
                         }
                         else
                         {
                             $num_todays_deal = count(filter_products(\App\ProductPrice::with(['product' => function($query) use($area_seller){
-                            $query->where('todays_deal', 1);
                             $query->where('brand_id', $area_seller['brand_ids']);
-                        }])->where('published', 1)->where('todays_deal', 1 )->where('seller_id', $area_seller['seller_ids'])->groupBy('product_id'))->get());
+                        }])->where('published', 1)->where('todays_deal', 1 )->whereIn('product_id', $todays_deal_product_id)->where('seller_id', $area_seller['seller_ids'])->groupBy('product_id'))->get());
                             $todays_deal_product = filter_products(\App\ProductPrice::with(['product' => function($query) use($area_seller){
-                            $query->where('todays_deal', 1);
                             $query->where('brand_id', $area_seller['brand_ids']);
-                        }])->where('published', 1)->where('todays_deal', 1 )->where('seller_id', $area_seller['seller_ids'])->groupBy('product_id'))->get();
+                        }])->where('published', 1)->where('todays_deal', 1 )->whereIn('product_id', $todays_deal_product_id)->where('seller_id', $area_seller['seller_ids'])->groupBy('product_id'))->get();
                         }
                     }
-                    // dd($todays_deal_product);
+                    // dd($todays_deal_product,$num_todays_deal);
                 @endphp
 
                 <div class="@if($num_todays_deal > 0) col-lg-7 @else col-lg-9 @endif">

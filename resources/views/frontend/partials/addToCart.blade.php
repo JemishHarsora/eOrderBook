@@ -3,7 +3,7 @@
         <div class="col-lg-5">
             <div class="row gutters-10 flex-row-reverse">
                 @php
-                    $photos = explode(',', $product->photos);
+                    $photos = explode(',', $product->product->photos);
                 @endphp
                 <div class="col">
                     <div class="aiz-carousel product-gallery" data-nav-for='.product-gallery-thumb' data-fade='true'>
@@ -38,14 +38,14 @@
         <div class="col-lg-7">
             <div class="text-left">
                 <h2 class="mb-2 fs-20 fw-600">
-                    {{ $product->getTranslation('name') }}
+                    {{ $product->product->getTranslation('name') }}
                 </h2>
 
                 <div class="row align-items-center">
                     <div class="col-auto">
                         <small class="mr-2 opacity-50">{{ translate('Sold by') }}: </small><br>
-                        @if ($product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
-                            <a href="{{ route('shop.visit', $product->user->shop->slug) }}" class="text-reset">{{ $product->user->shop->name }}</a>
+                        @if ($product->product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
+                            <a href="{{ route('shop.visit', $product->product->user->shop->slug) }}" class="text-reset">{{ $product->product->user->shop->name }}</a>
                         @else
                             {{ translate('Inhouse product') }}
                         @endif
@@ -57,9 +57,9 @@
                         </div>
                     @endif
 
-                    @if ($product->brand != null)
+                    @if ($product->product->brand != null)
                         <div class="col-auto">
-                            <img src="{{ uploaded_asset($product->brand->logo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="{{ $product->brand->getTranslation('name') }}" height="30">
+                            <img src="{{ uploaded_asset($product->product->brand->logo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="{{ $product->product->brand->getTranslation('name') }}" height="30">
                         </div>
                     @endif
                 </div>
@@ -74,8 +74,8 @@
                                 <div class="fs-16 opacity-60">
                                     <del>
                                         {{ home_price($product->id) }}
-                                        @if ($product->unit != null)
-                                            <span>/{{ $product->getTranslation('unit') }}</span>
+                                        @if ($product->product->unit != null)
+                                            <span>/{{ $product->product->getTranslation('unit') }}</span>
                                         @endif
                                     </del>
                                 </div>
@@ -90,8 +90,8 @@
                                     <strong class="fs-16 fw-600 text-primary">
                                         {{ home_discounted_price($product->id) }}
                                     </strong>
-                                    @if ($product->unit != null)
-                                        <span class="opacity-70">/{{ $product->getTranslation('unit') }}</span>
+                                    @if ($product->product->unit != null)
+                                        <span class="opacity-70">/{{ $product->product->getTranslation('unit') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -107,20 +107,20 @@
                                 <strong class="h2 fw-600 text-primary">
                                     {{ home_discounted_price($product->id) }}
                                 </strong>
-                                <span class="opacity-70">/{{ $product->unit }}</span>
+                                <span class="opacity-70">/{{ $product->product->unit }}</span>
                             </div>
                         </div>
                     </div>
                 @endif
 
-                @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated && $product->earn_point > 0)
+                @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated && $product->product->earn_point > 0)
                     <div class="row no-gutters mt-4">
                         <div class="col-2">
                             <div class="opacity-50">{{ translate('Club Point') }}:</div>
                         </div>
                         <div class="col-10">
                             <div class="d-inline-block club-point bg-soft-base-1 border-light-base-1 border">
-                                <span class="strong-700">{{ $product->earn_point }}</span>
+                                <span class="strong-700">{{ $product->product->earn_point }}</span>
                             </div>
                         </div>
                     </div>
@@ -130,12 +130,12 @@
 
                 @php
                     $qty = 0;
-                    if ($product->variant_product) {
-                        foreach ($product->stocks as $key => $stock) {
+                    if ($product->product->variant_product) {
+                        foreach ($product->product->stocks as $key => $stock) {
                             $qty += $stock->qty;
                         }
                     } else {
-                        $qty = $product->current_stock;
+                        $qty = $product->product->current_stock;
                     }
                 @endphp
 
@@ -144,9 +144,9 @@
                     <input type="hidden" name="id" value="{{ $product->id }}">
 
                     <!-- Quantity + Add to cart -->
-                    @if ($product->digital != 1)
-                        @if ($product->choice_options != null)
-                            @foreach (json_decode($product->choice_options) as $key => $choice)
+                    @if ($product->product->digital != 1)
+                        @if ($product->product->choice_options != null)
+                            @foreach (json_decode($product->product->choice_options) as $key => $choice)
 
                                 <div class="row no-gutters">
                                     <div class="col-2">
@@ -173,14 +173,14 @@
                             @endforeach
                         @endif
 
-                        @if (count(json_decode($product->colors)) > 0)
+                        @if (count(json_decode($product->product->colors)) > 0)
                             <div class="row no-gutters">
                                 <div class="col-2">
                                     <div class="opacity-50 mt-2">{{ translate('Color') }}:</div>
                                 </div>
                                 <div class="col-10">
                                     <div class="aiz-radio-inline">
-                                        @foreach (json_decode($product->colors) as $key => $color)
+                                        @foreach (json_decode($product->product->colors) as $key => $color)
                                             <label class="aiz-megabox pl-0 mr-2" data-toggle="tooltip" data-title="{{ \App\Color::where('code', $color)->first()->name }}">
                                                 <input
                                                     type="radio"
@@ -236,7 +236,7 @@
                                     </div>
                                 </div>
 
-                                @if ($product->digital == 1)
+                                @if ($product->product->digital == 1)
                                     <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart" {{ !empty($isblock) ? 'disabled' : '' }} onclick="addToCart()">
                                         <i class="la la-shopping-cart"></i>
                                         <span class="d-none d-md-inline-block"> {{ translate('Add to cart') }}</span>
@@ -270,13 +270,13 @@
                 <div class="row">
                     <div class="col-xs-2 col-lg-2 d-flex">
                         <span class="mr-2 ml-0">
-                            <img src="{{ uploaded_asset($product->thumbnail_img) }}"
+                            <img src="{{ uploaded_asset($product->product->thumbnail_img) }}"
                                 class="img-fit size-60px rounded" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
-                                alt="{{ $product->getTranslation('name') }}">
+                                alt="{{ $product->product->getTranslation('name') }}">
                         </span>
                     </div>
                     <div class="col-xs-7 col-lg-7">
-                        <span class="fs-14 opacity-60">{{ $product->getTranslation('name') }}</span>
+                        <span class="fs-14 opacity-60">{{ $product->product->getTranslation('name') }}</span>
                         <br>
                         <span class="fw-600 fs-12">
                             @if ($product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
@@ -287,8 +287,8 @@
                         </span>
                         <br>
                         <span class="fw-600 fs-16">{{ home_discounted_price($product->id) }}
-                            @if ($product->unit != null)
-                            <span>/{{ $product->getTranslation('unit') }}</span>
+                            @if ($product->product->unit != null)
+                            <span>/{{ $product->product->getTranslation('unit') }}</span>
                         @endif
                         </span>
                     </div>

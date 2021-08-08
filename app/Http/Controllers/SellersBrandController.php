@@ -83,21 +83,23 @@ class SellersBrandController extends Controller
         foreach ($products as $key => $product) {
 
             $price = ProductPrice::where('product_id', $product->id)->first();
-            $productPrice = new ProductPrice();
-            $productPrice->seller_id = Auth::user()->id;
-            $productPrice->added_by = Auth::user()->user_type == 'seller' ? 'seller' : 'admin';
-            $productPrice->product_id = $product->id;
-            $productPrice->sku = $price->sku;
-            $productPrice->min_qty = 1;
-            $productPrice->unit_price = $price->unit_price;
-            $productPrice->purchase_price = $price->purchase_price;
-            $productPrice->tax = $price->tax;
-            $productPrice->tax_type = $price->tax_type;
-            $productPrice->discount = $price->discount;
-            $productPrice->discount_type = $price->discount_type;
-            $productPrice->shipping_type = $price->shipping_type;
-            $productPrice->current_stock = $price->current_stock;
-            $productPrice->save();
+            if($price){
+                $productPrice = new ProductPrice();
+                $productPrice->seller_id = Auth::user()->id;
+                $productPrice->added_by = Auth::user()->user_type == 'seller' ? 'seller' : 'admin';
+                $productPrice->product_id = $product->id;
+                $productPrice->sku = $price->sku;
+                $productPrice->min_qty = 1;
+                $productPrice->unit_price = $price->unit_price;
+                $productPrice->purchase_price = $price->purchase_price;
+                $productPrice->tax = $price->tax;
+                $productPrice->tax_type = $price->tax_type;
+                $productPrice->discount = $price->discount;
+                $productPrice->discount_type = $price->discount_type;
+                $productPrice->shipping_type = $price->shipping_type;
+                $productPrice->current_stock = $price->current_stock;
+                $productPrice->save();
+            }
         }
 
         flash(translate('Brand inserted successfully'))->success();

@@ -12,7 +12,7 @@ class InvoiceController extends Controller
     //downloads customer invoice
     public function customer_invoice_download($id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::with('seller')->findOrFail($id);
         $pdf = PDF::setOptions([
             'isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true,
             'logOutputFile' => storage_path('logs/log.htm'),
@@ -24,7 +24,7 @@ class InvoiceController extends Controller
     //downloads seller invoice
     public function seller_invoice_download($id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::with('seller')->findOrFail($id);
         $order->view_invoice = 1;
         $order->save();
         $pdf = PDF::setOptions([

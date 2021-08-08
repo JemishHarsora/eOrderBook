@@ -121,7 +121,7 @@
                                     <td>{{ $key+1 }}</td>
                                     <td>
                                         @if ($orderDetail->product != null)
-                                            <a href="{{ route('product', $orderDetail->product->slug) }}" target="_blank">{{ $orderDetail->product->getTranslation('name') }}</a>
+                                            <a href="{{ route('product', $orderDetail->product->slug) }}" target="_blank">{{ $orderDetail->product->product->getTranslation('name') }}</a>
                                         @else
                                             <strong>{{  translate('Product Unavailable') }}</strong>
                                         @endif
@@ -149,7 +149,7 @@
                                             $today_date = Carbon\Carbon::now();
                                         @endphp
                                         <td>
-                                            @if ($orderDetail->product != null && $orderDetail->product->refundable != 0 && $orderDetail->refund_request == null && $today_date <= $last_refund_date && $orderDetail->delivery_status == 'delivered')
+                                            @if ($orderDetail->product != null && $orderDetail->product->product->refundable != 0 && $orderDetail->refund_request == null && $today_date <= $last_refund_date && $orderDetail->delivery_status == 'delivered')
                                                 <a href="{{route('refund_request_send_page', $orderDetail->id)}}" class="btn btn-primary btn-sm">{{  translate('Send') }}</a>
                                             @elseif ($orderDetail->refund_request != null && $orderDetail->refund_request->refund_status == 0)
                                                 <b class="text-info">{{  translate('Pending') }}</b>

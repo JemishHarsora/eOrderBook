@@ -371,18 +371,19 @@ class OrderController extends Controller
     {
         $selected_brand = '';
         $seller_id = (Auth::user()->user_type == 'seller') ? Auth::user()->id : Auth::user()->created_by;
-
-        $areas = DB::table('routes')
-            ->join('areas', 'routes.area_id', '=', 'areas.id')
-            ->where('routes.seller_id', $seller_id)
-            ->groupBy('routes.area_id')
-            ->select('areas.id', 'areas.name')
-            ->get();
+        $areas=[];
+        // $areas = DB::table('routes')
+        //     ->join('areas', 'routes.area_id', '=', 'areas.id')
+        //     ->where('routes.seller_id', $seller_id)
+        //     ->groupBy('routes.area_id')
+        //     ->select('areas.id', 'areas.name')
+        //     ->get();
         $products = ProductPrice::where('seller_id', $seller_id)->where('published', 1);
         if ($request->has('brand')) {
             $selected_brand = $request->brand;
             $product_id = Product::where('brand_id', $request->brand)->get()->pluck(['id']);
             $products = $products->whereIn('product_id', $product_id);
+            $areas = SellersBrand::with(['areas'])->where('seller_id', $seller_id)->where('brand_id', $request->brand)->get();
         }
         $products = $products->get();
 
@@ -390,7 +391,6 @@ class OrderController extends Controller
             ->with(['brands'])
             ->groupBy('brand_id')
             ->get();
-        // dd($brands);
         return view('frontend.user.sellerStaff.salesMan.manageOrders.create_order', compact('areas', 'products', 'brands', 'selected_brand'));
     }
 
@@ -571,7 +571,16 @@ class OrderController extends Controller
         $user = User::find(Auth::user()->id);
         $cart_data = $this->group_assoc(Session::get('cart'), 'owner_id');
         foreach ($cart_data as $key => $cart_product) {
-
+            foreach ($cart_product as $key => $cartItem) {
+                $product = ProductPrice::with(['product'])->find($cartItem['id']);
+                if($product->current_stock < $cartItem['quantity']){
+                    flash(translate('your cart quentity is gretar then available item for '. $product->product->name))->warning();
+                    return back();
+                }
+            }
+        }
+        
+        foreach ($cart_data as $key => $cart_product) {
             $order = new Order;
             if (Auth::check()) {
                 $order->user_id = $user->id;
@@ -607,17 +616,17 @@ class OrderController extends Controller
                 //Order Details Storing
                 foreach ($cart_product as $key => $cartItem) {
 
-                    $product = Product::find($cartItem['id']);
+                    $product = ProductPrice::with(['product'])->find($cartItem['id']);
 
                     if ($product->added_by == 'admin') {
                         array_push($admin_products, $cartItem['id']);
                     } else {
                         $product_ids = array();
-                        if (array_key_exists($product->user_id, $seller_products)) {
-                            $product_ids = $seller_products[$product->user_id];
+                        if (array_key_exists($product->seller_id, $seller_products)) {
+                            $product_ids = $seller_products[$product->seller_id];
                         }
                         array_push($product_ids, $cartItem['id']);
-                        $seller_products[$product->user_id] = $product_ids;
+                        $seller_products[$product->seller_id] = $product_ids;
                     }
 
                     $subtotal += $cartItem['price'] * $cartItem['quantity'];
@@ -626,8 +635,8 @@ class OrderController extends Controller
                     $product_variation = $cartItem['variant'];
 
                     if ($product_variation != null) {
-                        $product_stock = $product->stocks->where('variant', $product_variation)->first();
-                        if ($product->digital != 1 &&  $cartItem['quantity'] > $product_stock->qty) {
+                        $product_stock = $product->product->stocks->where('variant', $product_variation)->first();
+                        if ($product->product->digital != 1 &&  $cartItem['quantity'] > $product_stock->qty) {
                             flash(translate('The requested quantity is not available for ') . $product->getTranslation('name'))->warning();
                             $order->delete();
                             return redirect()->route('cart')->send();
@@ -636,8 +645,8 @@ class OrderController extends Controller
                             $product_stock->save();
                         }
                     } else {
-                        if ($product->digital != 1 && $cartItem['quantity'] > $product->current_stock) {
-                            flash(translate('The requested quantity is not available for ') . $product->getTranslation('name'))->warning();
+                        if ($product->product->digital != 1 && $cartItem['quantity'] > $product->current_stock) {
+                            flash(translate('The requested quantity is not available for ') . $product->product->getTranslation('name'))->warning();
                             $order->delete();
                             return redirect()->route('cart')->send();
                         } else {
@@ -651,7 +660,7 @@ class OrderController extends Controller
 
                     $order_detail = new OrderDetail;
                     $order_detail->order_id  = $order->id;
-                    $order_detail->seller_id = $product->user_id;
+                    $order_detail->seller_id = $product->seller_id;
                     $order_detail->product_id = $product->id;
                     $order_detail->variation = $product_variation;
                     $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
@@ -776,7 +785,7 @@ class OrderController extends Controller
         $request['shipping_type'] = 'home_delivery';
 
         try {
-            $this->add_item($request);
+            $this->add_item($request);    
             flash(translate('Order has been added successfully'))->success();
         } catch (\Throwable $th) {
             flash(translate('Something went wrong'))->error();
@@ -785,6 +794,7 @@ class OrderController extends Controller
     }
     public function add_item(Request $request)
     {
+        // dd($request->all());
         $addIds = request('add_id');
         $add_qty = request('add_qty');
         $orderId = request('order_id');
@@ -821,7 +831,7 @@ class OrderController extends Controller
                 $order_detail = new OrderDetail;
                 $order_detail->order_id  = $orderId;
                 $order_detail->seller_id = $product->seller_id;
-                $order_detail->product_id = $product->product_id;
+                $order_detail->product_id = $product->id;
                 $order_detail->variation = '';
                 $order_detail->price = $price * $add_qty[$key];
                 $order_detail->tax = $tax * $add_qty[$key];
@@ -829,18 +839,17 @@ class OrderController extends Controller
                 $order_detail->shipping_cost = 0;
                 $order_detail->quantity = $add_qty[$key];
                 $order_detail->save();
-                $product->num_of_sale = $product->num_of_sale->$add_qty[$key];
+                $product->num_of_sale = $product->num_of_sale + $add_qty[$key];
                 $product->current_stock = $product->current_stock - $add_qty[$key];
                 $product->save();
             }
-            $Order->grand_total = $Order->grand_total + $subtotal + $shipping;;
+            $Order->grand_total = $Order->grand_total + $subtotal + $shipping;
             $Order->save();
         }
         $array['view'] = 'emails.invoice';
         $array['subject'] = translate('Your order has been placed') . ' - ' . $Order->code;
         $array['from'] = env('MAIL_USERNAME');
         $array['order'] = $Order;
-
         try {
 
             Mail::to($Order->seller->email)->queue(new InvoiceEmailManager($array));
@@ -1076,9 +1085,9 @@ class OrderController extends Controller
     public function getInfoProduct()
     {
         $id = request('id');
-        $product = ProductPrice::where('id', $id)->first();
+        $product = ProductPrice::with(['product'])->where('id', $id)->first();
 
-        $product->discounted_price = substr(home_discounted_price($product->product_id), 2);
+        $product->discounted_price = substr(home_discounted_price($product->id), 2);
         $price = $product->unit_price;
         if ($product->discount_type == 'percent') {
             $price -= ($price * $product->discount) / 100;

@@ -353,7 +353,7 @@ if (!function_exists('home_price')) {
 if (!function_exists('home_discounted_price')) {
     function home_discounted_price($id)
     {
-        $product = ProductPrice::where('product_id', $id)->first();
+        $product = ProductPrice::where('id', $id)->first();
         $lowest_price = $product->purchase_price;
         $highest_price = $product->purchase_price;
 
@@ -405,7 +405,6 @@ if (!function_exists('home_discounted_price')) {
 
         $lowest_price = convert_price($lowest_price);
         $highest_price = convert_price($highest_price);
-
         if ($lowest_price == $highest_price) {
             return format_price($lowest_price);
         } else {

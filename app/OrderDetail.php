@@ -13,7 +13,7 @@ class OrderDetail extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(ProductPrice::class);
     }
 
     public function pickup_point()

@@ -1,33 +1,33 @@
 @extends('frontend.layouts.app')
 
-@section('meta_title'){{ $detailedProduct->meta_title }}@stop
+@section('meta_title'){{ $detailedProduct->product->meta_title }}@stop
 
-@section('meta_description'){{ $detailedProduct->meta_description }}@stop
+@section('meta_description'){{ $detailedProduct->product->meta_description }}@stop
 
-@section('meta_keywords'){{ $detailedProduct->tags }}@stop
+@section('meta_keywords'){{ $detailedProduct->product->tags }}@stop
 
 @section('meta')
     <!-- Schema.org markup for Google+ -->
-    <meta itemprop="name" content="{{ $detailedProduct->meta_title }}">
-    <meta itemprop="description" content="{{ $detailedProduct->meta_description }}">
-    <meta itemprop="image" content="{{ uploaded_asset($detailedProduct->meta_img) }}">
+    <meta itemprop="name" content="{{ $detailedProduct->product->meta_title }}">
+    <meta itemprop="description" content="{{ $detailedProduct->product->meta_description }}">
+    <meta itemprop="image" content="{{ uploaded_asset($detailedProduct->product->meta_img) }}">
 
     <!-- Twitter Card data -->
     <meta name="twitter:card" content="product">
     <meta name="twitter:site" content="@publisher_handle">
-    <meta name="twitter:title" content="{{ $detailedProduct->meta_title }}">
-    <meta name="twitter:description" content="{{ $detailedProduct->meta_description }}">
+    <meta name="twitter:title" content="{{ $detailedProduct->product->meta_title }}">
+    <meta name="twitter:description" content="{{ $detailedProduct->product->meta_description }}">
     <meta name="twitter:creator" content="@author_handle">
-    <meta name="twitter:image" content="{{ uploaded_asset($detailedProduct->meta_img) }}">
+    <meta name="twitter:image" content="{{ uploaded_asset($detailedProduct->product->meta_img) }}">
     <meta name="twitter:data1" content="{{ single_price($detailedProduct->unit_price) }}">
     <meta name="twitter:label1" content="Price">
 
     <!-- Open Graph data -->
-    <meta property="og:title" content="{{ $detailedProduct->meta_title }}" />
+    <meta property="og:title" content="{{ $detailedProduct->product->meta_title }}" />
     <meta property="og:type" content="og:product" />
     <meta property="og:url" content="{{ route('product', $detailedProduct->slug) }}" />
-    <meta property="og:image" content="{{ uploaded_asset($detailedProduct->meta_img) }}" />
-    <meta property="og:description" content="{{ $detailedProduct->meta_description }}" />
+    <meta property="og:image" content="{{ uploaded_asset($detailedProduct->product->meta_img) }}" />
+    <meta property="og:description" content="{{ $detailedProduct->product->meta_description }}" />
     <meta property="og:site_name" content="{{ get_setting('meta_title') }}" />
     <meta property="og:price:amount" content="{{ single_price($detailedProduct->unit_price) }}" />
     <meta property="product:price:currency" content="{{ \App\Currency::findOrFail(\App\BusinessSetting::where('type', 'system_default_currency')->first()->value)->code }}" />
@@ -42,7 +42,7 @@
                     <div class="col-xl-5 col-lg-6 mb-4">
                         <div class="sticky-top z-3 row gutters-10">
                             @php
-                                $photos = explode(',', $detailedProduct->photos);
+                                $photos = explode(',', $detailedProduct->product->photos);
                             @endphp
                             <div class="col order-1 order-md-2">
                                 <div class="aiz-carousel product-gallery" data-nav-for='.product-gallery-thumb' data-fade='true'>
@@ -76,25 +76,25 @@
                     <div class="col-xl-7 col-lg-6">
                         <div class="text-left">
                             <h1 class="mb-2 fs-20 fw-600">
-                                {{ $detailedProduct->getTranslation('name') }}
+                                {{ $detailedProduct->product->getTranslation('name') }}
                             </h1>
 
                             <div class="row align-items-center">
                                 <div class="col-6">
                                     @php
                                         $total = 0;
-                                        $total += $detailedProduct->reviews->count();
+                                        $total += $detailedProduct->product->reviews->count();
                                     @endphp
                                     <span class="rating">
-                                        {{ renderStarRating($detailedProduct->rating) }}
+                                        {{ renderStarRating($detailedProduct->product->rating) }}
                                     </span>
                                     <span class="ml-1 opacity-50">({{ $total }} {{ translate('reviews') }})</span>
                                 </div>
                                 <div class="col-6 text-right">
                                     @php
                                         $qty = 0;
-                                        if ($detailedProduct->variant_product) {
-                                            foreach ($detailedProduct->stocks as $key => $stock) {
+                                        if ($detailedProduct->product->variant_product) {
+                                            foreach ($detailedProduct->product->stocks as $key => $stock) {
                                                 $qty += $stock->qty;
                                             }
                                         } else {
@@ -132,9 +132,9 @@
                                     </div>
                                 @endif
 
-                                @if ($detailedProduct->brand != null)
+                                @if ($detailedProduct->product->brand != null)
                                     <div class="col-auto">
-                                        <img src="{{ uploaded_asset($detailedProduct->brand->logo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="{{ $detailedProduct->brand->getTranslation('name') }}" height="30">
+                                        <img src="{{ uploaded_asset($detailedProduct->product->brand->logo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="{{ $detailedProduct->product->brand->getTranslation('name') }}" height="30">
                                     </div>
                                 @endif
                             </div>
@@ -151,8 +151,8 @@
                                         <div class="fs-20 opacity-60">
                                             <del>
                                                 {{ home_price($detailedProduct->id) }}
-                                                @if ($detailedProduct->unit != null)
-                                                    <span>/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                                @if ($detailedProduct->product->unit != null)
+                                                    <span>/{{ $detailedProduct->product->getTranslation('unit') }}</span>
                                                 @endif
                                             </del>
                                         </div>
@@ -168,8 +168,8 @@
                                             <strong class="h2 fw-600 text-primary">
                                                 {{ home_discounted_price($detailedProduct->id) }}
                                             </strong>
-                                            @if ($detailedProduct->unit != null)
-                                                <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                            @if ($detailedProduct->product->unit != null)
+                                                <span class="opacity-70">/{{ $detailedProduct->product->getTranslation('unit') }}</span>
                                             @endif
                                         </div>
                                     </div>
@@ -184,22 +184,22 @@
                                             <strong class="h2 fw-600 text-primary">
                                                 {{ home_discounted_price($detailedProduct->id) }}
                                             </strong>
-                                            @if ($detailedProduct->unit != null)
-                                                <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                            @if ($detailedProduct->product->unit != null)
+                                                <span class="opacity-70">/{{ $detailedProduct->product->getTranslation('unit') }}</span>
                                             @endif
                                         </div>
                                     </div>
                                 </div>
                             @endif
 
-                            @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated && $detailedProduct->earn_point > 0)
+                            @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated && $detailedProduct->product->earn_point > 0)
                                 <div class="row no-gutters mt-4">
                                     <div class="col-sm-2">
                                         <div class="opacity-50 my-2">{{ translate('Club Point') }}:</div>
                                     </div>
                                     <div class="col-sm-10">
                                         <div class="d-inline-block rounded px-2 bg-soft-primary border-soft-primary border">
-                                            <span class="strong-700">{{ $detailedProduct->earn_point }}</span>
+                                            <span class="strong-700">{{ $detailedProduct->product->earn_point }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -211,8 +211,8 @@
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $detailedProduct->id }}">
 
-                                @if ($detailedProduct->choice_options != null)
-                                    @foreach (json_decode($detailedProduct->choice_options) as $key => $choice)
+                                @if ($detailedProduct->product->choice_options != null)
+                                    @foreach (json_decode($detailedProduct->product->choice_options) as $key => $choice)
 
                                         <div class="row no-gutters">
                                             <div class="col-sm-2">
@@ -239,14 +239,14 @@
                                     @endforeach
                                 @endif
 
-                                @if (count(json_decode($detailedProduct->colors)) > 0)
+                                @if (count(json_decode($detailedProduct->product->colors)) > 0)
                                     <div class="row no-gutters">
                                         <div class="col-sm-2">
                                             <div class="opacity-50 my-2">{{ translate('Color') }}:</div>
                                         </div>
                                         <div class="col-sm-10">
                                             <div class="aiz-radio-inline">
-                                                @foreach (json_decode($detailedProduct->colors) as $key => $color)
+                                                @foreach (json_decode($detailedProduct->product->colors) as $key => $color)
                                                     <label class="aiz-megabox pl-0 mr-2" data-toggle="tooltip" data-title="{{ \App\Color::where('code', $color)->first()->name }}">
                                                         <input
                                                             type="radio"
@@ -276,7 +276,7 @@
                                                 <button class="btn col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="minus" data-field="quantity" disabled="">
                                                     <i class="las la-minus"></i>
                                                 </button>
-                                                <input type="text" name="quantity" class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $detailedProduct->min_qty }}" min="{{ $detailedProduct->min_qty }}" max="10">
+                                                <input type="text" name="quantity" class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $detailedProduct->min_qty }}" min="{{ $detailedProduct->min_qty }}" max="{{ $detailedProduct->current_stock }}">
                                                 <button class="btn  col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="plus" data-field="quantity">
                                                     <i class="las la-plus"></i>
                                                 </button>
@@ -353,7 +353,7 @@
                                 $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')->first();
                                 $refund_sticker = \App\BusinessSetting::where('type', 'refund_sticker')->first();
                             @endphp
-                            @if ($refund_request_addon != null && $refund_request_addon->activated == 1 && $detailedProduct->refundable)
+                            @if ($refund_request_addon != null && $refund_request_addon->activated == 1 && $detailedProduct->product->refundable)
                                 <div class="row no-gutters mt-4">
                                     <div class="col-sm-2">
                                         <div class="opacity-50 my-2">{{ translate('Refund') }}:</div>
@@ -476,28 +476,31 @@
                             <ul class="list-group list-group-flush">
                                 @php
                                     $area_seller = getAreaWiseBrand();
-                                    $products_top_selling = filter_products(\App\Product::where('user_id', $detailedProduct->user_id)->orderBy('num_of_sale', 'desc'))
+                                    $products_top_selling = filter_products(\App\ProductPrice::with(['product'])->where('seller_id', $detailedProduct->seller_id)->orderBy('num_of_sale', 'desc'))
                                         ->limit(6)
                                         ->get();
                                     if ($area_seller['seller_ids'] != null) {
                                         if ($area_seller['seller_ids']['0'] != null) {
                                             $products_top_selling = filter_products(
-                                                \App\Product::where('user_id', $detailedProduct->user_id)
-                                                    ->whereIn('brand_id', $area_seller->brand_ids)
-                                                    ->orderBy('num_of_sale', 'desc'),
+                                                \App\ProductPrice::with(['product' => function($query) use($area_seller){
+                                                        $query->whereIn('brand_id', $area_seller->brand_ids);
+                                                    }])->where('published', 1)->where('seller_id', $area_seller->seller_ids)
+                                                    ->groupBy('product_id')
+                                                    ->orderBy('num_of_sale', 'desc')
                                             )
                                                 ->limit(6)
                                                 ->get();
                                         } else {
                                             $products_top_selling = filter_products(
-                                                \App\Product::where('user_id', $detailedProduct->user_id)
-                                                    ->where('id', $area_seller['seller_ids']['0'])
+                                                \App\ProductPrice::with(['product'])
+                                                    ->where('seller_id', $area_seller['seller_ids']['0'])
                                                     ->orderBy('num_of_sale', 'desc'),
                                             )
                                                 ->limit(6)
                                                 ->get();
                                         }
                                     }
+                                    // dd($products_top_selling);
                                 @endphp
                                 @foreach ($products_top_selling as $key => $top_product)
                                     <li class="py-3 px-0 list-group-item border-light">
@@ -507,17 +510,17 @@
                                                     <img
                                                         class="img-fit lazyload h-xxl-110px h-xl-80px h-120px"
                                                         src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                        data-src="{{ uploaded_asset($top_product->thumbnail_img) }}"
-                                                        alt="{{ $top_product->getTranslation('name') }}"
+                                                        data-src="{{ uploaded_asset($top_product->product->thumbnail_img) }}"
+                                                        alt="{{ $top_product->product->getTranslation('name') }}"
                                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                                 </a>
                                             </div>
                                             <div class="col-7 text-left">
                                                 <h4 class="fs-13 text-truncate-2">
-                                                    <a href="{{ route('product', $top_product->slug) }}" class="d-block text-reset">{{ $top_product->getTranslation('name') }}</a>
+                                                    <a href="{{ route('product', $top_product->slug) }}" class="d-block text-reset">{{ $top_product->product->getTranslation('name') }}</a>
                                                 </h4>
                                                 <div class="rating rating-sm mt-1">
-                                                    {{ renderStarRating($top_product->rating) }}
+                                                    {{ renderStarRating($top_product->product->rating) }}
                                                 </div>
                                                 <div class="mt-2">
                                                     <span class="fs-17 fw-600 text-primary">{{ home_discounted_base_price($top_product->id) }}</span>
@@ -534,10 +537,10 @@
                     <div class="bg-white mb-3 shadow-sm rounded">
                         <div class="nav border-bottom aiz-nav-tabs">
                             <a href="#tab_default_1" data-toggle="tab" class="p-3 fs-16 fw-600 text-reset active show">{{ translate('Description') }}</a>
-                            @if ($detailedProduct->video_link != null)
+                            @if ($detailedProduct->product->video_link != null)
                                 <a href="#tab_default_2" data-toggle="tab" class="p-3 fs-16 fw-600 text-reset">{{ translate('Video') }}</a>
                             @endif
-                            @if ($detailedProduct->pdf != null)
+                            @if ($detailedProduct->product->pdf != null)
                                 <a href="#tab_default_3" data-toggle="tab" class="p-3 fs-16 fw-600 text-reset">{{ translate('Downloads') }}</a>
                             @endif
                             <a href="#tab_default_4" data-toggle="tab" class="p-3 fs-16 fw-600 text-reset">{{ translate('Reviews') }}</a>
@@ -547,7 +550,7 @@
                             <div class="tab-pane fade active show" id="tab_default_1">
                                 <div class="p-4">
                                     <div class="mw-100 overflow-hidden text-left">
-                                        <?php echo $detailedProduct->getTranslation('description'); ?>
+                                        <?php echo $detailedProduct->product->getTranslation('description'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -555,25 +558,25 @@
                             <div class="tab-pane fade" id="tab_default_2">
                                 <div class="p-4">
                                     <div class="embed-responsive embed-responsive-16by9">
-                                        @if ($detailedProduct->video_provider == 'youtube' && isset(explode('=', $detailedProduct->video_link)[1]))
-                                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ explode('=', $detailedProduct->video_link)[1] }}"></iframe>
-                                        @elseif ($detailedProduct->video_provider == 'dailymotion' && isset(explode('video/', $detailedProduct->video_link)[1]))
-                                            <iframe class="embed-responsive-item" src="https://www.dailymotion.com/embed/video/{{ explode('video/', $detailedProduct->video_link)[1] }}"></iframe>
-                                        @elseif ($detailedProduct->video_provider == 'vimeo' && isset(explode('vimeo.com/', $detailedProduct->video_link)[1]))
-                                            <iframe src="https://player.vimeo.com/video/{{ explode('vimeo.com/', $detailedProduct->video_link)[1] }}" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                                        @if ($detailedProduct->product->video_provider == 'youtube' && isset(explode('=', $detailedProduct->product->video_link)[1]))
+                                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ explode('=', $detailedProduct->product->video_link)[1] }}"></iframe>
+                                        @elseif ($detailedProduct->product->video_provider == 'dailymotion' && isset(explode('video/', $detailedProduct->product->video_link)[1]))
+                                            <iframe class="embed-responsive-item" src="https://www.dailymotion.com/embed/video/{{ explode('video/', $detailedProduct->product->video_link)[1] }}"></iframe>
+                                        @elseif ($detailedProduct->product->video_provider == 'vimeo' && isset(explode('vimeo.com/', $detailedProduct->product->video_link)[1]))
+                                            <iframe src="https://player.vimeo.com/video/{{ explode('vimeo.com/', $detailedProduct->product->video_link)[1] }}" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
                                         @endif
                                     </div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tab_default_3">
                                 <div class="p-4 text-center ">
-                                    <a href="{{ uploaded_asset($detailedProduct->pdf) }}" class="btn btn-primary">{{ translate('Download') }}</a>
+                                    <a href="{{ uploaded_asset($detailedProduct->product->pdf) }}" class="btn btn-primary">{{ translate('Download') }}</a>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tab_default_4">
                                 <div class="p-4">
                                     <ul class="list-group list-group-flush">
-                                        @foreach ($detailedProduct->reviews as $key => $review)
+                                        @foreach ($detailedProduct->product->reviews as $key => $review)
                                             @if ($review->user != null)
                                                 <li class="media list-group-item d-flex">
                                                     <span class="avatar avatar-md mr-3">
@@ -607,12 +610,11 @@
                                         @endforeach
                                     </ul>
 
-                                    @if (count($detailedProduct->reviews) <= 0)
+                                    @if (count($detailedProduct->product->reviews) <= 0)
                                         <div class="text-center fs-18 opacity-70">
                                             {{ translate('There have been no reviews for this product yet.') }}
                                         </div>
                                     @endif
-
                                     @if (Auth::check())
                                         @php
                                             $commentable = false;
@@ -709,24 +711,23 @@
                                     if ($area_seller['seller_ids'] != null) {
                                         if ($area_seller['seller_ids']['0'] != null) {
                                             $retated_product = filter_products(
-                                                \App\Product::where('category_id', $detailedProduct->category_id)
-                                                    ->where('id', '!=', $detailedProduct->id)
-                                                    ->whereIn('user_id', $area_seller->seller_ids),
-                                            )
-                                                ->limit(10)
-                                                ->get();
+                                                \App\ProductPrice::with(['product' => function($query) use($detailedProduct){
+                                                    $query->where('category_id', $detailedProduct->product->category_id);
+                                                }])->where('id', '!=', $detailedProduct->id)
+                                                    ->whereIn('seller_id', $area_seller->seller_ids),
+                                            )->limit(10)->get();
                                         } else {
                                             $retated_product = filter_products(
-                                                \App\Product::where('category_id', $detailedProduct->category_id)
-                                                    ->where('id', $area_seller['seller_ids']['0'])
+                                                \App\ProductPrice::with(['product' => function($query) use($detailedProduct){
+                                                    $query->where('category_id', $detailedProduct->product->category_id);
+                                                }]) ->where('seller_id', $area_seller['seller_ids']['0'])
                                                     ->where('id', '!=', $detailedProduct->id),
-                                            )
-                                                ->limit(10)
-                                                ->get();
+                                            )->limit(10)->get();
                                         }
                                     }
                                 @endphp
                                 @foreach ($retated_product as $key => $related_product)
+                                @if($related_product->product !="")
                                     <div class="carousel-box">
                                         <div class="aiz-card-box border border-light rounded hov-shadow-md my-2 has-transition">
                                             <div class="">
@@ -734,8 +735,8 @@
                                                     <img
                                                         class="img-fit lazyload mx-auto h-140px h-md-210px"
                                                         src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                        data-src="{{ uploaded_asset($related_product->thumbnail_img) }}"
-                                                        alt="{{ $related_product->getTranslation('name') }}"
+                                                        data-src="{{ uploaded_asset($related_product->product->thumbnail_img) }}"
+                                                        alt="{{ $related_product->product->getTranslation('name') }}"
                                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                                 </a>
                                             </div>
@@ -747,20 +748,21 @@
                                                     <span class="fw-700 text-primary">{{ home_discounted_base_price($related_product->id) }}</span>
                                                 </div>
                                                 <div class="rating rating-sm mt-1">
-                                                    {{ renderStarRating($related_product->rating) }}
+                                                    {{ renderStarRating($related_product->product->rating) }}
                                                 </div>
                                                 <h3 class="fw-600 fs-13 text-truncate-2 lh-1-4 mb-0 h-35px">
-                                                    <a href="{{ route('product', $related_product->slug) }}" class="d-block text-reset">{{ $related_product->getTranslation('name') }}</a>
+                                                    <a href="{{ route('product', $related_product->slug) }}" class="d-block text-reset">{{ $related_product->product->getTranslation('name') }}</a>
                                                 </h3>
                                                 @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated)
                                                     <div class="rounded px-2 mt-2 bg-soft-primary border-soft-primary border">
                                                         {{ translate('Club Point') }}:
-                                                        <span class="fw-700 float-right">{{ $related_product->earn_point }}</span>
+                                                        <span class="fw-700 float-right">{{ $related_product->product->earn_point }}</span>
                                                     </div>
                                                 @endif
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
                                 @endforeach
                             </div>
                         </div>
@@ -790,13 +792,13 @@
                         <div class="row">
                             <div class="col-lg-2 d-flex">
                                 <span class="mr-2 ml-0">
-                                    <img src="{{ uploaded_asset($product->thumbnail_img) }}"
+                                    <img src="{{ uploaded_asset($product->product->thumbnail_img) }}"
                                         class="img-fit size-60px rounded" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
-                                        alt="{{ $product->getTranslation('name') }}">
+                                        alt="{{ $product->product->getTranslation('name') }}">
                                 </span>
                             </div>
                             <div class="col-lg-7">
-                                <span class="fs-14 opacity-60">{{ $product->getTranslation('name') }}</span>
+                                <span class="fs-14 opacity-60">{{ $product->product->getTranslation('name') }}</span>
                                 <br>
                                 <span class="fw-600 fs-12">
                                     @if ($product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
@@ -807,8 +809,8 @@
                                 </span>
                                 <br>
                                 <span class="fw-600 fs-16">{{ home_discounted_price($product->id) }}
-                                    @if ($product->unit != null)
-                                    <span>/{{ $product->getTranslation('unit') }}</span>
+                                    @if ($product->product->unit != null)
+                                    <span>/{{ $product->product->getTranslation('unit') }}</span>
                                 @endif
                                 </span>
                             </div>
@@ -851,7 +853,7 @@
                     <input type="hidden" name="product_id" value="{{ $detailedProduct->id }}">
                     <div class="modal-body gry-bg px-3 pt-3">
                         <div class="form-group">
-                            <input type="text" class="form-control mb-3" name="title" value="{{ $detailedProduct->name }}" placeholder="{{ translate('Product Name') }}" required>
+                            <input type="text" class="form-control mb-3" name="title" value="{{ $detailedProduct->product->name }}" placeholder="{{ translate('Product Name') }}" required>
                         </div>
                         <div class="form-group">
                             <textarea class="form-control" rows="8" name="message" required placeholder="{{ translate('Your Question') }}">{{ route('product', $detailedProduct->slug) }}</textarea>
