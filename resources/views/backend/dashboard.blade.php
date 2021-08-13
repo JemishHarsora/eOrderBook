@@ -131,7 +131,7 @@
     </div>
     <div class="card-body">
         <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="6" data-xl-items="5" data-lg-items="4" data-md-items="3" data-sm-items="2" data-arrows='true'>
-            @foreach (filter_products(\App\Product::where('published', 1)->orderBy('num_of_sale', 'desc'))->limit(12)->get() as $key => $product)
+            @foreach (filter_products(\App\ProductPrice::with('product')->where('published', 1)->orderBy('num_of_sale', 'desc'))->limit(12)->get() as $key => $product)
                 <div class="carousel-box">
                     <div class="aiz-card-box border border-light rounded shadow-sm hov-shadow-md mb-2 has-transition bg-white">
                         <div class="position-relative">
@@ -139,8 +139,8 @@
                                 <img
                                     class="img-fit lazyload mx-auto h-210px"
                                     src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                    data-src="{{ uploaded_asset($product->thumbnail_img) }}"
-                                    alt="{{  $product->getTranslation('name')  }}"
+                                    data-src="{{ uploaded_asset($product->product->thumbnail_img) }}"
+                                    alt="{{ $product->product->getTranslation('name') }}"
                                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                 >
                             </a>
@@ -153,10 +153,10 @@
                                 <span class="fw-700 text-primary">{{ home_discounted_base_price($product->id) }}</span>
                             </div>
                             <div class="rating rating-sm mt-1">
-                                {{ renderStarRating($product->rating) }}
+                                {{ renderStarRating($product->product->rating) }}
                             </div>
                             <h3 class="fw-600 fs-13 text-truncate-2 lh-1-4 mb-0">
-                                <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{ $product->getTranslation('name') }}</a>
+                                <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{ $product->product->getTranslation('name') }}</a>
                             </h3>
                         </div>
                     </div>
@@ -165,7 +165,6 @@
         </div>
     </div>
 </div>
-
 
 @endsection
 @section('script')
@@ -181,9 +180,9 @@
             datasets: [
                 {
                     data: [
-                        {{ \App\Product::where('published', 1)->get()->count() }},
-                        {{ \App\Product::where('published', 1)->where('added_by', 'seller')->get()->count() }},
-                        {{ \App\Product::where('published', 1)->where('added_by', 'admin')->get()->count() }}
+                        {{ \App\ProductPrice::where('published', 1)->get()->count() }},
+                        {{ \App\ProductPrice::where('published', 1)->where('added_by', 'seller')->get()->count() }},
+                        {{ \App\ProductPrice::where('published', 1)->where('added_by', 'admin')->get()->count() }}
                     ],
                     backgroundColor: [
                         "#fd3995",
@@ -269,7 +268,9 @@
             ],
             datasets: [
                 @foreach (\App\Category::where('level', 0)->get() as $key => $category)
-                {{ \App\Product::where('category_id', $category->id)->sum('num_of_sale') }},
+                {{ \App\ProductPrice::with(['product'])->whereHas('product',function($query) use($category){
+                    $query->where('category_id', $category->id);
+                })->sum('num_of_sale') }},
                 @endforeach
             ]
     }
@@ -289,7 +290,11 @@
                             $category_ids = \App\Utility\CategoryUtility::children_ids($category->id);
                             $category_ids[] = $category->id;
                         @endphp
-                    {{ \App\Product::whereIn('category_id', $category_ids)->sum('num_of_sale') }},
+                        
+                    {{ \App\ProductPrice::with(['product'])->whereHas('product',function($query) use($category_ids){
+                            $query->where('category_id', $category_ids);
+                        })->sum('num_of_sale')
+                    }},
                     @endforeach
                 ],
                 backgroundColor: [
@@ -358,11 +363,14 @@
                             $category_ids = \App\Utility\CategoryUtility::children_ids($category->id);
                             $category_ids[] = $category->id;
                             
-                            $products = \App\Product::whereIn('category_id', $category_ids)->get();
-                            $qty = 0;
+
+                            $products =  \App\ProductPrice::with(['product'])->whereHas('product',function($query) use($category_ids){
+                                $query->whereIn('category_id', $category_ids);
+                            })->get();
+                          
                             foreach ($products as $key => $product) {
-                                if ($product->variant_product) {
-                                    foreach ($product->stocks as $key => $stock) {
+                                if ($product->product->variant_product) {
+                                    foreach ($product->product->stocks as $key => $stock) {
                                         $qty += $stock->qty;
                                     }
                                 }
