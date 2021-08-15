@@ -489,7 +489,7 @@ class HomeController extends Controller
 
         if ($request->has('search')) {
             $search = $request->search;
-            $products = $products->where('name', 'like', '%' . $search . '%');
+            $products = $products->where('sku', 'like', '%' . $search . '%');
         }
         $products = $products->paginate(10);
         return view('frontend.user.seller.products', compact('products', 'search'));

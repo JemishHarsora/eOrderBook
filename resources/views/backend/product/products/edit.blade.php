@@ -25,13 +25,13 @@
 				<div class="form-group row">
                     <label class="col-lg-3 col-from-label">{{translate('Product Name')}} <i class="las la-language text-danger" title="{{translate('Translatable')}}"></i></label>
                     <div class="col-lg-8">
-                        <input type="text" class="form-control" name="name" placeholder="{{translate('Product Name')}}" value="{{ $product->getTranslation('name', $lang) }}" required>
+                        <input type="text" class="form-control" name="name" placeholder="{{translate('Product Name')}}" value="{{ $product->product->getTranslation('name', $lang) }}" required>
                     </div>
                 </div>
                 <div class="form-group row" id="category">
                     <label class="col-lg-3 col-from-label">{{translate('Category')}}</label>
                     <div class="col-lg-8">
-                        <select class="form-control aiz-selectpicker" name="category_id" id="category_id" data-selected="{{ $product->category_id }}" data-live-search="true" required>
+                        <select class="form-control aiz-selectpicker" name="category_id" id="category_id" data-selected="{{ $product->product->category_id }}" data-live-search="true" required>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->getTranslation('name') }}</option>
                                 @foreach ($category->childrenCategories as $childCategory)
@@ -47,7 +47,7 @@
                         <select class="form-control aiz-selectpicker" name="brand_id" id="brand_id" data-live-search="true">
 							<option value="">{{ ('Select Brand') }}</option>
 							@foreach (\App\Brand::all() as $brand)
-								<option value="{{ $brand->id }}" @if($product->brand_id == $brand->id) selected @endif>{{ $brand->getTranslation('name') }}</option>
+								<option value="{{ $brand->id }}" @if($product->product->brand_id == $brand->id) selected @endif>{{ $brand->getTranslation('name') }}</option>
 							@endforeach
                         </select>
                     </div>
@@ -55,7 +55,7 @@
                 <div class="form-group row">
                     <label class="col-lg-3 col-from-label">{{translate('Unit')}} <i class="las la-language text-danger" title="{{translate('Translatable')}}"></i> </label>
                     <div class="col-lg-8">
-                        <input type="text" class="form-control" name="unit" placeholder="{{ translate('Unit (e.g. KG, Pc etc)') }}" value="{{$product->getTranslation('unit', $lang)}}" required>
+                        <input type="text" class="form-control" name="unit" placeholder="{{ translate('Unit (e.g. KG, Pc etc)') }}" value="{{$product->product->getTranslation('unit', $lang)}}" required>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -67,7 +67,7 @@
                 <div class="form-group row">
                     <label class="col-lg-3 col-from-label">{{translate('Tags')}}</label>
                     <div class="col-lg-8">
-                        <input type="text" class="form-control aiz-tag-input" name="tags[]" id="tags" value="{{ $product->tags }}" placeholder="{{ translate('Type to add a tag') }}" data-role="tagsinput" required>
+                        <input type="text" class="form-control aiz-tag-input" name="tags[]" id="tags" value="{{ $product->product->tags }}" placeholder="{{ translate('Type to add a tag') }}" data-role="tagsinput" required>
                     </div>
                 </div>
 
@@ -93,7 +93,7 @@
                 <div class="form-group row">
                     <label class="col-md-3 col-from-label">{{translate('HSN Code')}}</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="hsn_code" placeholder="{{ translate('HSN Code') }}" required value="{{ $product->hsn_code }}">
+                        <input type="text" class="form-control" name="hsn_code" placeholder="{{ translate('HSN Code') }}" required value="{{ $product->product->hsn_code }}">
                     </div>
                 </div>
 
@@ -104,7 +104,7 @@
 					<div class="form-group row">
 						<label class="col-lg-3 col-from-label">{{translate('Barcode')}}</label>
 						<div class="col-lg-8">
-							<input type="text" class="form-control" name="barcode" placeholder="{{ translate('Barcode') }}" value="{{ $product->barcode }}" required minlength="13" maxlength="13" readonly>
+							<input type="text" class="form-control" name="barcode" placeholder="{{ translate('Barcode') }}" value="{{ $product->product->barcode }}" required minlength="13" maxlength="13" readonly>
 						</div>
 					</div>
 				{{-- @endif --}}
@@ -117,7 +117,7 @@
 						<label class="col-lg-3 col-from-label">{{translate('Refundable')}}</label>
 						<div class="col-lg-8">
 							<label class="aiz-switch aiz-switch-success mb-0" style="margin-top:5px;">
-								<input type="checkbox" name="refundable" @if ($product->refundable == 1) checked @endif>
+								<input type="checkbox" name="refundable" @if ($product->product->refundable == 1) checked @endif>
 	                            <span class="slider round"></span></label>
 							</label>
 						</div>
@@ -139,7 +139,7 @@
                                 <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                             </div>
                             <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                            <input type="hidden" name="photos" value="{{ $product->photos }}" class="selected-files">
+                            <input type="hidden" name="photos" value="{{ $product->product->photos }}" class="selected-files">
                         </div>
                         <div class="file-preview box sm">
                         </div>
@@ -153,7 +153,7 @@
                                 <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                             </div>
                             <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                            <input type="hidden" name="thumbnail_img" value="{{ $product->thumbnail_img }}" class="selected-files">
+                            <input type="hidden" name="thumbnail_img" value="{{ $product->product->thumbnail_img }}" class="selected-files">
                         </div>
                         <div class="file-preview box sm">
                         </div>
@@ -204,16 +204,16 @@
 					<label class="col-lg-3 col-from-label">{{translate('Video Provider')}}</label>
 					<div class="col-lg-8">
 						<select class="form-control aiz-selectpicker" name="video_provider" id="video_provider">
-							<option value="youtube" <?php if($product->video_provider == 'youtube') echo "selected";?> >{{translate('Youtube')}}</option>
-							<option value="dailymotion" <?php if($product->video_provider == 'dailymotion') echo "selected";?> >{{translate('Dailymotion')}}</option>
-							<option value="vimeo" <?php if($product->video_provider == 'vimeo') echo "selected";?> >{{translate('Vimeo')}}</option>
+							<option value="youtube" <?php if($product->product->video_provider == 'youtube') echo "selected";?> >{{translate('Youtube')}}</option>
+							<option value="dailymotion" <?php if($product->product->video_provider == 'dailymotion') echo "selected";?> >{{translate('Dailymotion')}}</option>
+							<option value="vimeo" <?php if($product->product->video_provider == 'vimeo') echo "selected";?> >{{translate('Vimeo')}}</option>
 						</select>
 					</div>
 				</div>
 				<div class="form-group row">
 					<label class="col-lg-3 col-from-label">{{translate('Video Link')}}</label>
 					<div class="col-lg-8">
-						<input type="text" class="form-control" name="video_link" value="{{ $product->video_link }}" placeholder="{{ translate('Video Link') }}">
+						<input type="text" class="form-control" name="video_link" value="{{ $product->product->video_link }}" placeholder="{{ translate('Video Link') }}">
 					</div>
 				</div>
 			</div>
@@ -233,14 +233,14 @@
 								<option
 									value="{{ $color->code }}"
 									data-content="<span><span class='size-15px d-inline-block mr-2 rounded border' style='background:{{ $color->code }}'></span><span>{{ $color->name }}</span></span>"
-									<?php if(in_array($color->code, json_decode($product->colors))) echo 'selected'?>
+									<?php if(in_array($color->code, json_decode($product->product->colors))) echo 'selected'?>
 								></option>
 							@endforeach
 						</select>
 					</div>
 					<div class="col-lg-1">
                         <label class="aiz-switch aiz-switch-success mb-0">
-                            <input value="1" type="checkbox" name="colors_active" <?php if(count(json_decode($product->colors)) > 0) echo "checked";?> >
+                            <input value="1" type="checkbox" name="colors_active" <?php if(count(json_decode($product->product->colors)) > 0) echo "checked";?> >
                             <span></span>
                         </label>
 					</div>
@@ -253,7 +253,7 @@
                     <div class="col-lg-8">
                         <select name="choice_attributes[]" id="choice_attributes" data-selected-text-format="count" data-live-search="true" class="form-control aiz-selectpicker" multiple data-placeholder="{{ translate('Choose Attributes') }}">
 							@foreach (\App\Attribute::all() as $key => $attribute)
-								<option value="{{ $attribute->id }}" @if($product->attributes != null && in_array($attribute->id, json_decode($product->attributes, true))) selected @endif>{{ $attribute->getTranslation('name') }}</option>
+								<option value="{{ $attribute->id }}" @if($product->product->attributes != null && in_array($attribute->id, json_decode($product->product->attributes, true))) selected @endif>{{ $attribute->getTranslation('name') }}</option>
 							@endforeach
                         </select>
                     </div>
@@ -265,7 +265,7 @@
 				</div>
 
 				<div class="customer_choice_options" id="customer_choice_options">
-					@foreach (json_decode($product->choice_options) as $key => $choice_option)
+					@foreach (json_decode($product->product->choice_options) as $key => $choice_option)
 						<div class="form-group row">
 							<div class="col-lg-3">
 								<input type="hidden" name="choice_no[]" value="{{ $choice_option->attribute_id }}">
@@ -340,7 +340,7 @@
 				<div class="form-group row">
                     <label class="col-lg-3 col-from-label">{{translate('Description')}} <i class="las la-language text-danger" title="{{translate('Translatable')}}"></i></label>
                     <div class="col-lg-9">
-                        <textarea class="aiz-text-editor" name="description">{{ $product->getTranslation('description', $lang) }}</textarea>
+                        <textarea class="aiz-text-editor" name="description">{{ $product->product->getTranslation('description', $lang) }}</textarea>
                     </div>
                 </div>
 			</div>
@@ -362,7 +362,7 @@
 								<label class="col-lg-3 col-from-label">{{translate('Status')}}</label>
 								<div class="col-lg-8">
 									<label class="aiz-switch aiz-switch-success mb-0">
-										<input type="radio" name="shipping_type" value="free" @if($product->shipping_type == 'free') checked @endif>
+										<input type="radio" name="shipping_type" value="free" @if($product->product->shipping_type == 'free') checked @endif>
 										<span></span>
 									</label>
 								</div>
@@ -381,7 +381,7 @@
 								<label class="col-lg-3 col-from-label">{{translate('Status')}}</label>
 								<div class="col-lg-8">
 									<label class="aiz-switch aiz-switch-success mb-0">
-										<input type="radio" name="shipping_type" value="flat_rate" @if($product->shipping_type == 'flat_rate') checked @endif>
+										<input type="radio" name="shipping_type" value="flat_rate" @if($product->product->shipping_type == 'flat_rate') checked @endif>
 										<span></span>
 									</label>
 								</div>
@@ -389,7 +389,7 @@
 							<div class="form-group row">
 								<label class="col-lg-3 col-from-label">{{translate('Shipping cost')}}</label>
 								<div class="col-lg-8">
-									<input type="number" lang="en" min="0" value="{{ $product->shipping_cost }}" step="0.01" placeholder="{{ translate('Shipping cost') }}" name="flat_shipping_cost" class="form-control" required>
+									<input type="number" lang="en" min="0" value="{{ $product->product->shipping_cost }}" step="0.01" placeholder="{{ translate('Shipping cost') }}" name="flat_shipping_cost" class="form-control" required>
 								</div>
 							</div>
 						</div>
@@ -410,7 +410,7 @@
                                 <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                             </div>
                             <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                            <input type="hidden" name="pdf" value="{{ $product->pdf }}" class="selected-files">
+                            <input type="hidden" name="pdf" value="{{ $product->product->pdf }}" class="selected-files">
                         </div>
                         <div class="file-preview box sm">
                         </div>
@@ -426,13 +426,13 @@
 				<div class="form-group row">
 					<label class="col-lg-3 col-from-label">{{translate('Meta Title')}}</label>
 					<div class="col-lg-8">
-						<input type="text" class="form-control" name="meta_title" value="{{ $product->meta_title }}" placeholder="{{translate('Meta Title')}}">
+						<input type="text" class="form-control" name="meta_title" value="{{ $product->product->meta_title }}" placeholder="{{translate('Meta Title')}}">
 					</div>
 				</div>
 				<div class="form-group row">
 					<label class="col-lg-3 col-from-label">{{translate('Description')}}</label>
 					<div class="col-lg-8">
-						<textarea name="meta_description" rows="8" class="form-control">{{ $product->meta_description }}</textarea>
+						<textarea name="meta_description" rows="8" class="form-control">{{ $product->product->meta_description }}</textarea>
 					</div>
 				</div>
                 <div class="form-group row">
@@ -443,7 +443,7 @@
                                 <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                             </div>
                             <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                            <input type="hidden" name="meta_img" value="{{ $product->meta_img }}" class="selected-files">
+                            <input type="hidden" name="meta_img" value="{{ $product->product->meta_img }}" class="selected-files">
                         </div>
                         <div class="file-preview box sm">
                         </div>

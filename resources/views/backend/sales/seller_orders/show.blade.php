@@ -95,14 +95,14 @@
                                     <td>{{ $key+1 }}</td>
                                     <td>
                                         @if ($orderDetail->product != null)
-                                          <a href="{{ route('product', $orderDetail->product->slug) }}" target="_blank"><img height="50px" src="{{ uploaded_asset($orderDetail->product->thumbnail_img) }}"></a>
+                                          <a href="{{ route('product', $orderDetail->product->slug) }}" target="_blank"><img height="50px" src="{{ uploaded_asset($orderDetail->product->product->thumbnail_img) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"></a>
                                         @else
                                           <strong>{{ translate('N/A') }}</strong>
                                         @endif
                                     </td>
                                     <td>
                                         @if ($orderDetail->product != null)
-                                          <strong><a href="{{ route('product', $orderDetail->product->slug) }}" target="_blank" class="text-muted">{{ $orderDetail->product->getTranslation('name') }}</a></strong>
+                                          <strong><a href="{{ route('product', $orderDetail->product->slug) }}" target="_blank" class="text-muted">{{ $orderDetail->product->product->getTranslation('name') }}</a></strong>
                                           <small>{{ $orderDetail->variation }}</small>
                                         @else
                                           <strong>{{ translate('Product Unavailable') }}</strong>

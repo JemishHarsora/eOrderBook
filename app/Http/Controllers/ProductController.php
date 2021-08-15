@@ -29,7 +29,9 @@ class ProductController extends Controller
         $query = null;
         $sort_search = null;
 
-        $products = Product::where('added_by', 'admin');
+        $products = ProductPrice::with(['product.category', 'product' => function ($q) {
+            $q->where('products.digital', 0);
+        }])->where('added_by', 'admin');
 
         if ($request->type != null) {
             $var = explode(",", $request->type);
@@ -40,11 +42,11 @@ class ProductController extends Controller
         }
         if ($request->search != null) {
             $products = $products
-                ->where('name', 'like', '%' . $request->search . '%');
+                ->where('sku', 'like', '%' . $request->search . '%');
             $sort_search = $request->search;
         }
 
-        $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(15);
+        $products = $products->orderBy('created_at', 'desc')->paginate(15);
 
         return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'sort_search'));
     }
@@ -60,14 +62,17 @@ class ProductController extends Controller
         $query = null;
         $seller_id = null;
         $sort_search = null;
-        $products = Product::where('added_by', 'seller');
+        $products = ProductPrice::with(['product.category', 'product' => function ($q) {
+            $q->where('products.digital', 0);
+        }])->where('added_by', 'seller');
+
         if ($request->has('user_id') && $request->user_id != null) {
-            $products = $products->where('user_id', $request->user_id);
+            $products = $products->where('seller_id', $request->user_id);
             $seller_id = $request->user_id;
         }
         if ($request->search != null) {
             $products = $products
-                ->where('name', 'like', '%' . $request->search . '%');
+                ->where('sku', 'like', '%' . $request->search . '%');
             $sort_search = $request->search;
         }
         if ($request->type != null) {
@@ -78,7 +83,7 @@ class ProductController extends Controller
             $sort_type = $request->type;
         }
 
-        $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(15);
+        $products = $products->orderBy('created_at', 'desc')->paginate(15);
         $type = 'Seller';
 
         return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'sort_search'));
@@ -90,14 +95,14 @@ class ProductController extends Controller
         $query = null;
         $seller_id = null;
         $sort_search = null;
-        $products = Product::orderBy('created_at', 'desc');
+        $products = ProductPrice::with(['product.category', 'product'])->orderBy('created_at', 'desc');
         if ($request->has('user_id') && $request->user_id != null) {
-            $products = $products->where('user_id', $request->user_id);
+            $products = $products->where('seller_id', $request->user_id);
             $seller_id = $request->user_id;
         }
         if ($request->search != null) {
             $products = $products
-                ->where('name', 'like', '%' . $request->search . '%');
+                ->where('sku', 'like', '%' . $request->search . '%');
             $sort_search = $request->search;
         }
         if ($request->type != null) {
@@ -138,7 +143,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $products = Product::where('user_id', Auth::user()->id)->where('barcode', $request->barcode)->first();
+        $products = Product::where('barcode', $request->barcode)->first();
         $product_id = '';
         if (Auth::user()->user_type = 'seller') {
             $seller_id  = Auth::user()->id;
@@ -390,9 +395,9 @@ class ProductController extends Controller
      */
     public function admin_product_edit(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductPrice::where('id', $id)->with(['product'])->first();
         $lang = $request->lang;
-        $tags = json_decode($product->tags);
+        $tags = json_decode($product->product->tags);
         $categories = Category::where('parent_id', 0)
             ->where('digital', 0)
             ->with('childrenCategories')

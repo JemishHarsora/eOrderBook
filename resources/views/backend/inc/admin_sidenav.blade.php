@@ -107,6 +107,11 @@
                         </li>
 
                         <li class="aiz-side-nav-item">
+                            <a href="{{route('product_detail.index')}}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('Bulk Product Update')}}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
                             <a href="{{route('product_stock.index')}}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{translate('Stock Update')}}</span>
                             </a>

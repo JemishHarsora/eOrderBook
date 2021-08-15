@@ -34,7 +34,7 @@ class ProductStockUpdateController extends Controller
         if (Auth::user()->user_type == 'seller') {
             return view('frontend.user.seller.product_detail_upload.index');
         } elseif (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff') {
-            return view('backend.product.detail_upload.index');
+            return view('backend.product.product_detail_upload.index');
         }
     }
 

@@ -108,17 +108,18 @@
 </thead>
 <tbody>
 @foreach ($products as $key => $product)
+@if($product->product)
 <tr>
     <td>{{ $key + 1 + ($products->currentPage() - 1) * $products->perPage() }}</td>
     <td>
         <a href="{{ route('product', $product->slug) }}" target="_blank">
             <div class="form-group row">
                 <div class="col-md-4">
-                    <img src="{{ uploaded_asset($product->thumbnail_img) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="Image"
+                    <img src="{{ uploaded_asset($product->product->thumbnail_img) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="Image"
                         class="w-50px">
                 </div>
                 <div class="col-md-8">
-                    <span class="text-muted">{{ $product->getTranslation('name') }}</span>
+                    <span class="text-muted">{{ $product->product->getTranslation('name') }}</span>
                 </div>
             </div>
         </a>
@@ -131,8 +132,8 @@
     <td>
         @php
             $qty = 0;
-            if ($product->variant_product) {
-                foreach ($product->stocks as $key => $stock) {
+            if ($product->product->variant_product) {
+                foreach ($product->product->stocks as $key => $stock) {
                     $qty += $stock->qty;
                 }
             } else {
@@ -150,7 +151,7 @@
             <span class="slider round"></span>
         </label>
     </td>
-    <td>{{ $product->rating }}</td>
+    <td>{{ $product->product->rating }}</td>
     <td>
         <label class="aiz-switch aiz-switch-success mb-0">
             <input onchange="update_published(this)" value="{{ $product->id }}" type="checkbox" <?php if ($product->published == 1) {
@@ -181,11 +182,11 @@
                 <i class="las la-edit"></i>
             </a>
         @endif
-        <a class="btn btn-soft-success btn-icon btn-circle btn-sm"
+        {{-- <a class="btn btn-soft-success btn-icon btn-circle btn-sm"
             href="{{ route('products.duplicate', ['id' => $product->id, 'type' => $type]) }}"
             title="{{ translate('Duplicate') }}">
             <i class="las la-copy"></i>
-        </a>
+        </a> --}}
         <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
             data-href="{{ route('products.destroy', $product->id) }}"
             title="{{ translate('Delete') }}">
@@ -193,6 +194,7 @@
         </a>
     </td>
 </tr>
+@endif
 @endforeach
 </tbody>
 </table>

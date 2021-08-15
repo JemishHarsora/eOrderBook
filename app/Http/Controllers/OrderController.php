@@ -198,8 +198,7 @@ class OrderController extends Controller
     public function all_orders_show($id)
     {
         $order = Order::findOrFail(decrypt($id));
-        $products = Product::where('user_id', Auth::user()->id)->get();
-
+        $products = ProductPrice::with(['product'])->where('published', 1)->get();
         return view('backend.sales.all_orders.show', compact('order', 'products'));
     }
 

@@ -123,9 +123,11 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>
                                         @if ($orderDetail->product != null)
-                                            <a href="{{ route('product', $orderDetail->product->slug) }}"
-                                                target="_blank"><img height="50"
-                                                    src="{{ uploaded_asset($orderDetail->product->thumbnail_img) }}"></a>
+                                            <a href="{{ route('product', $orderDetail->product->slug) }}" target="_blank">
+                                                <img height="50"
+                                                    src="{{ uploaded_asset($orderDetail->product->product->thumbnail_img) }}"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                ></a>
                                         @else
                                             <strong>{{ translate('N/A') }}</strong>
                                         @endif
@@ -134,7 +136,7 @@
                                         @if ($orderDetail->product != null)
                                             <strong><a href="{{ route('product', $orderDetail->product->slug) }}"
                                                     target="_blank"
-                                                    class="text-muted">{{ $orderDetail->product->getTranslation('name') }}</a></strong>
+                                                    class="text-muted">{{ $orderDetail->product->product->getTranslation('name') }}</a></strong>
                                             <small>{{ $orderDetail->variation }}</small>
                                         @else
                                             <strong>{{ translate('Product Unavailable') }}</strong>
@@ -168,6 +170,7 @@
                 <div class="col-md-9">
                     <form id="form-add-item" action="" method="">
                         @csrf
+                        <input type="hidden" name="user_id" value="{{ $order->user_id }}">
                         <input type="hidden" name="order_id" value="{{ $order->id }}">
 
                         <table class="table table-borderless table-responsive">
@@ -179,7 +182,6 @@
                                     <th>{{ translate('sku') }}</th>
                                     <th>{{ translate('Price') }}</th>
                                     <th>{{ translate('Quantity') }}</th>
-                                    <th>{{ translate('Tax') }}</th>
                                     <th>{{ translate('Total Price') }}</th>
                                     {{-- <th>{{ translate('Delivery Type')}}</th> --}}
 
@@ -283,7 +285,6 @@
                   <td style="width: 20%"><input type="text" readonly class="w-auto add_sku form-control" value=""></td>
                   <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_price form-control" name="add_price[]" value="0" ></td>
                   <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_qty form-control" name="add_qty[]" value="0"></td>
-                  <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" readonly class="w-auto add_tax form-control" name="add_tax[]" value="0"></td>
                   <td style="width: 10%"><input type="text" readonly name="add_total[]" class="w-auto add_total form-control" value="0"></td>
                   <td style="width: 10%"><button onClick="$(this).parent().parent().remove();" class="w-auto btn btn-soft-danger btn-icon btn-circle btn-sm" data-title="Delete"><i class="las la-trash" aria-hidden="true"></i></button></td>
                 </tr>
@@ -352,8 +353,7 @@
                 node.find('.add_qty').eq(0).val('');
                 node.find('.add_price').eq(0).val('');
                 node.find('.add_attr').html('');
-                node.find('.add_tax').eq(0).val('');
-
+                
             } else {
 
                 $.ajax({
@@ -374,7 +374,7 @@
                         node.find('.add_price').eq(0).val(returnedData.discounted_price);
                         node.find('.add_total').eq(0).val(returnedData.discounted_price);
                         // node.find('.add_attr').eq(0).html(returnedData.renderAttDetails);
-                        node.find('.add_tax').eq(0).val(returnedData.taxs);
+                        // node.find('.add_tax').eq(0).val(returnedData.taxs);
 
                         $('#loading').hide();
                     }
