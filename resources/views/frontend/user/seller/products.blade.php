@@ -103,6 +103,7 @@
 
                                 <tbody>
                                     @foreach ($products as $key => $prices)
+                                    @if($prices->product)
                                         <tr>
                                             <td>{{ $key + 1 + ($products->currentPage() - 1) * $products->perPage() }}
                                             </td>
@@ -151,7 +152,7 @@
                                             </td>
                                             <td class="text-right">
                                                 <a class="btn btn-soft-info btn-icon btn-circle btn-sm"
-                                                    href="{{ route('seller.products.edit', ['id' => $prices->product->id, 'lang' => env('DEFAULT_LANGUAGE')]) }}"
+                                                    href="{{ route('seller.products.edit', ['id' => $prices->id, 'lang' => env('DEFAULT_LANGUAGE')]) }}"
                                                     title="{{ translate('Edit') }}">
                                                     <i class="las la-edit"></i>
                                                 </a>
@@ -160,12 +161,13 @@
                     						  </a> --}}
                                                 <a href="#"
                                                     class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
-                                                    data-href="{{ route('products.destroy', $prices->product->id) }}"
+                                                    data-href="{{ route('products.destroy', $prices->id) }}"
                                                     title="{{ translate('Delete') }}">
                                                     <i class="las la-trash"></i>
                                                 </a>
                                             </td>
                                         </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>

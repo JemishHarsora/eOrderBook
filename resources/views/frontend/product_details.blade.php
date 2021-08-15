@@ -503,6 +503,7 @@
                                     // dd($products_top_selling);
                                 @endphp
                                 @foreach ($products_top_selling as $key => $top_product)
+                                @if($top_product->product)
                                     <li class="py-3 px-0 list-group-item border-light">
                                         <div class="row gutters-10 align-items-center">
                                             <div class="col-5">
@@ -528,6 +529,7 @@
                                             </div>
                                         </div>
                                     </li>
+                                    @endif
                                 @endforeach
                             </ul>
                         </div>
@@ -570,7 +572,7 @@
                             </div>
                             <div class="tab-pane fade" id="tab_default_3">
                                 <div class="p-4 text-center ">
-                                    <a href="{{ uploaded_asset($detailedProduct->product->pdf) }}" class="btn btn-primary">{{ translate('Download') }}</a>
+                                    <a target="_blank" href="{{ uploaded_asset($detailedProduct->product->pdf) }}" class="btn btn-primary">{{ translate('Download') }}</a>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tab_default_4">
@@ -621,9 +623,9 @@
                                         @endphp
                                         @foreach ($detailedProduct->orderDetails as $key => $orderDetail)
                                             @if ($orderDetail->order != null &&
-        $orderDetail->order->user_id == Auth::user()->id &&
-        $orderDetail->delivery_status == 'delivered' &&
-        \App\Review::where('user_id', Auth::user()->id)->where('product_id', $detailedProduct->id)->first() == null)
+                                                $orderDetail->order->user_id == Auth::user()->id &&
+                                                $orderDetail->delivery_status == 'delivered' &&
+                                                \App\Review::where('user_id', Auth::user()->id)->where('product_id', $detailedProduct->id)->first() == null)
                                                 @php
                                                     $commentable = true;
                                                 @endphp
@@ -636,7 +638,7 @@
                                                         {{ translate('Write a review') }}
                                                     </h3>
                                                 </div>
-                                                <form class="form-default" role="form" action="{{ route('reviews.store') }}" method="POST">
+                                                <form class="form-default" role="form" action="{{ route('reviews.store') }}" method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <input type="hidden" name="product_id" value="{{ $detailedProduct->id }}">
                                                     <div class="row">
@@ -695,7 +697,6 @@
                                     @endif
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="bg-white rounded shadow-sm">
@@ -710,17 +711,17 @@
                                     $retated_product = [];
                                     if ($area_seller['seller_ids'] != null) {
                                         if ($area_seller['seller_ids']['0'] != null) {
+                                            $products = \App\Product::where('category_id', $detailedProduct->product->category_id)->pluck('id');
                                             $retated_product = filter_products(
-                                                \App\ProductPrice::with(['product' => function($query) use($detailedProduct){
-                                                    $query->where('category_id', $detailedProduct->product->category_id);
-                                                }])->where('id', '!=', $detailedProduct->id)
-                                                    ->whereIn('seller_id', $area_seller->seller_ids),
+                                                \App\ProductPrice::with(['product'])->where('id', '!=', $detailedProduct->id)
+                                                    ->whereIn('seller_id', $area_seller->seller_ids)
+                                                    ->whereIn('product_id', $products),
                                             )->limit(10)->get();
                                         } else {
                                             $retated_product = filter_products(
-                                                \App\ProductPrice::with(['product' => function($query) use($detailedProduct){
-                                                    $query->where('category_id', $detailedProduct->product->category_id);
-                                                }]) ->where('seller_id', $area_seller['seller_ids']['0'])
+                                                \App\ProductPrice::with(['product'])
+                                                    ->whereIn('product_id', $products)
+                                                    ->where('seller_id', $area_seller['seller_ids']['0'])
                                                     ->where('id', '!=', $detailedProduct->id),
                                             )->limit(10)->get();
                                         }
@@ -788,6 +789,7 @@
                 <form id="option-choice-form">
                 <ul class="list-group list-group-flush">
                     @foreach($sellersData as $product)
+                    @if($product->product)
                     <li class="list-group-item px-0 px-lg-3">
                         <div class="row">
                             <div class="col-lg-2 d-flex">
@@ -828,6 +830,7 @@
                             </div>
                         </div>
                     </li>
+                    @endif
                     @endforeach
                 </ul>
                 </form>

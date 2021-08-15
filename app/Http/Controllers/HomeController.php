@@ -454,7 +454,7 @@ class HomeController extends Controller
 
     public function show_product_edit_form(Request $request, $id)
     {
-        $product = ProductPrice::where('product_id', $id)->where('seller_id', Auth::user()->id)->with(['product'])->first();
+        $product = ProductPrice::where('id', $id)->where('seller_id', Auth::user()->id)->with(['product'])->first();
         // $product = Product::findOrFail($id);
         $lang = $request->lang;
         // $business_category = explode(',', Auth::user()->business_category);
@@ -482,12 +482,9 @@ class HomeController extends Controller
     public function seller_product_list(Request $request)
     {
         $search = null;
-
-
         $products = ProductPrice::where('seller_id', Auth::user()->id)->with(['product.category', 'product' => function ($q) {
             $q->where('products.digital', 0);
         }]);
-
         $products = $products->orderBy('created_at', 'desc');
 
         if ($request->has('search')) {

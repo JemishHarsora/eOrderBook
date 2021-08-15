@@ -221,9 +221,10 @@ class ProductController extends Controller
                 $product->meta_description = ucfirst($product->description);
             }
 
-            if ($request->hasFile('pdf')) {
-                $product->pdf = $request->pdf->store('uploads/products/pdf');
-            }
+            $product->pdf = $request->pdf;
+            // if ($request->has('pdf')) {
+                // $product->pdf = $request->pdf->store('uploads/products/pdf');
+            // }
 
             // $product->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->name)) . '-' . Str::random(5);
 

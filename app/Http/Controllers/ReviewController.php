@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Review;
+use App\ProductPrice;
 use App\Product;
 use Auth;
 use DB;
@@ -66,19 +67,23 @@ class ReviewController extends Controller
         $review->comment = $request->comment;
         $review->viewed = '0';
         if($review->save()){
-            $product = Product::findOrFail($request->product_id);
+            $product = ProductPrice::findOrFail($request->product_id);
+            $products = Product::where('id',$product->product_id)->first();
             if(count(Review::where('product_id', $product->id)->where('status', 1)->get()) > 0){
-                $product->rating = Review::where('product_id', $product->id)->where('status', 1)->sum('rating')/count(Review::where('product_id', $product->id)->where('status', 1)->get());
+                $products->rating = Review::where('product_id', $product->id)->where('status', 1)->sum('rating')/count(Review::where('product_id', $product->id)->where('status', 1)->get());
             }
             else {
-                $product->rating = 0;
+                $products->rating = 0;
             }
-            $product->save();
+            $products->save();
             flash(translate('Review has been submitted successfully'))->success();
+            // return redirect($request->url);
             return back();
-        }
-        flash(translate('Something went wrong'))->error();
-        return back();
+        }else{
+            flash(translate('Something went wrong'))->error();
+            // return redirect($request->url);
+            return back();
+        } 
     }
 
     /**
