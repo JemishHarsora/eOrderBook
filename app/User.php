@@ -85,6 +85,10 @@ class User extends Authenticatable implements MustVerifyEmail,JWTSubject
     {
         return $this->hasMany(Product::class);
     }
+    public function priceproduct()
+    {
+        return $this->hasMany(ProductPrice::class,'seller_id','id');
+    }
 
     public function shop()
     {

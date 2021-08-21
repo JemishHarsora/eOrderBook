@@ -34,9 +34,9 @@
     @php
         $total = 0;
         $rating = 0;
-        foreach ($shop->user->products as $key => $seller_product) {
-            $total += $seller_product->reviews->count();
-            $rating += $seller_product->reviews->sum('rating');
+        foreach ($shop->user->priceproduct as $key => $seller_product) {
+            $total += $seller_product->product->reviews->count();
+            $rating += $seller_product->product->reviews->sum('rating');
         }
     @endphp
 
@@ -158,7 +158,8 @@
                 <div class="row">
                     <div class="col">
                         <div class="aiz-carousel gutters-10" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-autoplay='true' data-infinute="true" data-dots="true">
-                            @foreach ($shop->user->products->where('published', 1)->where('seller_featured', 1) as $key => $product)
+                            @foreach ($shop->user->priceproduct->where('published', 1)->where('seller_featured', 1) as $key => $product)
+                            @if($product->product)
                                 <div class="carousel-box">
                                     <div class="aiz-card-box border bg-white border-light rounded shadow-sm hov-shadow-md my-2 has-transition">
                                         <div class="position-relative">
@@ -166,8 +167,8 @@
                                                 <img
                                                     class="img-fit lazyload mx-auto h-140px h-md-210px"
                                                     src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                    data-src="{{ uploaded_asset($product->thumbnail_img) }}"
-                                                    alt="{{  $product->getTranslation('name')  }}"
+                                                    data-src="{{ uploaded_asset($product->product->thumbnail_img) }}"
+                                                    alt="{{  $product->product->getTranslation('name')  }}"
                                                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                                 >
                                             </a>
@@ -191,20 +192,21 @@
                                                 <span class="fw-700 text-primary">{{ home_discounted_base_price($product->id) }}</span>
                                             </div>
                                             <div class="rating rating-sm mt-1">
-                                                {{ renderStarRating($product->rating) }}
+                                                {{ renderStarRating($product->product->rating) }}
                                             </div>
                                             <h3 class="fw-600 fs-13 text-truncate-2 lh-1-4 mb-0 h-35px">
-                                                <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{  $product->getTranslation('name')  }}</a>
+                                                <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{  $product->product->getTranslation('name')  }}</a>
                                             </h3>
                                             @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated)
                                                 <div class="rounded px-2 mt-2 bg-soft-primary border-soft-primary border">
                                                     {{ translate('Club Point') }}:
-                                                    <span class="fw-700 float-right">{{ $product->earn_point }}</span>
+                                                    <span class="fw-700 float-right">{{ $product->product->earn_point }}</span>
                                                 </div>
                                             @endif
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             @endforeach
                         </div>
                     </div>
@@ -232,16 +234,17 @@
             <div class="row gutters-5 row-cols-xxl-5 row-cols-lg-4 row-cols-md-3 row-cols-2">
                 @php
                     if (!isset($type)){
-                        $products = \App\Product::where('user_id', $shop->user->id)->where('published', 1)->orderBy('created_at', 'desc')->paginate(24);
+                        $products = \App\ProductPrice::with('product')->where('seller_id', $shop->user->id)->where('published', 1)->orderBy('created_at', 'desc')->paginate(24);
                     }
                     elseif ($type == 'top_selling'){
-                        $products = \App\Product::where('user_id', $shop->user->id)->where('published', 1)->orderBy('num_of_sale', 'desc')->paginate(24);
+                        $products = \App\ProductPrice::with('product')->where('seller_id', $shop->user->id)->where('published', 1)->orderBy('num_of_sale', 'desc')->paginate(24);
                     }
                     elseif ($type == 'all_products'){
-                        $products = \App\Product::where('user_id', $shop->user->id)->where('published', 1)->paginate(24);
+                        $products = \App\ProductPrice::with('product')->where('seller_id', $shop->user->id)->where('published', 1)->paginate(24);
                     }
                 @endphp
                 @foreach ($products as $key => $product)
+                @if($product->product)
                     <div class="col mb-3">
                         <div class="aiz-card-box border border-light rounded shadow-sm hov-shadow-md h-100 has-transition bg-white">
                             <div class="position-relative">
@@ -249,8 +252,8 @@
                                     <img
                                         class="img-fit lazyload mx-auto h-160px h-sm-200px h-md-220px h-xl-270px"
                                         src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                        data-src="{{ uploaded_asset($product->thumbnail_img) }}"
-                                        alt="{{  $product->getTranslation('name')  }}"
+                                        data-src="{{ uploaded_asset($product->product->thumbnail_img) }}"
+                                        alt="{{  $product->product->getTranslation('name')  }}"
                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                     >
                                 </a>
@@ -274,21 +277,22 @@
                                     <span class="fw-700 text-primary">{{ home_discounted_base_price($product->id) }}</span>
                                 </div>
                                 <div class="rating rating-sm mt-1">
-                                    {{ renderStarRating($product->rating) }}
+                                    {{ renderStarRating($product->product->rating) }}
                                 </div>
                                 <h3 class="fw-600 fs-13 text-truncate-2 lh-1-4 mb-0">
-                                    <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{  $product->getTranslation('name')  }}</a>
+                                    <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{  $product->product->getTranslation('name')  }}</a>
                                 </h3>
 
                                 @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated)
                                     <div class="rounded px-2 mt-2 bg-soft-primary border-soft-primary border">
                                         {{ translate('Club Point') }}:
-                                        <span class="fw-700 float-right">{{ $product->earn_point }}</span>
+                                        <span class="fw-700 float-right">{{ $product->product->earn_point }}</span>
                                     </div>
                                 @endif
                             </div>
                         </div>
                     </div>
+                    @endif
                 @endforeach
             </div>
             <div class="aiz-pagination aiz-pagination-center mb-4">
