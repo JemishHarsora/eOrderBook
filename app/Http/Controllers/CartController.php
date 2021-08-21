@@ -66,11 +66,13 @@ class CartController extends Controller
             $data['owner_id'] = $product->seller_id;
             $str = '';
             $tax = 0;
-
             if($product->product->digital != 1 && $request->quantity < $product->min_qty) {
-                return array('status' => 0, 'view' => view('frontend.partials.minQtyNotSatisfied', [
-                    'min_qty' => $product->min_qty
-                ])->render());
+
+                return array('status' => 0, 'message' => 'You need to add minimum '.$product->min_qty.' products! ');
+
+                // return array('status' => 0, 'view' => view('frontend.partials.minQtyNotSatisfied', [
+                //     'min_qty' => $product->product->min_qty
+                // ])->render());
             }
 
 
