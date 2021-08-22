@@ -697,12 +697,9 @@ class ProductController extends Controller
 
     public function adminDisableProductStatus(Request $request)
     {
-        $product = Product::where('user_id', $request->seller_id)
-            ->where('brand_id', $request->brand_id)->all()->pluck('id');
-
+        $product = Product::where('brand_id', $request->brand_id)->pluck('id');
         ProductPrice::whereIn('product_id', $product)->where('seller_id', $request->seller_id)
             ->update(['published' => $request->action]);
-
         return back();
     }
 
