@@ -7,6 +7,7 @@ use App\Seller;
 use App\User;
 use App\Shop;
 use App\Product;
+use App\ProductPrice;
 use App\Order;
 use App\OrderDetail;
 use Illuminate\Support\Facades\DB;
@@ -236,6 +237,7 @@ class SellerController extends Controller
             $seller->user->banned = 0;
             flash(translate('Seller has been unbanned successfully'))->success();
         } else {
+            ProductPrice::where('seller_id',$seller->user->id)->update(['published' => 0]);
             $seller->user->banned = 1;
             flash(translate('Seller has been banned successfully'))->success();
         }
