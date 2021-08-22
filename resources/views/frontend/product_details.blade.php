@@ -837,11 +837,6 @@
             </div>
         </div>
     </div>
-@endsection
-
-
-
-@section('modal')
     <div class="modal fade" id="chat_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-zoom product-modal" id="modal-size" role="document">
             <div class="modal-content position-relative">
