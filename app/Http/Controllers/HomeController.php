@@ -631,7 +631,6 @@ class HomeController extends Controller
                 $products = $products->whereHas('product', function($query) use($conditions,$area_seller){
                     $query->where($conditions)->whereIn('brand_id', $area_seller->brand_ids);
                 })->whereIn('seller_id', $area_seller->seller_ids);
-
                 // $products = Product::where($conditions)->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids);
             } else {
                 $products = $products->whereHas('product', function($query) use($conditions,$area_seller){
@@ -655,12 +654,11 @@ class HomeController extends Controller
             $products = $products->whereHas('product', function($query) use($category_ids){
                 $query->whereIn('category_id', $category_ids);
             });
-
             if ($area_seller['seller_ids'] != null) {
                 if ($area_seller['seller_ids']['0'] != null) {
 
                     $products = $products->whereHas('product', function($query) use($category_ids,$area_seller){
-                        $query->whereIn('category_id', $area_seller->category_ids)->whereIn('brand_id', $area_seller->brand_ids)->whereIn('seller_id', $area_seller->seller_ids);
+                        $query->whereIn('category_id', $category_ids)->whereIn('brand_id', $area_seller->brand_ids)->whereIn('seller_id', $area_seller->seller_ids);
                     });
 
                     // $products = $products->whereIn('category_id', $category_ids)->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids);
