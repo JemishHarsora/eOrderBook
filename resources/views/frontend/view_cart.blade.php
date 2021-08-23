@@ -111,7 +111,7 @@
                                                                 data-field="quantity[{{ $key }}]">
                                                                 <i class="las la-minus"></i>
                                                             </button>
-                                                            <input type="text" name="quantity[{{ $key }}]"
+                                                            <input type="text" name="quantity[{{ $key }}]" id="quantity[{{ $key }}]"
                                                                 class="col border-0 text-center flex-grow-1 fs-16 input-number"
                                                                 placeholder="1" value="{{ $cartItem['quantity'] }}"
                                                                 min="1" max="10" onchange="updateQuantity({{ $key }}, this)">

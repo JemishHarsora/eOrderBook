@@ -1618,7 +1618,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
 
                 var fieldName = $(this).attr("data-field");
                 var type = $(this).attr("data-type");
-                var input = $("input[name='" + fieldName + "']");
+                var input = $("input[id='" + fieldName + "']");
                 var currentVal = parseInt(input.val());
                 
 

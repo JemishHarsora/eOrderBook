@@ -154,7 +154,7 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         if (auth()->user() != null && (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff')) {
-            $redirect_route = 'login';
+            $redirect_route = 'home';
         } else {
             $redirect_route = 'home';
         }

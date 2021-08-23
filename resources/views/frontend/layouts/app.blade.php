@@ -411,9 +411,8 @@
             }
         }
 
-        function addToCartFromSellerPopup(datas){
-
-            let datass = datas.split(',');
+        function addToCartFromSellerPopup(id){
+            let qty = $('#quantity'+id).val();
             if(checkAddToCartValidity()) {
                 $('.c-preloader').show();
                 $.ajax({
@@ -422,7 +421,7 @@
                    headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                   data: {id: datass[0],quantity:datass[1]},
+                   data: {id: id,quantity:qty},
                    success: function(data){
                        $('.c-preloader').hide();
                        if(data.status){

@@ -207,11 +207,11 @@
                                 <div class="col-10">
                                     <div class="product-quantity d-flex align-items-center">
                                         <div class="row no-gutters align-items-center aiz-plus-minus mr-3" style="width: 130px;">
-                                            <button class="btn col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="minus" data-field="quantity" disabled="">
+                                            <button class="btn col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="minus" data-field={{'quantity'.$product->id}} disabled="">
                                                 <i class="las la-minus"></i>
                                             </button>
-                                            <input type="text" name="quantity" class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $product->min_qty }}" min="{{ $product->min_qty }}" max="10">
-                                            <button class="btn  col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="plus" data-field="quantity">
+                                            <input type="text" name="quantity" id={{'quantity'.$product->id}} class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $product->min_qty }}" min="{{ $product->min_qty }}" max="{{$product->current_stock}}"> 
+                                            <button class="btn  col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="plus" data-field={{'quantity'.$product->id}}>
                                                 <i class="las la-plus"></i>
                                             </button>
                                         </div>
@@ -268,14 +268,14 @@
             @foreach($sellersData as $product)
             <li class="list-group-item px-0 px-lg-3">
                 <div class="row">
-                    <div class="col-xs-2 col-lg-2 d-flex">
+                    <div class="col-xs-3 col-lg-2 d-flex">
                         <span class="mr-2 ml-0">
                             <img src="{{ uploaded_asset($product->product->thumbnail_img) }}"
                                 class="img-fit size-60px rounded" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                 alt="{{ $product->product->getTranslation('name') }}">
                         </span>
                     </div>
-                    <div class="col-xs-7 col-lg-7">
+                    <div class="col-xs-9 col-lg-5">
                         <span class="fs-14 opacity-60">{{ $product->product->getTranslation('name') }}</span>
                         <br>
                         <span class="fw-600 fs-12">
@@ -292,17 +292,39 @@
                         @endif
                         </span>
                     </div>
-                    <div class="col-xs-3 col-lg-3 px-0">
+                    <div class="col-xs-3 col-lg-5 px-0">
                         @if ($product->current_stock > 0)
-
-                        <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600" {{ !empty($product->isblock) ? 'disabled' : '' }} onclick="addToCartFromSellerPopup('{{$product->id.','.$product->min_qty}}')">
-                            <i class="la la-shopping-cart"></i> <span class="d-none d-md-inline-block"> {{ translate('Add to cart') }}</span>
+                        <div class="row">
+                        <div class="col-md-8">
+                            <div class="col-2">
+                                <div class="opacity-50 mt-2">{{ translate('Quantity') }}:</div>
+                            </div>
+                            <div class="col-10">
+                                <div class="product-quantity d-flex align-items-center">
+                                    <div class="row no-gutters align-items-center aiz-plus-minus mr-3" style="width: 130px;">
+                                        <button class="btn col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="minus" data-field={{'quantity'.$product->id}} disabled="">
+                                            <i class="las la-minus"></i>
+                                        </button>
+                                        <input type="text" name="quantity" id={{'quantity'.$product->id}} class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $product->min_qty }}" min="{{ $product->min_qty }}" max={{ $product->current_stock }}>
+                                        <button class="btn  col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="plus" data-field={{'quantity'.$product->id}}>
+                                            <i class="las la-plus"></i>
+                                        </button>
+                                    </div>
+                                    {{-- <div class="avialable-amount opacity-60">(<span id="available-quantity">{{ $qty }}</span> {{ translate('available') }})</div> --}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mt-3">
+                        <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600" {{ !empty($product->isblock) ? 'disabled' : '' }} onclick="addToCartFromSellerPopup('{{$product->id}}')">
+                            <i class="la la-shopping-cart"></i> <span class="d-none d-md-inline-block"> </span>
                         </button>
                         @else
                             <button type="button" class="btn btn-secondary fw-600" disabled>
-                                <i class="la la-cart-arrow-down"></i>  {{ translate('Out of Stock') }}
+                                <i class="la la-cart-arrow-down"></i> 
                             </button>
                         @endif
+                        </div>
+                        </div>
                     </div>
                 </div>
             </li>
