@@ -143,7 +143,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                <td>{{ $orderDetail->product->getTranslation('name') }} ({{ $orderDetail->variation }})</td>
+                                <td>{{ $orderDetail->product->product->getTranslation('name') }} ({{ $orderDetail->variation }})</td>
                                     <td>{{ $orderDetail->quantity }}</td>
                                     <td>{{ $orderDetail->product->user->name }}</td>
                                 </tr>
