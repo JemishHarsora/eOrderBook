@@ -144,10 +144,10 @@
                             @if (home_price($detailedProduct->id) != home_discounted_price($detailedProduct->id))
 
                                 <div class="row no-gutters mt-3">
-                                    <div class="col-sm-2">
+                                    <div class="col-2">
                                         <div class="opacity-50 my-2">{{ translate('Price') }}:</div>
                                     </div>
-                                    <div class="col-sm-10">
+                                    <div class="col-10">
                                         <div class="fs-20 opacity-60">
                                             <del>
                                                 {{ home_price($detailedProduct->id) }}
@@ -160,10 +160,10 @@
                                 </div>
 
                                 <div class="row no-gutters my-2">
-                                    <div class="col-sm-2">
+                                    <div class="col-2">
                                         <div class="opacity-50">{{ translate('Discount Price') }}:</div>
                                     </div>
-                                    <div class="col-sm-10">
+                                    <div class="col-10">
                                         <div class="">
                                             <strong class="h2 fw-600 text-primary">
                                                 {{ home_discounted_price($detailedProduct->id) }}
@@ -307,7 +307,7 @@
                                 @if ($qty > 0)
                                     <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600" {{ !empty($isblock) ? 'disabled' : '' }} onclick="addToCart()">
                                         <i class="las la-shopping-bag"></i>
-                                        <span class="d-none d-md-inline-block"> {{ translate('Add to cart') }}</span>
+                                        <span class="d-none d-inline-block"> {{ translate('Add to cart') }}</span>
                                     </button>
                                     <button type="button" class="btn btn-primary buy-now fw-600" {{ !empty($isblock) ? 'disabled' : '' }} onclick="buyNow()">
                                         <i class="la la-shopping-cart"></i> {{ translate('Buy Now') }}
@@ -778,7 +778,7 @@
 
 @section('modal')
     <div class="modal fade" id="moreSellerModal" tabindex="-1" role="dialog" aria-labelledby="moreSellerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-zoom" role="document">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-zoom product-modal" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title fw-600">{{ translate('More sellers') }}</h6>
@@ -786,76 +786,78 @@
                         <span aria-hidden="true"></span>
                     </button>
                 </div>
-                <form id="option-choice-form">
-                <ul class="list-group list-group-flush">
-                    @foreach($sellersData as $product)
-                    @if($product->product)
-                    <li class="list-group-item px-0 px-lg-3">
-                        <div class="row">
-                            <div class="col-lg-2 col-xs-4 d-flex">
-                                <span class="mr-2 ml-0">
-                                    <img src="{{ uploaded_asset($product->product->thumbnail_img) }}"
-                                        class="img-fit size-60px rounded" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
-                                        alt="{{ $product->product->getTranslation('name') }}">
-                                </span>
-                            </div>
-                            <div class="col-lg-5 col-xs-8">
-                                <span class="fs-14 opacity-60">{{ $product->product->getTranslation('name') }}</span>
-                                <br>
-                                <span class="fw-600 fs-12">
-                                    @if ($product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
-                                        <a href="{{ route('shop.visit', $product->user->shop->slug) }}">{{ $product->user->shop->name }}</a>
-                                    @else
-                                        {{ translate('Inhouse product') }}
-                                    @endif
-                                </span>
-                                <br>
-                                <span class="fw-600 fs-16">{{ home_discounted_price($product->id) }}
-                                    @if ($product->product->unit != null)
-                                    <span>/{{ $product->product->getTranslation('unit') }}</span>
-                                @endif
-                                </span>
-                            </div>
-                            <div class="col-xs-12 col-lg-5 px-0">
-                                @if ($product->current_stock > 0)
+                <div class="modal-body p-4 c-scrollbar-light">
+                    <form id="option-choice-form">
+                        <ul class="list-group list-group-flush">
+                            @foreach($sellersData as $product)
+                            @if($product->product)
+                            <li class="list-group-item px-0 px-lg-3">
                                 <div class="row">
-                                <div class="col-md-8">
-                                    <div class="col-2">
-                                        <div class="opacity-50 mt-2">{{ translate('Quantity') }}:</div>
+                                    <div class="col-xs-3 col-lg-2 d-flex">
+                                        <span class="mr-2 ml-0">
+                                            <img src="{{ uploaded_asset($product->product->thumbnail_img) }}"
+                                                class="img-fit size-60px rounded" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                alt="{{ $product->product->getTranslation('name') }}">
+                                        </span>
                                     </div>
-                                    <div class="col-10">
-                                        <div class="product-quantity d-flex align-items-center">
-                                            <div class="row no-gutters align-items-center aiz-plus-minus mr-3" style="width: 130px;">
-                                                <button class="btn col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="minus" data-field={{'quantity'.$product->id}} disabled="">
-                                                    <i class="las la-minus"></i>
-                                                </button>
-                                                <input type="text" name="quantity" id={{'quantity'.$product->id}} class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $product->min_qty }}" min="{{ $product->min_qty }}" max={{ $product->current_stock }}>
-                                                <button class="btn  col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="plus" data-field={{'quantity'.$product->id}}>
-                                                    <i class="las la-plus"></i>
-                                                </button>
+                                    <div class="col-xs-9 col-lg-5">
+                                        <span class="fs-14 opacity-60">{{ $product->product->getTranslation('name') }}</span>
+                                        <br>
+                                        <span class="fw-600 fs-12">
+                                            @if ($product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
+                                                <a href="{{ route('shop.visit', $product->user->shop->slug) }}">{{ $product->user->shop->name }}</a>
+                                            @else
+                                                {{ translate('Inhouse product') }}
+                                            @endif
+                                        </span>
+                                        <br>
+                                        <span class="fw-600 fs-16">{{ home_discounted_price($product->id) }}
+                                            @if ($product->product->unit != null)
+                                            <span>/{{ $product->product->getTranslation('unit') }}</span>
+                                        @endif
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-3 col-lg-5 px-0">
+                                        @if ($product->current_stock > 0)
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <div class="col-2">
+                                                    <div class="opacity-50 mt-2">{{ translate('Quantity') }}:</div>
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="product-quantity d-flex align-items-center">
+                                                        <div class="row no-gutters align-items-center aiz-plus-minus mr-3" style="width: 130px;">
+                                                            <button class="btn col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="minus" data-field={{'quantity'.$product->id}} disabled="">
+                                                                <i class="las la-minus"></i>
+                                                            </button>
+                                                            <input type="text" name="quantity" id={{'quantity'.$product->id}} class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $product->min_qty }}" min="{{ $product->min_qty }}" max={{ $product->current_stock }}>
+                                                            <button class="btn  col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="plus" data-field={{'quantity'.$product->id}}>
+                                                                <i class="las la-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                        {{-- <div class="avialable-amount opacity-60">(<span id="available-quantity">{{ $qty }}</span> {{ translate('available') }})</div> --}}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            {{-- <div class="avialable-amount opacity-60">(<span id="available-quantity">{{ $qty }}</span> {{ translate('available') }})</div> --}}
+                                            <div class="col-4 mt-3">
+                                                <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600" {{ !empty($product->isblock) ? 'disabled' : '' }} onclick="addToCartFromSellerPopup('{{$product->id}}')">
+                                                    <i class="la la-shopping-cart"></i> <span class="d-none d-md-inline-block"> </span>
+                                                </button>
+                                                @else
+                                                    <button type="button" class="btn btn-secondary fw-600" disabled>
+                                                        <i class="la la-cart-arrow-down"></i>
+                                                    </button>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mt-3">
-                                <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600" {{ !empty($product->isblock) ? 'disabled' : '' }} onclick="addToCartFromSellerPopup('{{$product->id}}')">
-                                    <i class="la la-shopping-cart"></i> <span class="d-none d-md-inline-block"> </span>
-                                </button>
-                                @else
-                                    <button type="button" class="btn btn-secondary fw-600" disabled>
-                                        <i class="la la-cart-arrow-down"></i> 
-                                    </button>
-                                @endif
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    @endif
-                    @endforeach
-                </ul>
-                </form>
+                            </li>
+                            @endif
+                            @endforeach
+                        </ul>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

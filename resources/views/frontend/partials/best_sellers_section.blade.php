@@ -56,6 +56,7 @@
                                                 data-src="@if ($seller->user->shop->logo !== null) {{ uploaded_asset($seller->user->shop->logo) }} @else {{ static_asset('assets/img/placeholder.jpg') }} @endif"
                                                 alt="{{ $seller->user->shop->name }}"
                                                 class="img-fluid lazyload"
+                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                             >
                                         </a>
                                     </div>
