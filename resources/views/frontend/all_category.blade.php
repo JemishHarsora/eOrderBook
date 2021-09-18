@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="pt-4 mb-4">
-    <div class="container text-center">
+    <div class="container-flude m-3 text-center">
         <div class="row">
             <div class="col-lg-6 text-center text-lg-left">
                 <h1 class="fw-600 h4">{{ translate('All Categories') }}</h1>

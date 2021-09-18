@@ -3,7 +3,7 @@
 @section('content')
 
 <section class="pt-4 mb-4">
-    <div class="container">
+    <div class="container-flude m-3">
         <div class="row">
             <div class="col-lg-6 text-center text-lg-left">
                 <h1 class="fw-600 h4">{{ translate('All Brands') }}</h1>
