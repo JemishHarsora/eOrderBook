@@ -37,7 +37,7 @@
 @section('content')
 
     <section class="mb-4 pt-3">
-        <div class="container sm-px-0">
+        <div class="container-flude sm-px-0">
             <form class="" id="search-form" action="" method="GET">
                 <div class="row">
                     <div class="col-xl-3">

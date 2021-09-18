@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-flude">
     <div class="row">
         <div class="col-xxl-8 col-xl-10 mx-auto">
             <div class="shadow-sm bg-white p-3 p-lg-4 rounded">

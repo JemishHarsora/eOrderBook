@@ -3,7 +3,7 @@
 @section('content')
 
     <section class="pt-5 mb-4">
-        <div class="container">
+        <div class="container-flude">
             <div class="row">
                 <div class="col-xl-8 mx-auto">
                     <div class="row aiz-steps arrow-divider">
@@ -49,7 +49,7 @@
     </section>
 
     <section class="mb-4" id="cart-summary">
-        <div class="container">
+        <div class="container-flude">
             @if (Session::has('cart') && count(Session::get('cart')) > 0)
                 <div class="row">
                     <div class="col-xxl-8 col-xl-10 mx-auto">

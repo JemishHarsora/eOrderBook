@@ -53,7 +53,7 @@
     </div>
 </section>
 <section class="mb-4">
-	<div class="container">
+	<div class="container-flude">
         <div class="p-4 bg-white rounded shadow-sm overflow-hidden mw-100 text-left">
 		    @php echo $page->getTranslation('content'); @endphp
         </div>

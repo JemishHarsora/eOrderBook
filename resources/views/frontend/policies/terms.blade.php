@@ -5,7 +5,7 @@
     $terms =  \App\Page::where('type', 'terms_conditions_page')->first();
 @endphp
 <section class="pt-4 mb-4">
-    <div class="container text-center">
+    <div class="container-flude m-3 text-center">
         <div class="row">
             <div class="col-lg-6 text-center text-lg-left">
                 <h1 class="fw-600 h4">{{ $terms->getTranslation('title') }}</h1>
@@ -24,7 +24,7 @@
     </div>
 </section>
 <section class="mb-4">
-    <div class="container">
+    <div class="container-flude m-3">
         <div class="p-4 bg-white rounded shadow-sm overflow-hidden mw-100 text-left">
             @php
                 echo $terms->getTranslation('content');

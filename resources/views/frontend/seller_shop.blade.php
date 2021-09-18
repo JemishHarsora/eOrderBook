@@ -41,7 +41,7 @@
     @endphp
 
     <section class="pt-5 mb-4 bg-white">
-        <div class="container">
+        <div class="container-flude m-2">
             <div class="row">
                 <div class="col-md-6 mx-auto">
                     <div class="d-flex justify-content-center">
@@ -51,6 +51,7 @@
                             src="{{ static_asset('assets/img/placeholder.jpg') }}"
                             data-src="@if ($shop->logo !== null) {{ uploaded_asset($shop->logo) }} @else {{ static_asset('assets/img/placeholder.jpg') }} @endif"
                             alt="{{ $shop->name }}"
+                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                         >
                         <div class="pl-4 text-left">
                             <h1 class="fw-600 h4 mb-0">{{ $shop->name }}
@@ -136,7 +137,7 @@
 
     @if (!isset($type))
         <section class="mb-5">
-            <div class="container">
+            <div class="container-flude">
                 <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height" data-arrows="true" data-dots="true" data-autoplay="true">
                     @if ($shop->sliders != null)
                         @foreach (explode(',',$shop->sliders) as $key => $slide)
@@ -149,7 +150,7 @@
             </div>
         </section>
         <section class="mb-4">
-            <div class="container">
+            <div class="container-flude m-2">
                 <div class="text-center mb-4">
                     <h3 class="h3 fw-600 border-bottom">
                         <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Featured Products')}}</span>
@@ -216,7 +217,7 @@
     @endif
 
     <section class="mb-4">
-        <div class="container">
+        <div class="container-flude m-2">
             <div class="mb-4">
                 <h3 class="h3 fw-600 border-bottom">
                     <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">

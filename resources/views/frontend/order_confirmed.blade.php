@@ -5,7 +5,7 @@
         $status = $order->orderDetails->first()->delivery_status;
     @endphp
     <section class="pt-5 mb-4">
-        <div class="container">
+        <div class="container-flude">
             <div class="row">
                 <div class="col-xl-8 mx-auto">
                     <div class="row aiz-steps arrow-divider">
@@ -45,7 +45,7 @@
         </div>
     </section>
     <section class="py-4">
-        <div class="container text-left">
+        <div class="container-flude text-left">
             <div class="row">
                 <div class="col-xl-8 mx-auto">
                     <div class="card shadow-sm border-0 rounded">

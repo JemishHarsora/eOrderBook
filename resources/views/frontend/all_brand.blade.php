@@ -22,7 +22,7 @@
     </div>
 </section>
 <section class="mb-4">
-    <div class="container">
+    <div class="container-flude">
         <div class="bg-white shadow-sm rounded px-3 pt-3">
             <div class="row row-cols-xxl-6 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2 gutters-10">
                 @php

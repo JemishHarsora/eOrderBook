@@ -21,7 +21,7 @@
     </div>
 </section>
 <section class="mb-4">
-    <div class="container">
+    <div class="container-flude">
         @foreach ($categories as $key => $category)
             <div class="mb-3 bg-white shadow-sm rounded">
                 <div class="p-3 border-bottom fs-16 fw-600">

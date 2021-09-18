@@ -1,6 +1,6 @@
 @if (\App\BusinessSetting::where('type', 'best_selling')->first()->value == 1)
     <section class="mb-4">
-        <div class="container">
+        <div class="container-flude">
             <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded">
                 <div class="d-flex mb-3 align-items-baseline border-bottom">
                     <h3 class="h5 fw-700 mb-0">

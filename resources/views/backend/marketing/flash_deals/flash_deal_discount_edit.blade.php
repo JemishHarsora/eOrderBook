@@ -8,7 +8,7 @@
             <span>{{translate('Product')}}</span>
         </td>
         <td width="20%">
-            <span>{{translate('Base Price')}}</span>
+            <span>{{translate('Selling Price')}}</span>
         </td>
         <td width="20%">
             <span>{{translate('Discount')}}</span>
@@ -21,22 +21,22 @@
     <tbody>
         @foreach ($product_ids as $key => $id)
             @php
-              $product = \App\Product::findOrFail($id);
+              $product = \App\ProductPrice::with(['product'])->findOrFail($id);
               $flash_deal_product = \App\FlashDealProduct::where('flash_deal_id', $flash_deal_id)->where('product_id', $product->id)->first();
             @endphp
             <tr>
                 <td>
                   <div class="form-group row">
                       <div class="col-auto">
-                          <img src="{{ uploaded_asset($product->thumbnail_img)}}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" class="size-60px img-fit" >
+                          <img src="{{ uploaded_asset($product->product->thumbnail_img)}}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" class="size-60px img-fit" >
                       </div>
                       <div class="col">
-                          <span>{{  $product->getTranslation('name')  }}</span>
+                          <span>{{  $product->product->getTranslation('name')  }}</span>
                       </div>
                   </div>
                 </td>
                 <td>
-                    <span>{{ $product->unit_price }}</span>
+                    <span>{{ $product->purchase_price }}</span>
                 </td>
                 @if ($flash_deal_product != null)
                 <td>

@@ -1,5 +1,5 @@
 <section class="bg-white border-top mt-auto">
-    <div class="container">
+    <div class="container-flude">
         <div class="row no-gutters">
             <div class="col-lg-3 col-md-6">
                 <a class="text-reset border-left text-center p-4 d-block" href="{{ route('terms') }}">

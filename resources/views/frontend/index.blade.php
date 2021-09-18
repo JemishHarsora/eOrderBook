@@ -3,7 +3,7 @@
 @section('content')
     {{-- Categories , Sliders . Today's deal --}}
     <div class="home-banner-area mb-4 pt-3">
-        <div class="container">
+        <div class="container-flude">
             <div class="row gutters-10 position-relative">
                 <div class="col-lg-3 position-static d-none d-lg-block">
                     @include('frontend.partials.category_menu')
@@ -138,7 +138,7 @@
     {{-- Banner section 1 --}}
     @if (get_setting('home_banner1_images') != null)
     <div class="mb-4">
-        <div class="container">
+        <div class="container-flude m-3">
             <div class="row gutters-10">
                 @php $banner_1_imags = json_decode(get_setting('home_banner1_images')); @endphp
                 @foreach ($banner_1_imags as $key => $value)
@@ -163,7 +163,7 @@
     @endphp
     @if($flash_deal != null && strtotime(date('Y-m-d H:i:s')) >= $flash_deal->start_date && strtotime(date('Y-m-d H:i:s')) <= $flash_deal->end_date)
     <section class="mb-4">
-        <div class="container">
+        <div class="container-flude">
             <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded">
 
                 <div class="d-flex flex-wrap mb-3 align-items-baseline border-bottom">
@@ -250,7 +250,7 @@
     {{-- Banner Section 2 --}}
     @if (get_setting('home_banner2_images') != null)
     <div class="mb-4">
-        <div class="container">
+        <div class="container-flude m-3">
             <div class="row gutters-10">
                 @php $banner_2_imags = json_decode(get_setting('home_banner2_images')); @endphp
                 @foreach ($banner_2_imags as $key => $value)
@@ -279,7 +279,7 @@
         @endphp
            @if (count($customer_products) > 0)
                <section class="mb-4">
-                   <div class="container">
+                   <div class="container-flude">
                        <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded">
                             <div class="d-flex mb-3 align-items-baseline border-bottom">
                                 <h3 class="h5 fw-700 mb-0">
@@ -330,7 +330,7 @@
     {{-- Banner Section 2 --}}
     @if (get_setting('home_banner3_images') != null)
     <div class="mb-4">
-        <div class="container">
+        <div class="container-flude m-3">
             <div class="row gutters-10">
                 @php $banner_3_imags = json_decode(get_setting('home_banner3_images')); @endphp
                 @foreach ($banner_3_imags as $key => $value)
@@ -356,7 +356,7 @@
 
     {{-- Top 10 categories and Brands --}}
     <section class="mb-4">
-        <div class="container">
+        <div class="container-flude m-3">
             <div class="row gutters-10">
                 @if (get_setting('top10_categories') != null)
                     <div class="col-lg-6">

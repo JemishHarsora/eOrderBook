@@ -39,7 +39,7 @@
     @endphp
 
     <section class="py-5 mb-4 bg-white">
-        <div class="container">
+        <div class="container-flude">
             <div class="row">
                 <div class="col-md-6 mx-auto">
                     <div class="d-flex justify-content-center">
@@ -74,7 +74,7 @@
     </section>
 
     <section class="mb-4">
-        <div class="container">
+        <div class="container-flude">
             <div class="row">
                 <div class="col-xxl-5 col-xl-6 col-md-8 mx-auto">
                     <div class="bg-white rounded shadow-sm p-4 text-center">

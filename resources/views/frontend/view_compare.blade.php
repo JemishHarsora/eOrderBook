@@ -3,7 +3,7 @@
 @section('content')
 
 <section class="pt-4 mb-4">
-    <div class="container text-center">
+    <div class="container-flude m-3 text-center">
         <div class="row">
             <div class="col-lg-6 text-center text-lg-left">
                 <h1 class="fw-600 h4">{{ translate('Compare')}}</h1>
@@ -23,7 +23,7 @@
 </section>
 
 <section class="mb-4">
-    <div class="container text-left">
+    <div class="container-flude text-left">
         <div class="bg-white shadow-sm rounded">
             <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
                 <div class="fs-15 fw-600">{{ translate('Comparison')}}</div>

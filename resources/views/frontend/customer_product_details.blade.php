@@ -27,7 +27,7 @@
 
 @section('content')
     <section class="mb-4 pt-3">
-        <div class="container">
+        <div class="container-flude">
             <div class="bg-white shadow-sm rounded p-3">
                 <div class="row ">
                     <div class="col-xl-5 col-lg-6 mb-4">
@@ -143,7 +143,7 @@
     </section>
 
     <section class="mb-4">
-        <div class="container">
+        <div class="container-flude">
             <div class="bg-white mb-3 shadow-sm rounded">
                 <div class="nav border-bottom aiz-nav-tabs">
                     <a href="#tab_default_1" data-toggle="tab" class="p-3 fs-16 fw-600 text-reset active show">{{ translate('Description')}}</a>
@@ -187,7 +187,7 @@
         </div>
     </section>
     <section class="mb-4">
-        <div class="container">
+        <div class="container-flude">
            <div class="bg-white shadow-sm rounded">
                 <div class="d-flex mb-3 align-items-baseline border-bottom px-3 py-2">
                     <h3 class="fs-16 fw-600 mb-0">

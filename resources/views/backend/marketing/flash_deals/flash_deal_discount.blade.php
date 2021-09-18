@@ -8,7 +8,7 @@
             <span>{{translate('Product')}}</span>
     		</td>
         <td width="20%">
-            <span>{{translate('Base Price')}}</span>
+            <span>{{translate('Selling Price')}}</span>
     		</td>
     		<td width="20%">
             <span>{{translate('Discount')}}</span>
@@ -21,21 +21,21 @@
     <tbody>
         @foreach ($product_ids as $key => $id)
         	@php
-        		$product = \App\Product::findOrFail($id);
+        		$product = \App\ProductPrice::with(['product'])->findOrFail($id);
         	@endphp
             <tr>
               <td>
                 <div class="from-group row">
                   <div class="col-auto">
-                    <img class="size-60px img-fit" src="{{ uploaded_asset($product->thumbnail_img)}}">
+                    <img class="size-60px img-fit" src="{{ uploaded_asset($product->product->thumbnail_img)}}">
                   </div>
                   <div class="col">
-                    <span>{{  $product->getTranslation('name')  }}</span>
+                    <span>{{  $product->product->getTranslation('name')  }}</span>
                   </div>
                 </div>
               </td>
               <td>
-                  <span>{{ $product->unit_price }}</span>
+                  <span>{{ $product->purchase_price }}</span>
               </td>
               <td>
                   <input type="number" lang="en" name="discount_{{ $id }}" value="{{ $product->discount }}" min="0" step="1" class="form-control" required>

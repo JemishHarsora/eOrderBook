@@ -2,7 +2,7 @@
 @section('robots'){{  translate('index') }}@stop
 @section('content')
     <section class="gry-bg py-4 profile">
-        <div class="container">
+        <div class="container-flude">
             <div class="d-flex align-items-start">
                 @include('frontend.inc.user_side_nav')
 

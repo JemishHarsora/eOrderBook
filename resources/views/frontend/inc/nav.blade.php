@@ -117,7 +117,6 @@
     <div class="position-relative logo-bar-area">
         <div class="container">
             <div class="d-flex align-items-center">
-
                 <div class="col-auto col-xl-3 pl-0 pr-3 d-flex align-items-center">
                     <a class="d-block py-20px mr-3 ml-0" href="{{ route('home') }}">
                         @php
