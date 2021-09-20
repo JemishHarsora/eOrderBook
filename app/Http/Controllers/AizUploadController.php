@@ -69,8 +69,8 @@ class AizUploadController extends Controller
     }
     public function upload(Request $request){
 
-        $storagePath= request()->file('aiz_file')->store('uploads','spaces');
-        dd($storagePath);
+        // $storagePath= request()->file('aiz_file')->store('uploads','spaces');
+        // dd($storagePath);
         $type = array(
             "jpg"=>"image",
             "jpeg"=>"image",
@@ -123,7 +123,8 @@ class AizUploadController extends Controller
                         $upload->file_original_name .= ".".$arr[$i];
                     }
                 }
-                $upload->file_name = $request->file('aiz_file')->store('uploads/all');
+                // $upload->file_name = $request->file('aiz_file')->store('uploads/all');
+                $upload->file_name = request()->file('aiz_file')->store('uploads','spaces');
                 $upload->user_id = Auth::user()->id;
                 $upload->type = $type[$upload->extension];
                 $upload->file_size = $request->file('aiz_file')->getSize();
