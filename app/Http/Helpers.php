@@ -824,6 +824,8 @@ if (!function_exists('my_asset')) {
     {
         if (env('FILESYSTEM_DRIVER') == 's3') {
             return Storage::disk('s3')->url($path);
+        } else if (env('FILESYSTEM_DRIVER') == 'spaces') {
+            return Storage::disk('spaces')->url($path);
         } else {
             return app('url')->asset($path, $secure);
         }
