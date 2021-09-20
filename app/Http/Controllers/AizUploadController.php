@@ -68,6 +68,9 @@ class AizUploadController extends Controller
         return view('uploader.aiz-uploader');
     }
     public function upload(Request $request){
+
+        $storagePath= request()->file('aiz_file')->store('uploads','spaces');
+        dd($storagePath);
         $type = array(
             "jpg"=>"image",
             "jpeg"=>"image",
