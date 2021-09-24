@@ -256,13 +256,14 @@ class RegisterController extends Controller
             $proof2 = '';
             $proof3 = '';
             if ($request->hasFile('proof1')) {
-                $proof1 = $request->file('proof1')->store('uploads/shopVerificationData');
+
+                $proof1 = $request->file('proof1')->store('uploads/shopVerificationData','spaces');
             }
             if ($request->hasFile('proof2')) {
-                $proof2 = $request->file('proof2')->store('uploads/shopVerificationData');
+                $proof2 = $request->file('proof2')->store('uploads/shopVerificationData','spaces');
             }
             if ($request->hasFile('proof3')) {
-                $proof3 = $request->file('proof3')->store('uploads/shopVerificationData');
+                $proof3 = $request->file('proof3')->store('uploads/shopVerificationData','spaces');
             }
 
             $user = $this->create($request->all(), $proof1, $proof2, $proof3);
