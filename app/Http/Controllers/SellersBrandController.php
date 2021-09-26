@@ -97,7 +97,7 @@ class SellersBrandController extends Controller
                 $productPrice->discount = $price->discount;
                 $productPrice->discount_type = $price->discount_type;
                 $productPrice->shipping_type = $price->shipping_type;
-                $productPrice->current_stock = $price->current_stock;
+                $productPrice->current_stock = 0;
                 $productPrice->save();
             }
         }
