@@ -30,10 +30,10 @@
                         {
                             $num_todays_deal = count(filter_products(\App\ProductPrice::with(['product' => function($query) use($area_seller){
                             $query->where('brand_id', $area_seller['brand_ids']);
-                        }])->where('published', 1)->where('todays_deal', 1 )->whereIn('product_id', $todays_deal_product_id)->where('seller_id', $area_seller['seller_ids'])->groupBy('product_id'))->get());
+                        }])->where('published', 1)->whereIn('product_id', $todays_deal_product_id)->where('seller_id', $area_seller['seller_ids'])->groupBy('product_id'))->get());
                             $todays_deal_product = filter_products(\App\ProductPrice::with(['product' => function($query) use($area_seller){
                             $query->where('brand_id', $area_seller['brand_ids']);
-                        }])->where('published', 1)->where('todays_deal', 1 )->whereIn('product_id', $todays_deal_product_id)->where('seller_id', $area_seller['seller_ids'])->groupBy('product_id'))->get();
+                        }])->where('published', 1)->whereIn('product_id', $todays_deal_product_id)->where('seller_id', $area_seller['seller_ids'])->groupBy('product_id'))->get();
                         }
                     }
                     // dd($todays_deal_product,$num_todays_deal);

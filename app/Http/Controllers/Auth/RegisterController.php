@@ -245,7 +245,7 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         if ($request->user_type != "0") {
-            if ($request->is_shop == '1') {
+            if (isset($request->licence_no)) {
                 if (User::where('licence_no', $request->licence_no)->first() != null) {
                     flash(translate('Shop Licence already exists.'));
                     return redirect()->back()->withInput();
