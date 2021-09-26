@@ -168,6 +168,9 @@ class AizUploadController extends Controller
             if(env('FILESYSTEM_DRIVER') == 's3'){
                 Storage::disk('s3')->delete(Upload::where('id', $id)->first()->file_name);
             }
+            else if(env('FILESYSTEM_DRIVER') == 'spaces'){
+                Storage::disk('spaces')->delete(Upload::where('id', $id)->first()->file_name);
+            }
             else{
                 unlink(public_path().'/'.Upload::where('id', $id)->first()->file_name);
             }

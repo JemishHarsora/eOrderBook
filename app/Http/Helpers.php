@@ -871,7 +871,10 @@ if (!function_exists('getFileBaseURL')) {
     {
         if (env('FILESYSTEM_DRIVER') == 's3') {
             return env('AWS_URL') . '/';
-        } else {
+        }else if (env('FILESYSTEM_DRIVER') == 'spaces') {
+            return env('DO_URL') . '/';
+        }  
+        else {
             return getBaseURL();
         }
     }

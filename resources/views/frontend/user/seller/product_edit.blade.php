@@ -63,7 +63,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-from-label">{{ translate('Minimum Qty') }}</label>
+                                    <label class="col-lg-3 col-from-label">{{ translate('Minimum Order Qty') }}</label>
                                     <div class="col-lg-8">
 
                                         <input type="number" lang="en" min="0" step="0.01"

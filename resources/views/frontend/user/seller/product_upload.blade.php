@@ -61,7 +61,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 col-from-label">{{ translate('Minimum Qty') }}</label>
+                                    <label class="col-md-3 col-from-label">{{ translate('Minimum Order Qty') }}</label>
                                     <div class="col-md-8">
                                         <input type="number" lang="en" class="form-control" name="min_qty" value="1" min="1" required>
                                     </div>

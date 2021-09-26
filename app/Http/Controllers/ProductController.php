@@ -630,7 +630,7 @@ class ProductController extends Controller
         //     $product_translations->delete();
         // }
 
-        $product = ProductPrice::where('product_id', $id)->where('seller_id', Auth::user()->id)->first();
+        $product = ProductPrice::where('id', $id)->where('seller_id', Auth::user()->id)->first();
         if ($product) {
             $product->delete();
             flash(translate('Product has been deleted successfully'))->success();
