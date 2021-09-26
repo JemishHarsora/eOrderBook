@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="pt-4 mb-4">
-    <div class="container-flude m-3 text-center">
+    <div class="container-fluid text-center">
         <div class="row">
             <div class="col-lg-6 text-center text-lg-left">
                 <h1 class="fw-600 h4">{{ translate('Track Order') }}</h1>
@@ -21,7 +21,7 @@
     </div>
 </section>
 <section class="mb-5">
-    <div class="container-flude text-left">
+    <div class="container-fluid text-left">
         <div class="row">
             <div class="col-xxl-5 col-xl-6 col-lg-8 mx-auto">
                 <form class="" action="{{ route('orders.track') }}" method="GET" enctype="multipart/form-data">

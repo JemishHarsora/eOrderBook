@@ -6,7 +6,7 @@
 @endphp
 
 <section class="pt-4 mb-4">
-    <div class="container-flude m-3 text-center">
+    <div class="container-fluid text-center">
         <div class="row">
             <div class="col-lg-6 text-center text-lg-left">
                 <h1 class="fw-600 h4">{{ $return_policy->getTranslation('title') }}</h1>
@@ -25,7 +25,7 @@
     </div>
 </section>
 <section class="mb-4">
-    <div class="container-flude m-3">
+    <div class="container-fluid">
         <div class="p-4 bg-white rounded shadow-sm overflow-hidden mw-100 text-left">
             @php
                 echo $return_policy->getTranslation('content');

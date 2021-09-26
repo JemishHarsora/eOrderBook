@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="pt-4 mb-4">
-    <div class="container-flude text-center">
+    <div class="container-fluid text-center">
         <div class="row">
             <div class="col-lg-6 text-center text-lg-left">
                 <h1 class="fw-600 h4">{{ translate('Register your shop')}}</h1>
@@ -21,7 +21,7 @@
     </div>
 </section>
 <section class="pt-4 mb-4">
-    <div class="container-flude">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-xxl-5 col-xl-6 col-md-8 mx-auto">
                 <form id="shop" class="" action="{{ route('shops.store') }}" method="POST" enctype="multipart/form-data">

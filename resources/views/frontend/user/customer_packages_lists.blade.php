@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="py-8 bg-primary text-white">
-    <div class="container-flude">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-xl-8 mx-auto text-center">
                 <h1 class="mb-0 fw-700">{{ translate('Premium Packages for Customers') }}</h1>
@@ -12,7 +12,7 @@
 </section>
 
 <section class="py-4 py-lg-5">
-    <div class="container-flude">
+    <div class="container-fluid">
         <div class="row row-cols-xxl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 gutters-10 justify-content-center">
             @foreach ($customer_packages as $key => $customer_package)
                 <div class="col">

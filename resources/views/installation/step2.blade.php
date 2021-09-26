@@ -1,6 +1,6 @@
 @extends('backend.layouts.blank')
 @section('content')
-    <div class="container-flude pt-5">
+    <div class="container-fluid pt-5">
         <div class="row">
             <div class="col-xl-6 mx-auto">
                 <div class="card">
