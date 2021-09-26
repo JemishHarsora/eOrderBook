@@ -104,30 +104,20 @@
                                             </select>
                                         </div>
 
-                                        {{-- shop info --}}
-                                        <div class="form-group">
-                                            <label class="col-md-6 col-from-label">{{ translate('Do you have shop ?') }}
-                                            </label>
-                                            <label class="aiz-switch aiz-switch-success mb-0 float-right"> <input
-                                                    type="checkbox" name="is_shop" id="is_shop" value="1" checked>
-                                                <span></span>
-                                            </label>
-                                        </div>
-
                                         <div>
                                             <div class="fs-15 fw-600 p-3 border-bottom">
                                                 {{ translate('Basic Shop Info') }}
                                             </div>
                                             <div class="pt-3">
                                                 <div class="form-group is_shop">
-                                                    <input type="text" class="form-control" value="{{ old('shop_name') }}"
+                                                    <input type="text" class="form-control" required value="{{ old('shop_name') }}"
                                                         placeholder=" {{ translate('Outlet Name/Shop Name') }}"
                                                         name="shop_name">
                                                 </div>
                                                 <div class="form-group is_shop">
                                                     <div class="custom-file">
                                                         <label class="custom-file-label">
-                                                            <input type="file" class="custom-file-input" name="proof1"
+                                                            <input type="file" class="custom-file-input" required name="proof1"
                                                                 accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf">
                                                             <span
                                                                 class="custom-file-name">{{ translate('Choose Shop image') }}</span>
@@ -192,9 +182,14 @@
                                                         required>
                                                         <option value="">{{ translate('Select City') }}</option>
                                                         @foreach ($cities as $key => $city)
-                                                            <option value="{{ $city->id }}" {{ old('business_category') ? 'selected' : '' }}>
-                                                                {{ translate($city->name) }}
+                                                            @if (old('city'))
+                                                                <option value="{{ $city->id }}" {{ ($city->id == old('city')) ? 'selected' : '' }}>
+                                                            @else
+                                                                <option value="{{ $city->id }}">                                                                
+                                                            @endif
+                                                        {{ translate($city->name) }}
                                                             </option>
+
                                                         @endforeach
                                                     </select>
                                                     @if ($errors->has('city'))
@@ -205,7 +200,7 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <select name="area" id="mainArea" class="form-control aiz-selectpicker"
+                                                    <select name="area" required id="mainArea" class="form-control aiz-selectpicker"
                                                         required>
                                                         <option value="">{{ translate('Select Area of locate') }}
                                                         </option>
