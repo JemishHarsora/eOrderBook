@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="row no-gutters">
             <div class="col-lg-3 col-6">
-                <a class="text-reset border-left text-center p-4 d-block" href="{{ route('terms') }}">
+                <a class="text-reset text-center p-4 d-block" href="{{ route('terms') }}">
                     <i class="la la-file-text la-3x text-primary mb-2"></i>
                     <h4 class="h6">{{ translate('Terms & conditions') }}</h4>
                 </a>
@@ -20,7 +20,7 @@
                 </a>
             </div>
             <div class="col-lg-3 col-6">
-                <a class="text-reset border-left border-right text-center p-4 d-block" href="{{ route('privacypolicy') }}">
+                <a class="text-reset border-left text-center p-4 d-block" href="{{ route('privacypolicy') }}">
                     <i class="las la-exclamation-circle la-3x text-primary mb-2"></i>
                     <h4 class="h6">{{ translate('Privacy Policy') }}</h4>
                 </a>

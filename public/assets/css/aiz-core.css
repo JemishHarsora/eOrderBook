@@ -3448,7 +3448,72 @@ fixed-bottom 1030*/
         flex-grow: 1 !important;
     }
 }
-
+/* custome css */
+.footer-form .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.footer-form button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.feature-link h4{
+    font-weight: 600;
+}
+.best-seller-sec .best-sel-image {
+    width: 140px;
+    height: 140px;
+    overflow: hidden;
+}
+.best-seller-sec .best-sel-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.category-listing .cat-list{
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+}
+.category-listing .cat-list img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.aiz-card-box a{
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    padding: 10px;
+}
+.aiz-card-box a img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.img-fluid {
+    max-width: unset;
+    height: auto;
+    width: 100%;
+}
+.category-listing .cat-list-info{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: auto;
+    align-items: center;
+    flex: 1;
+    padding-right: 20px;
+}
+.category-listing .cat-list-info i{
+    padding-left: 15px;
+}
+.aiz-card-box h3 a {
+    height: auto;
+}
+.bg-white.rounded p{
+    word-break: break-all;
+}
 /*bootstrap, global reset*/
 body {
     margin: 0;
@@ -4015,7 +4080,7 @@ input[type="number"] {
     display: block;
     height: 32px;
     width: 32px;
-    line-height: 32px;
+    line-height: 10px;
     border-radius: 50%;
     text-align: center;
     background: #fff;
@@ -5045,8 +5110,105 @@ input[type="number"] {
         visibility: visible;
         opacity: 1;
     }
+    .aiz-carousel.dots-inside-bottom.mobile-img-auto-height button.slick-arrow{
+        transform: translateY(-40px);
+    }
+    .aiz-carousel button.slick-arrow{
+        width: 30px;
+        height: 30px;
+        line-height: 28px;
+        transform: translateY(-20px);
+    }
+    .half-outside-arrow button.slick-next {
+        right: 10px;
+    }
+    .half-outside-arrow button.slick-prev {
+        left: 10px;
+    }
+    .aiz-p-hov-icon a{
+        transform: translateX(0);
+    }
+    .aiz-card-box a.d-block{
+        height: 150px;
+    }
+    .aiz-card-box h3 a.d-block{
+        height: auto;
+    }
+    .best-seller-sec .best-sel-image{
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+    }
+    .img-fit.h-120px {
+        object-fit: contain;
+    }
+    div.aiz-user-sidenav .aiz-side-nav-list .aiz-side-nav-link{
+        font-size: 16px;
+        align-items: center;
+    }
 }
-
+@media(max-width:575px){
+   div h3{
+        font-size: 18px !important;
+        line-height: 15px !important;
+    }
+     .category-title{
+        flex-wrap: wrap;
+    }
+     .category-title a{
+        margin: 5px 0;
+    }
+    .feature-link a{
+        padding: 12px!important;
+    }
+    .feature-link a .la-3x {
+        font-size: 26px;
+    }
+    .feature-link a h4.h6 {
+        font-size: 14px;
+    }
+    .aiz-carousel ul.slick-dots button{
+        width: 7px;
+        height: 7px;
+    }
+    ul.social li a{
+        width: 25px;
+        height: 25px;
+        line-height: 24px;
+        text-align: center;
+        font-size: 12px;
+    }
+    strong.h2.fw-600.text-primary{
+       font-size: 20px;
+       padding-left: 15px;
+   }
+   .fs-20.opacity-60 del{
+        font-size: 16px;
+   }
+   .product-price strong{
+       font-size: 22px;
+   }
+   .avatar.avatar-sm {
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+    }
+}
+@media (max-width: 340px){
+    .footer-form button {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+    .footer-form .form-control {
+        margin-bottom: 5px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+    .category-listing .cat-list{
+        width: 50px;
+        height: 50px;
+    }
+}
 .search-icon {
     position: relative;
     display: inline-block;
@@ -5995,7 +6157,8 @@ div.footable-loader > span.fooicon:after {
     -webkit-transform: translateY(-50%);
     width: 40px;
     height: 40px;
-    background: #fff;
+    background: #20808a;
+    color: #fff;
     border-radius: 50em;
     border: 0;
     box-shadow: 0 0 1px 1px rgba(20, 23, 28, 0.1),
@@ -6418,7 +6581,7 @@ ul.social a {
     width: 36px;
     height: 36px;
     border-radius: 50em;
-    line-height: 39px;
+    line-height: 34px;
     text-align: center;
     font-size: 18px;
 }
