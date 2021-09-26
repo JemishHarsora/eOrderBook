@@ -142,7 +142,7 @@
             <div class="row gutters-10">
                 @php $banner_1_imags = json_decode(get_setting('home_banner1_images')); @endphp
                 @foreach ($banner_1_imags as $key => $value)
-                    <div class="col-xl col-md-6">
+                    <div class="col-xl col-sm-6">
                         <div class="mb-3 mb-lg-0">
                             <a href="{{ json_decode(get_setting('home_banner1_links'), true)[$key] }}" class="d-block text-reset">
                                 <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" data-src="{{ uploaded_asset($banner_1_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload">
@@ -166,7 +166,7 @@
         <div class="container-fluid">
             <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded">
 
-                <div class="d-flex flex-wrap mb-3 align-items-baseline border-bottom">
+                <div class="d-flex flex-wrap mb-3 align-items-baseline border-bottom category-title">
                     <h3 class="h5 fw-700 mb-0">
                         <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Flash Sale') }}</span>
                     </h3>
@@ -254,7 +254,7 @@
             <div class="row gutters-10">
                 @php $banner_2_imags = json_decode(get_setting('home_banner2_images')); @endphp
                 @foreach ($banner_2_imags as $key => $value)
-                    <div class="col-xl col-md-6">
+                    <div class="col-xl col-sm-6">
                         <div class="mb-3 mb-lg-0">
                             <a href="{{ json_decode(get_setting('home_banner2_links'), true)[$key] }}" class="d-block text-reset">
                                 <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" data-src="{{ uploaded_asset($banner_2_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload">
@@ -281,7 +281,7 @@
                <section class="mb-4">
                    <div class="container-fluid">
                        <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded">
-                            <div class="d-flex mb-3 align-items-baseline border-bottom">
+                            <div class="d-flex mb-3 align-items-baseline border-bottom category-title">
                                 <h3 class="h5 fw-700 mb-0">
                                     <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Classified Ads') }}</span>
                                 </h3>
@@ -334,7 +334,7 @@
             <div class="row gutters-10">
                 @php $banner_3_imags = json_decode(get_setting('home_banner3_images')); @endphp
                 @foreach ($banner_3_imags as $key => $value)
-                    <div class="col-xl col-md-6">
+                    <div class="col-xl col-sm-6">
                         <div class="mb-3 mb-lg-0">
                             <a href="{{ json_decode(get_setting('home_banner3_links'), true)[$key] }}" class="d-block text-reset">
                                 <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" data-src="{{ uploaded_asset($banner_3_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload">
@@ -360,7 +360,7 @@
             <div class="row gutters-10">
                 @if (get_setting('top10_categories') != null)
                     <div class="col-lg-6">
-                        <div class="d-flex mb-3 align-items-baseline border-bottom">
+                        <div class="d-flex mb-3 align-items-baseline border-bottom category-title">
                             <h3 class="h5 fw-700 mb-0">
                                 <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Top 10 Categories') }}</span>
                             </h3>
@@ -373,8 +373,8 @@
                                 @if ($category != null)
                                     <div class="col-sm-6">
                                         <a href="{{ route('products.category', $category->slug) }}" class="bg-white border d-block text-reset rounded p-2 hov-shadow-md mb-2">
-                                            <div class="row align-items-center no-gutters">
-                                                <div class="col-3 text-center">
+                                            <div class="row align-items-center no-gutters category-listing">
+                                                <div class="cat-list text-center">
                                                     <img
                                                         src="{{ static_asset('assets/img/placeholder.jpg') }}"
                                                         data-src="{{ uploaded_asset($category->banner) }}"
@@ -383,12 +383,10 @@
                                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';"
                                                     >
                                                 </div>
-                                                <div class="col-7">
+                                                <div class="cat-list-info">
                                                     <div class="text-truncat-2 pl-3 fs-14 fw-600 text-left">{{ $category->getTranslation('name') }}</div>
-                                                </div>
-                                                <div class="col-2 text-center">
                                                     <i class="la la-angle-right text-primary"></i>
-                                                </div>
+                                                </div>                                               
                                             </div>
                                         </a>
                                     </div>
@@ -399,7 +397,7 @@
                 @endif
                 @if (get_setting('top10_categories') != null)
                     <div class="col-lg-6">
-                        <div class="d-flex mb-3 align-items-baseline border-bottom">
+                        <div class="d-flex mb-3 align-items-baseline border-bottom category-title">
                             <h3 class="h5 fw-700 mb-0">
                                 <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Top 10 Brands') }}</span>
                             </h3>
