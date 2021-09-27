@@ -36,7 +36,7 @@
 
 @section('content')
     <section class="mb-4 pt-3">
-        <div class="container-flude">
+        <div class="container-fluid">
             <div class="bg-white shadow-sm rounded p-3">
                 <div class="row">
                     <div class="col-xl-5 col-lg-6 mb-4">
@@ -386,7 +386,7 @@
     </section>
 
     <section class="mb-4">
-        <div class="container-flude">
+        <div class="container-fluid">
             <div class="row gutters-10">
                 <div class="col-xl-3 order-1 order-xl-0">
                     <div class="bg-white shadow-sm mb-3">

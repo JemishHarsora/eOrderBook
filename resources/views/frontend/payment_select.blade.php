@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="pt-5 mb-4">
-    <div class="container-flude">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-xl-8 mx-auto">
                 <div class="row aiz-steps arrow-divider">
@@ -42,7 +42,7 @@
     </div>
 </section>
 <section class="mb-4">
-    <div class="container-flude text-left">
+    <div class="container-fluid text-left">
         <div class="row">
             <div class="col-lg-8">
                 <form action="{{ route('payment.checkout') }}" class="form-default" role="form" method="POST" id="checkout-form">

@@ -3,7 +3,7 @@
 @section('content')
 
 <section class="pt-4 mb-4">
-    <div class="container-flude m-3">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-lg-6 text-center text-lg-left">
                 <h1 class="fw-600 h4">{{ translate('All Brands') }}</h1>
@@ -22,7 +22,7 @@
     </div>
 </section>
 <section class="mb-4">
-    <div class="container-flude">
+    <div class="container-fluid">
         <div class="bg-white shadow-sm rounded px-3 pt-3">
             <div class="row row-cols-xxl-6 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2 gutters-10">
                 @php

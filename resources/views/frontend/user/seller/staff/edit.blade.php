@@ -3,7 +3,7 @@
 @section('content')
 
     <section class="py-5">
-        <div class="container-flude">
+        <div class="container-fluid">
             <div class="d-flex align-items-start">
                 @include('frontend.inc.user_side_nav')
 

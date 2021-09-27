@@ -3,7 +3,7 @@
 @section('content')
 
 <section class="pt-5 mb-4">
-    <div class="container-flude">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-xl-8 mx-auto">
                 <div class="row aiz-steps arrow-divider">
@@ -44,7 +44,7 @@
 </section>
 
 <section class="mb-4 gry-bg">
-    <div class="container-flude">
+    <div class="container-fluid">
         <div class="row cols-xs-space cols-sm-space cols-md-space">
             <div class="col-xxl-8 col-xl-10 mx-auto">
                 <form class="form-default" data-toggle="validator" action="{{ route('checkout.store_shipping_infostore') }}" role="form" method="POST">

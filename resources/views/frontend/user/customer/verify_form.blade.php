@@ -3,7 +3,7 @@
 @section('content')
 
 <section class="gry-bg py-4 profile">
-    <div class="container-flude">
+    <div class="container-fluid">
         <div class="row cols-xs-space cols-sm-space cols-md-space">
             <div class="col-lg-3 d-none d-lg-block">
                 @include('frontend.inc.user_side_nav')
