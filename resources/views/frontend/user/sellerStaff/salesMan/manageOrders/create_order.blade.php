@@ -36,12 +36,11 @@
                                     <label class="col-md-3 col-from-label">{{ translate('Brand') }}</label>
                                     <div class="col-md-8">
 
-                                        {{-- {{ dd($brands, $selected_brand) }} --}}
-                                        <select class="form-control aiz-selectpicker" name="brand_id" id="brand_id"
-                                            data-live-search="true" required>
+                                        <select class="form-control aiz-selectpicker" name="brand_id[]" id="brand_id"
+                                            data-live-search="true" required multiple>
                                             <option value="">Select Brand</option>
                                             @foreach ($brands as $brand)
-                                                <option value="{{ $brand->brands->id }}" @isset($selected_brand) @if ($selected_brand == $brand->brands->id) selected @endif @endisset>
+                                                <option value="{{ $brand->brands->id }}" @if(isset($selected_brand) && $selected_brand !="") @if (in_array($brand->brands->id,$selected_brand)) selected @endif @endif>
                                                     {{ $brand->brands->name }}
                                                 </option>
                                             @endforeach
@@ -52,8 +51,8 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{ translate('Area') }}</label>
                                     <div class="col-md-8">
-                                        <select class="form-control aiz-selectpicker" name="area_id" id="area_id"
-                                            data-live-search="true" value='{{ old('area_id') }}' required>
+                                        <select class="form-control aiz-selectpicker" name="area_id[]" id="area_id"
+                                            data-live-search="true" value='{{ old('area_id') }}' required multiple>
                                             <option value="">Select Area</option>
                                             @foreach ($areas as $area)
                                                 <option value="{{ $area->areas->id }}">{{ $area->areas->name }}</option>
@@ -77,9 +76,9 @@
                                             <tr>
                                                 <th>{{ translate('Product') }}</th>
                                                 {{-- <th>{{ translate('sku') }}</th> --}}
+                                                <th>{{ translate('Quantity') }}</th>
                                                 <th>{{ translate('Price') }}</th>
                                                 <th>{{ translate('Available Qty') }}</th>
-                                                <th>{{ translate('Quantity') }}</th>
                                                 {{-- <th>{{ translate('Tax') }}</th> --}}
                                                 <th>{{ translate('Total Price') }}</th>
                                                 <th class="float-right">{{ translate('Action') }}</th>
@@ -136,11 +135,11 @@ $htmlSelectProduct .= '
               <span class="add_attr"></span>
             </td>
 
-              <td style="width: 10%"><input onChange="update_total($(this));" type="text" min="0" class="w-auto add_price form-control" style="width: 70px!important" name="add_price[]" value="0" ></td>
-              <td style="width: 10%"><p class="available_qty mb-0 mt-2">0</p></td>
-              <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_qty form-control" name="add_qty[]" style="width: 70px!important" value="0"></td>
-              <td style="width: 10%"><input type="text" readonly name="add_total[]" class="w-auto add_total form-control" value="0"></td>
-              <td style="width: 10%"><button onClick="$(this).parent().parent().remove();" class="w-auto btn btn-soft-danger btn-icon btn-circle btn-sm" data-title="Delete"><i class="las la-trash" aria-hidden="true"></i></button></td>
+                <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="w-auto add_qty form-control" name="add_qty[]" style="width: 70px!important" value="0"></td>
+                <td style="width: 10%"><input onChange="update_total($(this));" type="text" min="0" class="w-auto add_price form-control" style="width: 70px!important" name="add_price[]" value="0" ></td>
+                <td style="width: 10%"><p class="available_qty mb-0 mt-2">0</p></td>
+                <td style="width: 10%"><input type="text" readonly name="add_total[]" class="w-auto add_total form-control" value="0"></td>
+                <td style="width: 10%"><button onClick="$(this).parent().parent().remove();" class="w-auto btn btn-soft-danger btn-icon btn-circle btn-sm" data-title="Delete"><i class="las la-trash" aria-hidden="true"></i></button></td>
             </tr>
           <tr>
           </tr>';
@@ -155,19 +154,24 @@ $htmlSelectProduct = str_replace("'", '"', $htmlSelectProduct);
         $(document).ready(function() {
 
             $('#brand_id').on('change', function() {
+                var selMulti = $.map($("#brand_id option:selected"), function (el, i) {
+                    return $(el).val();
+                });
                 var currentURL = window.location.href.split('?')[0];
-                currentURL = currentURL + '?brand=' + this.value;
+                currentURL = currentURL + '?brand=' + selMulti.join(",");
                 window.location.href = currentURL;
             });
 
             $('#area_id').on('change', function() {
-                var area_id = this.value;
+                var selMulti = $.map($("#area_id option:selected"), function (el, i) {
+                    return $(el).val();
+                });
                 $("#user_id").html('');
                 $.ajax({
                     url: "{{ url('orders/getusers') }}",
                     type: "POST",
                     data: {
-                        area_id: area_id,
+                        area_id: selMulti.join(","),
                         _token: '{{ csrf_token() }}'
                     },
                     dataType: 'json',
@@ -193,7 +197,7 @@ $htmlSelectProduct = str_replace("'", '"', $htmlSelectProduct);
         function update_total(e) {
             node = e.closest('tr');
             var qty = node.find('.add_qty').eq(0).val();
-            var price = node.find('.add_total').eq(0).val();
+            var price = node.find('.add_price').eq(0).val();
             node.find('.add_total').eq(0).val(qty * price);
         }
 

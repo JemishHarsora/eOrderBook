@@ -218,7 +218,7 @@
                             <a href="{{ url('seller/routes') }}"
                                 class="aiz-side-nav-link {{ areActiveRoutes(['seller.routes', 'seller.routes', 'routes.create', 'routes.edit']) }}">
                                 <i class="las la-location-arrow aiz-side-nav-icon"></i>
-                                <span class="aiz-side-nav-text">{{ translate('Routes') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('Delivery Routes') }}</span>
                             </a>
                         </li>
 

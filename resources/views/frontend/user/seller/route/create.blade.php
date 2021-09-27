@@ -12,7 +12,7 @@
                     <div class="aiz-titlebar mt-2 mb-4">
                         <div class="row align-items-center">
                             <div class="col-md-6">
-                                <h1 class="h3">{{ translate('Add Your Route') }}</h1>
+                                <h1 class="h3">{{ translate('Add Your Delivery Route') }}</h1>
                             </div>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                                 </div> --}}
 
                                 <div class="form-group row">
-                                    <label class="col-md-3 col-from-label">{{ translate('Name') }}</label>
+                                    <label class="col-md-3 col-from-label">{{ translate('Name (day)') }}</label>
                                     <div class="col-md-8">
                                         <input type="text" class="form-control text-capitalize" name="name"
                                             placeholder="{{ translate('Name') }}" required>
@@ -74,7 +74,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{ translate('Date') }}</label>
                                     <div class="col-md-8">
-                                        <select class="form-control aiz-selectpicker" name="date" data-live-search="true"
+                                        <select class="form-control aiz-selectpicker" multiple name="date[]" data-live-search="true"
                                             required>
                                             @for ($aaa = 1; $aaa <= 30; $aaa++)
                                                 <option value="{{ $aaa }}">{{ $aaa }}</option>

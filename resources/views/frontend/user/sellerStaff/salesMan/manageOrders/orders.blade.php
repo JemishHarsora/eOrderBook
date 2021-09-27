@@ -22,6 +22,9 @@
                                 </a>
                             </div>
                         @endif
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
                         <div class="card">
                             <form id="sort_orders" action="" method="GET">
                                 <div class="card-header row gutters-5">
@@ -72,7 +75,7 @@
                                             <th>#</th>
                                             <th>{{ translate('Order Code') }}</th>
                                             <th data-breakpoints="lg">{{ translate('Num. of Products') }}</th>
-                                            <th data-breakpoints="lg">{{ translate('Customer') }}</th>
+                                            <th>{{ translate('Customer') }}</th>
                                             <th data-breakpoints="md">{{ translate('Amount') }}</th>
                                             <th data-breakpoints="lg">{{ translate('Delivery Status') }}</th>
                                             <th>{{ translate('Payment Status') }}</th>
@@ -145,6 +148,7 @@
                             </div>
                         @endif
                     </div>
+                        </div>
                 </div>
             </div>
         </div>

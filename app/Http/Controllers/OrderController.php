@@ -371,21 +371,15 @@ class OrderController extends Controller
         $selected_brand = '';
         $seller_id = (Auth::user()->user_type == 'seller') ? Auth::user()->id : Auth::user()->created_by;
         $areas=[];
-        // $areas = DB::table('routes')
-        //     ->join('areas', 'routes.area_id', '=', 'areas.id')
-        //     ->where('routes.seller_id', $seller_id)
-        //     ->groupBy('routes.area_id')
-        //     ->select('areas.id', 'areas.name')
-        //     ->get();
+      
         $products = ProductPrice::where('seller_id', $seller_id)->where('published', 1);
         if ($request->has('brand')) {
-            $selected_brand = $request->brand;
-            $product_id = Product::where('brand_id', $request->brand)->get()->pluck(['id']);
+            $selected_brand = explode(",",$request->brand);
+            $product_id = Product::whereIn('brand_id', $selected_brand)->get()->pluck(['id']);
             $products = $products->whereIn('product_id', $product_id);
-            $areas = SellersBrand::with(['areas'])->where('seller_id', $seller_id)->where('brand_id', $request->brand)->get();
+            $areas = SellersBrand::with(['areas'])->where('seller_id', $seller_id)->whereIn('brand_id', $selected_brand)->groupBy('area_id')->get();
         }
         $products = $products->get();
-
         $brands = SellersBrand::where('seller_id', $seller_id)
             ->with(['brands'])
             ->groupBy('brand_id')
@@ -395,7 +389,8 @@ class OrderController extends Controller
 
     public function getUsers(Request $request)
     {
-        $data['users'] = User::where("area", $request->area_id)->where("user_type", "customer")->where('banned', 0)->get(["name", "id"]);
+        $area = explode(",",$request->area_id);
+        $data['users'] = User::whereIn("area", $area)->where("user_type", "customer")->where('banned', 0)->get(["name", "id"]);
         return response()->json($data);
     }
 
@@ -784,13 +779,69 @@ class OrderController extends Controller
         $request['shipping_type'] = 'home_delivery';
 
         try {
-            $this->add_item($request);    
+            $this->add_seller_item($request);    
             flash(translate('Order has been added successfully'))->success();
         } catch (\Throwable $th) {
             flash(translate('Something went wrong'))->error();
         }
         return back();
     }
+
+    public function add_seller_item(Request $request)
+    {
+        // dd($request->all());
+        $addIds = request('add_id');
+        $add_qty = request('add_qty');
+        $add_price = request('add_price');
+        $add_total = request('add_total');
+        $orderId = request('order_id');
+        $Order = Order::find($orderId);
+        $shipping_type = isset($request->shipping_type) ? $request->shipping_type : $Order->orderDetails[0]->shipping_type;
+        $shipping = 0;
+        $subtotal = 0;
+
+        foreach ($addIds as $key => $id) {
+            //where exits id and qty > 0
+            if ($id && $add_qty[$key]) {
+                $product = ProductPrice::find($id);
+                if (!$product) {
+                    return response()->json(['error' => 1, 'msg' => trans('admin.data_not_found_detail', ['msg' => '#' . $id]), 'detail' => '']);
+                }
+                $price = $add_total[$key];
+                $subtotal += $price;
+               
+                $order_detail = new OrderDetail;
+                $order_detail->order_id  = $orderId;
+                $order_detail->seller_id = $product->seller_id;
+                $order_detail->product_id = $product->id;
+                $order_detail->variation = '';
+                $order_detail->price = $price;
+                $order_detail->tax = 0;
+                $order_detail->shipping_type = $shipping_type;
+                $order_detail->shipping_cost = 0;
+                $order_detail->quantity = $add_qty[$key];
+                $order_detail->save();
+                $product->num_of_sale = $product->num_of_sale + $add_qty[$key];
+                $product->current_stock = $product->current_stock - $add_qty[$key];
+                $product->save();
+            }
+            $Order->grand_total = $Order->grand_total + $subtotal + $shipping;
+            $Order->save();
+        }
+        $array['view'] = 'emails.invoice';
+        $array['subject'] = translate('Your order has been placed') . ' - ' . $Order->code;
+        $array['from'] = env('MAIL_USERNAME');
+        $array['order'] = $Order;
+        try {
+            Mail::to($Order->seller->email)->queue(new InvoiceEmailManager($array));
+            Mail::to(\App\User::find($request->user_id)->email)->queue(new InvoiceEmailManager($array));
+        } catch (\Exception $e) {
+            dd('catch');
+        }
+
+        return response()->json(['error' => 0, 'msg' => translate('Order Item has been added successfully')]);
+    }
+
     public function add_item(Request $request)
     {
         // dd($request->all());
@@ -850,7 +901,6 @@ class OrderController extends Controller
         $array['from'] = env('MAIL_USERNAME');
         $array['order'] = $Order;
         try {
-
             Mail::to($Order->seller->email)->queue(new InvoiceEmailManager($array));
             Mail::to(\App\User::find($request->user_id)->email)->queue(new InvoiceEmailManager($array));
         } catch (\Exception $e) {

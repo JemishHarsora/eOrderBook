@@ -58,15 +58,16 @@ class RouteController extends Controller
      */
     public function store(Request $request)
     {
-        $route = new Route;
-
-        $route->name = ucfirst($request->name);
-        $route->city_id = $request->city_id;
-        // $route->user_id = implode(",", $request->user_id);
-        $route->area_id = implode(",", $request->area_id);
-        $route->day = $request->date;
-        $route->seller_id = Auth::user()->id;
-        $route->save();
+        foreach($request->date as $key => $value){
+            $route = new Route;
+            $route->name = ucfirst($request->name);
+            $route->city_id = $request->city_id;
+            // $route->user_id = implode(",", $request->user_id);
+            $route->area_id = implode(",", $request->area_id);
+            $route->day = $value;
+            $route->seller_id = Auth::user()->id;
+            $route->save();
+        }
         flash(translate('Route has been inserted successfully'))->success();
         return back();
     }
