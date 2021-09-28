@@ -132,28 +132,27 @@
 		</div>
 		<div style="padding: 1rem; margin: 10px; margin-bottom: -20px"">
 		<div style="padding-bottom: 0; width: 49.5%; display: inline-block;">
-            <table>
-				@php
-					$shipping_address = json_decode($order->shipping_address);
-				@endphp
-				<tr><td class="strong small gry-color">{{ translate('Bill to') }}:</td></tr>
-				<tr><td class="strong">{{ $shipping_address->name }}</td></tr>
-				<tr><td class="gry-color small">{{ $shipping_address->address }}, {{ $shipping_address->area }}, {{ $shipping_address->city }}</td></tr>
-				<tr><td class="gry-color small">{{ translate('Email') }}: {{ $shipping_address->email }}</td></tr>
-				<tr><td class="gry-color small">{{ translate('Phone') }}: {{ $shipping_address->phone }}</td></tr>
-				<tr><td class="gry-color small">{{ translate('GST') }}: {{ $order->user->gst_no }}</td></tr>
+			<table>
+				<tr><td class="strong small gry-color ">{{ translate('Bill from') }}:</td></tr>
+				<tr><td class="strong ">{{ $order->seller->shop->name }}</td></tr>
+				<tr><td class="gry-color small ">{{ $order->seller->address }}, {{ $order->seller->areas->name }}, {{ $order->seller->areas->city->name }}</td></tr>
+				<tr><td class="gry-color small ">{{ translate('Email') }}: {{ $order->seller->email }}</td></tr>
+				<tr><td class="gry-color small ">{{ translate('Phone') }}: {{ $order->seller->phone }}</td></tr>
+				<tr><td class="gry-color small ">{{ translate('GST') }}: {{ $order->seller->gst_no }}</td></tr>
 			</table>
 		</div>
 
 		<div style="padding-bottom: 0;width: 50%;display: inline-block;">
-            <table>
-			
-				<tr><td class="strong small gry-color text-right">{{ translate('Bill from') }}:</td></tr>
-				<tr><td class="strong text-right">{{ $order->seller->shop->name }}</td></tr>
-				<tr><td class="gry-color small text-right">{{ $order->seller->address }}, {{ $order->seller->areas->name }}, {{ $order->seller->areas->city->name }}</td></tr>
-				<tr><td class="gry-color small text-right">{{ translate('Email') }}: {{ $order->seller->email }}</td></tr>
-				<tr><td class="gry-color small text-right">{{ translate('Phone') }}: {{ $order->seller->phone }}</td></tr>
-				<tr><td class="gry-color small text-right">{{ translate('GST') }}: {{ $order->seller->gst_no }}</td></tr>
+			<table>
+				@php
+					$shipping_address = json_decode($order->shipping_address);
+				@endphp
+				<tr><td class="strong small gry-color text-right">{{ translate('Bill to') }}:</td></tr>
+				<tr><td class="strong text-right">{{ $shipping_address->name }}</td></tr>
+				<tr><td class="gry-color text-right small">{{ $shipping_address->address }}, {{ $shipping_address->area }}, {{ $shipping_address->city }}</td></tr>
+				<tr><td class="gry-color text-right small">{{ translate('Email') }}: {{ $shipping_address->email }}</td></tr>
+				<tr><td class="gry-color text-right small">{{ translate('Phone') }}: {{ $shipping_address->phone }}</td></tr>
+				<tr><td class="gry-color text-right small">{{ translate('GST') }}: {{ $order->user->gst_no }}</td></tr>
 			</table>
 		</div>
 	</div>
@@ -197,7 +196,7 @@
 		        <tbody>
 			        <tr>
 			            <th class="gry-color text-left">{{ translate('Sub Total') }}</th>
-			            <td class="currency">{{ single_price($order->orderDetails->sum('price')) }}</td>
+			            <td class="currency">{{single_price($order->orderDetails->sum('price') - (($order->orderDetails->sum('price')/100)*18))}}</td>
 			        </tr>
 			        <tr>
 			            <th class="gry-color text-left">{{ translate('Shipping Cost') }}</th>
@@ -205,7 +204,7 @@
 			        </tr>
 			        <tr class="border-bottom">
 			            <th class="gry-color text-left">{{ translate('Total Tax') }}</th>
-			            <td class="currency">{{ single_price($order->orderDetails->sum('tax')) }}</td>
+			            <td class="currency">{{ single_price((($order->orderDetails->sum('price'))/100)*18) }}</td>
 			        </tr>
                     <tr class="border-bottom">
 			            <th class="gry-color text-left">{{ translate('Coupon Discount') }}</th>
