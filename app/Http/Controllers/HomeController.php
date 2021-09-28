@@ -349,7 +349,7 @@ class HomeController extends Controller
         $isblock = '';
         $sellersData = [];
         $detailedProduct  = ProductPrice::with(['product','user','orderDetails'])->where('slug', $slug)->first();
-        $ProductSeller = ProductPrice::with(['product'])->where('product_id', $detailedProduct->product_id)->where('id', '!=', $detailedProduct->id)->get();
+        $ProductSeller = ProductPrice::with(['product'])->where('product_id', $detailedProduct->product_id)->get();
         if (isset(Auth::user()->id)) {
             $isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $detailedProduct->seller_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $detailedProduct->seller_id]])->first();
             foreach ($ProductSeller as $sellers) {

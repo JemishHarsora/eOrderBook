@@ -125,8 +125,8 @@
                                         <button class="btn btn-sm btn-soft-primary" onclick="show_chat_modal()">{{ translate('Message Seller') }}</button>
                                     </div>
                                 @endif
-
-                                @if ($sellersData)
+                                    
+                                @if (count($sellersData) > 1)
                                     <div class="col-auto">
                                         <button class="btn btn-sm btn-soft-primary" data-toggle="modal" data-target="#moreSellerModal">{{ translate('More Seller') }}</button>
                                     </div>

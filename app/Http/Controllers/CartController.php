@@ -27,7 +27,7 @@ class CartController extends Controller
         $isblock='';
         $sellersData=[];
         $product = ProductPrice::with(['product','user'])->find($request->id);
-        $ProductSeller = ProductPrice::with(['product','user'])->where('product_id', $product->product_id)->where('seller_id','!=', $product->seller_id)->get();
+        $ProductSeller = ProductPrice::with(['product','user'])->where('product_id', $product->product_id)->get();
 
         if (isset(Auth::user()->id)) {
             $isblock = BlockUser::where([['user_id', '=', Auth::user()->id], ['blocker_id', '=', $product->seller_id]])->orWhere([['blocker_id', '=', Auth::user()->id], ['user_id', '=', $product->seller_id]])->first();

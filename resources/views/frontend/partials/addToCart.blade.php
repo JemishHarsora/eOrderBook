@@ -51,7 +51,7 @@
                         @endif
                     </div>
 
-                    @if ($sellersData)
+                    @if (count($sellersData) > 1)
                         <div class="col-auto">
                             <button class="btn btn-sm btn-soft-primary" id="moreSellerModal">{{ translate('More Seller') }}</button>
                         </div>
