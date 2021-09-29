@@ -5091,7 +5091,10 @@ input[type="number"] {
         z-index: 2;
         top: 3px;
     }
-
+    .aiz-card-box .h-35px,
+    .aiz-card-box .size-35px {
+        height: auto;
+    }
     .aiz-uploader-search input {
         position: absolute;
         z-index: 1;
@@ -5207,6 +5210,9 @@ input[type="number"] {
     .category-listing .cat-list{
         width: 50px;
         height: 50px;
+    }
+    button.btn{
+        padding: 10px 12px;
     }
 }
 .search-icon {
