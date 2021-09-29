@@ -581,6 +581,15 @@ class OrderController extends Controller
             } else {
                 $order->guest_id = mt_rand(100000, 999999);
             }
+            $orders= Order::where('seller_id',$key)->orderBy('id','desc')->limit(1)->first();
+            $invoice_prefix = user::where('id',$key)->first()->invoice_prefix;
+            if($orders){
+                $int = (int) (preg_replace('/[^0-9.]+/', '', $orders->invoice_id))+1;
+                $order->invoice_id = $invoice_prefix.$int;
+            }else
+            {
+                $order->invoice_id = $invoice_prefix.'1';
+            }
             $address_data['name'] = $user->name;
             $address_data['email'] = $user->email;
             $address_data['address'] = $user->address;
@@ -609,9 +618,7 @@ class OrderController extends Controller
 
                 //Order Details Storing
                 foreach ($cart_product as $key => $cartItem) {
-
                     $product = ProductPrice::with(['product'])->find($cartItem['id']);
-
                     if ($product->added_by == 'admin') {
                         array_push($admin_products, $cartItem['id']);
                     } else {
@@ -625,7 +632,6 @@ class OrderController extends Controller
 
                     $subtotal += $cartItem['price'] * $cartItem['quantity'];
                     $tax += $cartItem['tax'] * $cartItem['quantity'];
-
                     $product_variation = $cartItem['variant'];
 
                     if ($product_variation != null) {
@@ -736,11 +742,13 @@ class OrderController extends Controller
     public function addSellerOrder(Request $request)
     {
         $seller_id = "";
+        $invoice_prefix="";
         if (Auth::user()->user_type === 'salesman' || Auth::user()->user_type === 'delivery') {
-
             $seller_id = Auth::user()->created_by;
+            $invoice_prefix = User::where('id',$seller_id)->first()->invoice_prefix;
         } else {
             $seller_id = Auth::user()->id;
+            $invoice_prefix = Auth::user()->invoice_prefix;
         }
 
         $addIds = request('add_id');
@@ -763,6 +771,14 @@ class OrderController extends Controller
         $address_data['area'] = isset($user->areas->name) ? $user->areas->name : '';
         $address_data['phone'] = $user->phone;
 
+        $orders= Order::where('seller_id',$seller_id)->orderBy('id','desc')->limit(1)->first();
+        if($orders){
+            $int = (int) (preg_replace('/[^0-9.]+/', '', $orders->invoice_id))+1;
+            $order->invoice_id = $invoice_prefix.$int;
+        }else
+        {
+            $order->invoice_id = $invoice_prefix.'1';
+        }
         $order->shipping_address = json_encode($address_data);
         $order->user_id = $user->id;
         $order->payment_type = 'as_per_yours_terms';

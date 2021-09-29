@@ -243,7 +243,24 @@
                             </div>
                         </div> --}}
                     </div>
-            </div>
+                    </div>
+
+                    <!-- Invoice prefix -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 h6">{{ translate('Invoice Setting')}}</h5>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group row">
+                                <label class="col-md-2 col-form-label">{{ translate('Invoice Prefix') }}</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" placeholder="{{ translate('Invoice Prefix') }}"
+                                        name="invoice_prefix" value="{{ Auth::user()->invoice_prefix }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             <div class="form-group mb-0 text-right">
                 <button type="submit" class="btn btn-primary">{{translate('Update Profile')}}</button>
             </div>

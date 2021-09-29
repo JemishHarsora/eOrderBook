@@ -91,6 +91,10 @@
                             <td>{{ $order->code }}</td>
                         </tr>
                         <tr>
+                            <td class="w-50 fw-600">{{ translate('Invoice')}}:</td>
+                            <td>{{ $order->invoice_id }}</td>
+                        </tr>
+                        <tr>
                             <td class="w-50 fw-600">{{ translate('Customer')}}:</td>
                             <td>{{ json_decode($order->shipping_address)->name }}</td>
                         </tr>

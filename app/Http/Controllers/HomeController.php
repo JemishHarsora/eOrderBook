@@ -238,6 +238,7 @@ class HomeController extends Controller
         $user->area = $request->area;
         $user->postal_code = $request->postal_code;
         $user->phone = $request->phone;
+        $user->invoice_prefix = $request->invoice_prefix;
         $user->business_category = implode(",", $request->business_category);
 
         if ($request->new_password != null && ($request->new_password == $request->confirm_password)) {
