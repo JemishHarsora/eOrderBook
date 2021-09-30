@@ -294,6 +294,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Product detail update
     Route::get('/product_detail/index', 'ProductStockUpdateController@detailView')->name('product_detail.index');
     Route::post('/product-detail-update', 'ProductStockUpdateController@detail_update')->name('product_detail_update');
+    Route::post('/available-product-detail', 'ProductStockUpdateController@available_product_detail')->name('available_product_detail');
 
     Route::get('/product-csv-download/{type}', 'ProductBulkUploadController@import_product')->name('product_csv.download');
     Route::get('/vendor-product-csv-download/{id}', 'ProductBulkUploadController@import_vendor_product')->name('import_vendor_product.download');

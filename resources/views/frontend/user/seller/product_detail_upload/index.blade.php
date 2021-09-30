@@ -43,7 +43,41 @@
                         </div>
                     </div>
 
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 h6"><strong>{{ translate('Get Available Products') }}</strong></h5>
+                        </div>
+                        <div class="card-body">
+                            <form class="form-horizontal" action="{{ route('available_product_detail') }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
 
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-md-3 col-from-label">{{ translate('Choose brand') }}</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control aiz-selectpicker" name="brand_id" id="brand_id" data-live-search="true">
+                                                    <option value="">{{ 'Select Brand' }}</option>
+                                                    @foreach ($brands as $brand)
+                                                        <option value="{{ $brand->id }}">{{ $brand->getTranslation('name') }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-md-6">
+                                       
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-0 text-right">
+                                    <button type="submit" class="btn btn-primary">{{ translate('Go') }}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
                     <div class="card">
                         <div class="card-header">
