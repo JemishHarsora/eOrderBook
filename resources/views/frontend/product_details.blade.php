@@ -112,33 +112,36 @@
                             <hr>
 
                             <div class="row align-items-center">
-                                <div class="col-auto">
-                                    <small class="mr-2 opacity-50">{{ translate('Sold by') }}: </small><br>
-                                    @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
-                                        <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="text-reset">{{ $detailedProduct->user->shop->name }}</a>
-                                    @else
-                                        {{ translate('Inhouse product') }}
-                                    @endif
+                                <div class="col-md-12">
+                                    <div class="seller-btn-info">
+                                        <div class="seller-info">
+                                            <small class="mr-2 opacity-50">{{ translate('Sold by') }}: </small><br>
+                                            @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
+                                                <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="text-reset">{{ $detailedProduct->user->shop->name }}</a>
+                                            @else
+                                                {{ translate('Inhouse product') }}
+                                            @endif
+                                        </div>
+                                        @if (\App\BusinessSetting::where('type', 'conversation_system')->first()->value == 1)
+                                            <div class="seller-info">
+                                                <button class="btn btn-sm btn-soft-primary" onclick="show_chat_modal()">{{ translate('Message Seller') }}</button>
+                                            </div>
+                                        @endif
+                                            
+                                        @if (count($sellersData) > 1)
+                                            <div class="seller-info">
+                                                <button class="btn btn-sm btn-soft-primary" data-toggle="modal" data-target="#moreSellerModal">{{ translate('More Seller') }}</button>
+                                            </div>
+                                        @endif
+
+                                        @if ($detailedProduct->product->brand != null)
+                                            <div class="seller-info">
+                                                <img src="{{ uploaded_asset($detailedProduct->product->brand->logo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="{{ $detailedProduct->product->brand->getTranslation('name') }}" height="30">
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
-                                @if (\App\BusinessSetting::where('type', 'conversation_system')->first()->value == 1)
-                                    <div class="col-auto">
-                                        <button class="btn btn-sm btn-soft-primary" onclick="show_chat_modal()">{{ translate('Message Seller') }}</button>
-                                    </div>
-                                @endif
-                                    
-                                @if (count($sellersData) > 1)
-                                    <div class="col-auto">
-                                        <button class="btn btn-sm btn-soft-primary" data-toggle="modal" data-target="#moreSellerModal">{{ translate('More Seller') }}</button>
-                                    </div>
-                                @endif
-
-                                @if ($detailedProduct->product->brand != null)
-                                    <div class="col-auto">
-                                        <img src="{{ uploaded_asset($detailedProduct->product->brand->logo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="{{ $detailedProduct->product->brand->getTranslation('name') }}" height="30">
-                                    </div>
-                                @endif
                             </div>
-
                             <hr>
 
                             @if (home_price($detailedProduct->id) != home_discounted_price($detailedProduct->id))
