@@ -864,6 +864,7 @@ class OrderController extends Controller
         $addIds = request('add_id');
         $add_qty = request('add_qty');
         $orderId = request('order_id');
+        $add_total = request('add_total');
         $Order = Order::find($orderId);
         $shipping_type = isset($request->shipping_type) ? $request->shipping_type : $Order->orderDetails[0]->shipping_type;
         $shipping = 0;
@@ -872,35 +873,24 @@ class OrderController extends Controller
         foreach ($addIds as $key => $id) {
             //where exits id and qty > 0
             if ($id && $add_qty[$key]) {
-                $product = ProductPrice::find($id);
+                $product = ProductPrice::with(['product'])->find($id);
                 if (!$product) {
                     return response()->json(['error' => 1, 'msg' => trans('admin.data_not_found_detail', ['msg' => '#' . $id]), 'detail' => '']);
                 }
-
-                $price = $product->purchase_price;
-
-                if ($product->discount_type == 'percent') {
-                    $price -= ($price * $product->discount) / 100;
-                } elseif ($product->discount_type == 'amount') {
-                    $price -= $product->discount;
+                if($product->current_stock < $add_qty[$key]){
+                    return response()->json(['error' => 1, 'msg' => trans('your cart quentity is gretar then available item for '. $product->product->name, ['msg' => '#' . $id]), 'detail' => '']);
                 }
 
-                if ($product->tax_type == 'percent') {
-                    $tax = ($price * $product->tax) / 100;
-                } elseif ($product->tax_type == 'amount') {
-                    $tax = $product->tax;
-                }
-
-                $subtotal += $price * $add_qty[$key];
-                $subtotal += $tax * $add_qty[$key];
+                $price = $add_total[$key];
+                $subtotal += $price;
 
                 $order_detail = new OrderDetail;
                 $order_detail->order_id  = $orderId;
                 $order_detail->seller_id = $product->seller_id;
                 $order_detail->product_id = $product->id;
                 $order_detail->variation = '';
-                $order_detail->price = $price * $add_qty[$key];
-                $order_detail->tax = $tax * $add_qty[$key];
+                $order_detail->price = $price;
+                $order_detail->tax = 0;
                 $order_detail->shipping_type = $shipping_type;
                 $order_detail->shipping_cost = 0;
                 $order_detail->quantity = $add_qty[$key];
@@ -918,11 +908,10 @@ class OrderController extends Controller
         $array['order'] = $Order;
         try {
             Mail::to($Order->seller->email)->queue(new InvoiceEmailManager($array));
-            Mail::to(\App\User::find($request->user_id)->email)->queue(new InvoiceEmailManager($array));
+            Mail::to(\App\User::find($Order->user_id)->email)->queue(new InvoiceEmailManager($array));
         } catch (\Exception $e) {
             dd('catch');
         }
-
         return response()->json(['error' => 0, 'msg' => translate('Order Item has been added successfully')]);
     }
     /**
@@ -997,12 +986,11 @@ class OrderController extends Controller
         $order = Order::findOrFail($request->order_id);
         $order->save();
         if (Auth::user()->user_type === "salesman" || Auth::user()->user_type === "delivery") {
-            $products = Product::where('user_id', Auth::user()->created_by)->get();
+            $products = ProductPrice::where('seller_id', Auth::user()->created_by)->get();
             return view('frontend.user.sellerStaff.salesMan.manageOrders.order_details_seller', compact('order', 'products'));
         } else {
-            // $products = Product::where('user_id',Auth::user()->id)->get();
-            // return view('frontend.user.seller.order_details_seller', compact('order','products'));
-            $products = Product::where('user_id', Auth::user()->id)->get();
+            
+            $products = ProductPrice::where('seller_id', Auth::user()->id)->get();
             $isCustomerBlockShop = [];
             $isCustomerBlockShop = BlockUser::where('user_id', Auth::user()->id)
                 ->whereIn('blocker_id', array($order->user_id))->first();

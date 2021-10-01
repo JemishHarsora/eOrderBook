@@ -155,13 +155,12 @@
                     <table class="table table-borderless table-responsive">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th style="width: 3%">#</th>
 
                                 <th>{{ translate('Product')}}</th>
-                                <th>{{ translate('sku')}}</th>
-                                <th>{{ translate('Price')}}</th>
                                 <th>{{ translate('Quantity')}}</th>
-                                <th>{{ translate('Tax')}}</th>
+                                <th>{{ translate('Price')}}</th>
+                                <th>{{ translate('Available Qty')}}</th>
                                 <th>{{ translate('Total Price')}}</th>
                                 {{-- <th>{{ translate('Delivery Type')}}</th> --}}
 
@@ -181,15 +180,12 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ $orderDetail->product->sku }}
-                                    </td>
-                                    <td>{{ $orderDetail->product->unit_price }}</td>
-                                    <td>
                                         {{ $orderDetail->quantity }}
                                     </td>
-                                    <td>
-                                        {{ $orderDetail->tax }}
-                                    </td>
+                                    <td>{{ $orderDetail->product->unit_price }}</td>
+
+                                   <td>-</td>
+
                                     <td>
                                         {{ $orderDetail->price }}
                                     </td>
@@ -209,6 +205,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div id="error_msg"></div>
                 </form>
                 </div>
             </div>
@@ -365,12 +362,12 @@ $htmlSelectProduct = '<tr>
 
               <span class="add_attr"></span>
             </td>
-              <td style="width: 20%"><input type="text" readonly class="add_sku form-control" value=""></td>
-              <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="add_price form-control" name="add_price[]" value="0" ></td>
-              <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="add_qty form-control" name="add_qty[]" value="0"></td>
-              <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" readonly class="add_tax form-control" name="add_tax[]" value="0"></td>
-              <td style="width: 10%"><input type="text" readonly name="add_total[]" class="add_total form-control" value="0"></td>
-              <td style="width: 10%"><button onClick="$(this).parent().parent().remove();" class="btn btn-soft-danger btn-icon btn-circle btn-sm" data-title="Delete"><i class="las la-trash" aria-hidden="true"></i></button></td>
+                <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="add_qty form-control" name="add_qty[]" value="0"></td>  
+                <td style="width: 10%"><input onChange="update_total($(this));" type="number" min="0" class="add_price form-control" name="add_price[]" value="0" ></td>
+                <td style="width: 10%"><p class="available_qty mb-0 mt-2"></p></td>
+                <td style="width: 10%"><input type="text" readonly name="add_total[]" class="add_total form-control" value="0"></td>
+                
+                <td style="width: 10%"><button onClick="$(this).parent().parent().remove();" class="btn btn-soft-danger btn-icon btn-circle btn-sm" data-title="Delete"><i class="las la-trash" aria-hidden="true"></i></button></td>
             </tr>
           <tr>
           </tr>';
@@ -416,7 +413,7 @@ $htmlSelectProduct = '<tr>
     function update_total(e){
         node = e.closest('tr');
         var qty = node.find('.add_qty').eq(0).val();
-        var price = node.find('.add_total').eq(0).val();
+        var price = node.find('.add_price').eq(0).val();
         node.find('.add_total').eq(0).val(qty*price);
     }
 
@@ -429,6 +426,7 @@ $htmlSelectProduct = '<tr>
             node.find('.add_qty').eq(0).val('');
             node.find('.add_price').eq(0).val('');
             node.find('.add_attr').html('');
+            node.find('.available_qty').html('');
             node.find('.add_tax').eq(0).val('');
 
         }else{
@@ -451,16 +449,12 @@ $htmlSelectProduct = '<tr>
                 node.find('.add_price').eq(0).val(returnedData.discounted_price);
                 node.find('.add_total').eq(0).val(returnedData.discounted_price);
                 // node.find('.add_attr').eq(0).html(returnedData.renderAttDetails);
-                node.find('.add_tax').eq(0).val(returnedData.taxs);
+                node.find('.available_qty').eq(0).html(returnedData.current_stock);
 
                 $('#loading').hide();
                 }
             });
-
-
-
         }
-
     }
 
     $('#add-item-button-save').click(function(event) {
@@ -480,12 +474,14 @@ $htmlSelectProduct = '<tr>
                 $('#loading').show();
             },
             success: function(result){
+                console.log('res',result);
             $('#loading').hide();
                 if(parseInt(result.error) ==0){
                     AIZ.plugins.notify('success', '{{ translate('Order Item has been added successfully') }}');
                     location.reload();
                 }else{
-                alertJs('error', result.msg);
+                // alertJs('error', result.msg);
+                $('#error_msg').html('<p class="text-danger>'+result.msg +'</p>')
                 }
             }
         });
