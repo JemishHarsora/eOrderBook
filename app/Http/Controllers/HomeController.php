@@ -544,7 +544,7 @@ class HomeController extends Controller
         if ($area_seller['seller_ids'] != null) {
             if ($area_seller['seller_ids']['0'] != null) {
                 $products = filter_products(
-                        ProductPrice::with(['product' => function($query) use($request){
+                        ProductPrice::with(['product' => function($query) use($request,$area_seller){
                             $query->whereIn('brand_id', $area_seller->brand_ids)
                             ->where('tags', 'like', '%' . $request->search . '%');
                     }])->where('published', 1)->where('seller_id', $area_seller['seller_ids']['0'])->groupBy('product_id'))->get()->take(3);
