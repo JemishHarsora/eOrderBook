@@ -161,7 +161,7 @@
 </section>
 
 <!-- FOOTER -->
-<footer class="pt-3 pb-7 pb-xl-3 bg-black text-light">
+<footer class="pt-3 pb-4 pb-xl-3 bg-black text-light">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-4">
@@ -211,6 +211,9 @@
                             @endforeach
                         @endif
                     </ul>
+                </div>
+                <div class="text-right text-md-right">
+                    Design And Develop by <a target="_blank" href="https://wa.me/918733836152"> Technovia</a>
                 </div>
             </div>
         </div>
