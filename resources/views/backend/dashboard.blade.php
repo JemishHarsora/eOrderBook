@@ -362,7 +362,7 @@
                         @php
                             $category_ids = \App\Utility\CategoryUtility::children_ids($category->id);
                             $category_ids[] = $category->id;
-                            
+                            $qty =0;
 
                             $products =  \App\ProductPrice::with(['product'])->whereHas('product',function($query) use($category_ids){
                                 $query->whereIn('category_id', $category_ids);
