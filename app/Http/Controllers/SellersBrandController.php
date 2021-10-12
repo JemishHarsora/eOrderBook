@@ -11,6 +11,7 @@ use App\SellersBrand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Illuminate\Support\Str;
 
 class SellersBrandController extends Controller
 {
@@ -81,7 +82,6 @@ class SellersBrandController extends Controller
 
         $products = Product::where('brand_id', $request->brand_id)->get();
         foreach ($products as $key => $product) {
-
             $price = ProductPrice::where('product_id', $product->id)->first();
             if($price){
                 $productPrice = new ProductPrice();
@@ -98,6 +98,7 @@ class SellersBrandController extends Controller
                 $productPrice->discount_type = $price->discount_type;
                 $productPrice->shipping_type = $price->shipping_type;
                 $productPrice->current_stock = 0;
+                $productPrice->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $product->name)) . '-' . Str::random(7);
                 $productPrice->save();
             }
         }
@@ -162,6 +163,34 @@ class SellersBrandController extends Controller
                 $add_brand->area_id = $no;
                 $add_brand->save();
             }
+
+            if($sellersbrand->brand_id != $request->brand_id){  
+                $products = Product::where('brand_id', $request->brand_id)->get();
+                foreach ($products as $key => $product) {
+                    
+                    if(ProductPrice::where('product_id', $product->id)->where('seller_id', $sellersbrand->seller_id)->count() == 0){
+                        $price = ProductPrice::where('product_id', $product->id)->first();
+                        if($price){
+                            $productPrice = new ProductPrice();
+                            $productPrice->seller_id = Auth::user()->id;
+                            $productPrice->added_by = Auth::user()->user_type == 'seller' ? 'seller' : 'admin';
+                            $productPrice->product_id = $product->id;
+                            $productPrice->sku = $price->sku;
+                            $productPrice->min_qty = 1;
+                            $productPrice->unit_price = $price->unit_price;
+                            $productPrice->purchase_price = $price->purchase_price;
+                            $productPrice->tax = $price->tax;
+                            $productPrice->tax_type = $price->tax_type;
+                            $productPrice->discount = $price->discount;
+                            $productPrice->discount_type = $price->discount_type;
+                            $productPrice->shipping_type = $price->shipping_type;
+                            $productPrice->current_stock = 0;
+                            $productPrice->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $product->name)) . '-' . Str::random(7);
+                            $productPrice->save();
+                        }
+                    }
+                }
+            }
         }
         flash(translate('Brand updated successfully'))->success();
         return redirect()->route('myBrands.index');
@@ -175,7 +204,7 @@ class SellersBrandController extends Controller
      */
     public function destroy($id)
     {
-        SellersBrand::destroy($id);
+        SellersBrand::where('brand_id',$id)->delete();
         flash(translate('Brand has been deleted successfully'))->success();
         return redirect()->route('myBrands.index');
     }

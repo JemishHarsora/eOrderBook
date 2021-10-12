@@ -565,7 +565,7 @@ class ProductController extends Controller
         $productPrice->discount_type = $request->discount_type;
         $productPrice->shipping_type = $request->shipping_type;
         $productPrice->current_stock = $request->current_stock;
-        $productPrice->slug = strtolower($request->slug);
+        $productPrice->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($request->slug))) . '-' . Str::random(7);
         $productPrice->save();
 
         $combinations = Combinations::makeCombinations($options);
