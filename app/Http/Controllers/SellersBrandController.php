@@ -167,7 +167,7 @@ class SellersBrandController extends Controller
             if($sellersbrand->brand_id != $request->brand_id){  
                 $products = Product::where('brand_id', $request->brand_id)->get();
                 foreach ($products as $key => $product) {
-                    
+
                     if(ProductPrice::where('product_id', $product->id)->where('seller_id', $sellersbrand->seller_id)->count() == 0){
                         $price = ProductPrice::where('product_id', $product->id)->first();
                         if($price){
@@ -205,6 +205,9 @@ class SellersBrandController extends Controller
     public function destroy($id)
     {
         SellersBrand::where('brand_id',$id)->delete();
+        $products = Product::where('brand_id', $id)->pluck('id');
+        ProductPrice::whereIn('product_id', $products)->where('seller_id', Auth::user()->id)->delete();
+        
         flash(translate('Brand has been deleted successfully'))->success();
         return redirect()->route('myBrands.index');
     }
