@@ -713,8 +713,8 @@
                                 @php
                                     $retated_product = [];
                                     if ($area_seller['seller_ids'] != null) {
+                                        $products = \App\Product::where('category_id', $detailedProduct->product->category_id)->pluck('id');
                                         if ($area_seller['seller_ids']['0'] != null) {
-                                            $products = \App\Product::where('category_id', $detailedProduct->product->category_id)->pluck('id');
                                             $retated_product = filter_products(
                                                 \App\ProductPrice::with(['product'])->where('id', '!=', $detailedProduct->id)
                                                     ->whereIn('seller_id', $area_seller->seller_ids)
