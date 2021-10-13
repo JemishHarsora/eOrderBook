@@ -103,3 +103,12 @@
     left: 4px;
     top: 7px;
 }
+
+@media (max-width: 786px) {
+    .supportpolicy {
+        border: none !important;
+    }
+    .develop_by {
+        margin-bottom: 50px;
+    }
+}

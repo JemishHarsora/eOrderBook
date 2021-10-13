@@ -14,7 +14,7 @@
                 </a>
             </div>
             <div class="col-lg-3 col-6">
-                <a class="text-reset border-left text-center p-4 d-block" href="{{ route('supportpolicy') }}">
+                <a class="text-reset border-left text-center p-4 d-block supportpolicy" href="{{ route('supportpolicy') }}">
                     <i class="la la-support la-3x text-primary mb-2"></i>
                     <h4 class="h6">{{ translate('Support Policy') }}</h4>
                 </a>
@@ -31,12 +31,12 @@
 
 <section class="bg-dark py-5 text-light">
     <div class="container">
-        <div class="row">
+        <div class="row text-center text-md-left">
             <div class="col-md-5">
                 <div class="footer-widgets mb-4">
                     <a href="{{ route('home') }}" class="d-block">
                         @if(get_setting('footer_logo') != null)
-                            <img class="lazyload" src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ uploaded_asset(get_setting('footer_logo')) }}" alt="{{ env('APP_NAME') }}" height="44">
+                            <img class="lazyload" src="{{ uploaded_asset(get_setting('footer_logo')) }}" data-src="{{ uploaded_asset(get_setting('footer_logo')) }}" alt="{{ env('APP_NAME') }}" height="44">
                         @else
                             <img class="lazyload" src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ static_asset('assets/img/logo.png') }}" alt="{{ env('APP_NAME') }}" height="44">
                         @endif
@@ -212,7 +212,7 @@
                         @endif
                     </ul>
                 </div>
-                <div class="text-right text-md-right">
+                <div class="text-center text-md-right develop_by">
                     Design And Develop by <a target="_blank" href="https://wa.me/918733836152"> Technovia</a>
                 </div>
             </div>
