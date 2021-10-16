@@ -5887,6 +5887,10 @@ hr {
     height: auto;
     width: 100%;
 }
+.product_detail_page .img-fluid {
+    height: 375px;
+    object-fit: contain;
+}
 .category-listing .cat-list-info {
     position: relative;
     display: flex;

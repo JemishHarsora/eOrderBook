@@ -47,7 +47,7 @@
                             <div class="col order-1 order-md-2">
                                 <div class="aiz-carousel product-gallery" data-nav-for='.product-gallery-thumb' data-fade='true'>
                                     @foreach ($photos as $key => $photo)
-                                        <div class="carousel-box img-zoom rounded">
+                                        <div class="carousel-box img-zoom rounded product_detail_page">
                                             <img
                                                 class="img-fluid lazyload"
                                                 src="{{ static_asset('assets/img/placeholder.jpg') }}"
@@ -875,7 +875,7 @@
                 </div>
                 <form class="" action="{{ route('conversations.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="product_id" value="{{ $detailedProduct->id }}">
+                    <input type="hidden" name="product_id" value="{{ $detailedProduct->product_id }}">
                     <div class="modal-body gry-bg px-3 pt-3">
                         <div class="form-group">
                             <input type="text" class="form-control mb-3" name="title" value="{{ $detailedProduct->product->name }}" placeholder="{{ translate('Product Name') }}" required>

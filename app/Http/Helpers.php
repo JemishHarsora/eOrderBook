@@ -968,7 +968,7 @@ if (!function_exists('getAreaWiseBrand')) {
         $seller_ids = '';
         $brand_ids = '';
         if (isset(Auth::user()->area)) {
-            $seller = SellersBrand::where('area_id', Auth::user()->area)->where('status', '1')->get();
+            $seller = SellersBrand::where('area_id', Auth::user()->area)->where('status', '1')->groupBy('seller_id')->get();
             foreach ($seller as $data) {
                 $seller_ids .= "," . $data->seller_id;
                 $brand_ids .= "," . $data->brand_id;

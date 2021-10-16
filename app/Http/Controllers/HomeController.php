@@ -500,30 +500,22 @@ class HomeController extends Controller
     {
         $area_seller = getAreaWiseBrand();
         $keywords = array();
+        $product_ids = Product::where('tags', 'like', '%' . $request->search . '%')->orWhere('name', 'like', '%' . $request->search . '%')->get()->pluck('id')->toArray();
         if ($area_seller['seller_ids'] != null) {
             if ($area_seller['seller_ids']['0'] != null) {
                 $products = ProductPrice::with(['product' => function($query) use($area_seller,$request){
-                    $query->whereIn('brand_id', $area_seller->brand_ids)
-                    ->where('tags', 'like', '%' . $request->search . '%');
-                }])->where('published', 1)->groupBy('product_id')->whereIn('seller_id', $area_seller->seller_ids)->get();
-
+                    $query->whereIn('brand_id', $area_seller->brand_ids);
+                }])->where('published', 1)->groupBy('product_id')->whereIn('product_id',$product_ids)->whereIn('seller_id', $area_seller->seller_ids)->get();
             } else {
 
                 $products = ProductPrice::with(['product' => function($query) use($request,$area_seller){
-                    $query->where('tags', 'like', '%' . $request->search . '%');
                     $query->where('id', $area_seller['seller_ids']['0']);
-                }])->where('published', 1)->groupBy('product_id')->get();
+                }])->where('published', 1)->whereIn('product_id',$product_ids)->groupBy('product_id')->get();
                 
-
                 // $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->where('id', $area_seller['seller_ids']['0'])->get();
             }
         } else {
-
-            $products = ProductPrice::with(['product' => function($query) use($request){
-                $query->where('tags', 'like', '%' . $request->search . '%');
-            }])->where('published', 1)->groupBy('product_id')->get();
-            
-            
+            $products = ProductPrice::with(['product'])->whereIn('product_id',$product_ids)->where('published', 1)->groupBy('product_id')->get();
             // $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->get();
         }
         foreach ($products as $key => $product) {
@@ -545,25 +537,22 @@ class HomeController extends Controller
             if ($area_seller['seller_ids']['0'] != null) {
                 $products = filter_products(
                         ProductPrice::with(['product' => function($query) use($request,$area_seller){
-                            $query->whereIn('brand_id', $area_seller->brand_ids)
-                            ->where('tags', 'like', '%' . $request->search . '%');
-                    }])->where('published', 1)->where('seller_id', $area_seller['seller_ids']['0'])->groupBy('product_id'))->get()->take(3);
+                            $query->whereIn('brand_id', $area_seller->brand_ids);
+                    }])->where('published', 1)->where('seller_id', $area_seller['seller_ids']['0'])->groupBy('product_id')->whereIn('product_id',$product_ids))->get()->take(3);
 
                     // Product::where('published', 1)->where('name', 'like', '%' . $request->search . '%')->whereIn('user_id', $area_seller->seller_ids)->whereIn('brand_id', $area_seller->brand_ids))->get()->take(3);
                 $shops = Shop::whereIn('user_id', $area_seller->seller_ids)->where('name', 'like', '%' . $request->search . '%')->get()->take(3);
             } else {
 
                 $products = ProductPrice::with(['product' => function($query) use($request,$area_seller){
-                    $query->where('tags', 'like', '%' . $request->search . '%');
                     $query->where('id', $area_seller['seller_ids']['0']);
-                }])->where('published', 1)->groupBy('product_id')->get();                
+                }])->where('published', 1)->whereIn('product_id',$product_ids)->groupBy('product_id')->get();                
 
                 // $products = Product::where('published', 1)->where('tags', 'like', '%' . $request->search . '%')->where('id', $area_seller['seller_ids']['0'])->get()->take(3);
                 $shops = Shop::where('user_id', $area_seller['seller_ids']['0'])->where('name', 'like', '%' . $request->search . '%')->get()->take(3);
             }
         } else {
             $products = filter_products(
-                
                 ProductPrice::with(['product' => function($query) use($request){
                     $query->where('name', 'like', '%' . $request->search . '%');
                 }])->where('published', 1)->groupBy('product_id'))->get()->take(3);

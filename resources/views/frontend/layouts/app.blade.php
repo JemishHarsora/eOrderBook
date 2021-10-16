@@ -425,6 +425,8 @@
                    success: function(data){
                        $('.c-preloader').hide();
                        if(data.status){
+                        $('#moreSellerModal').modal('hide');
+                        $('#addToCart').modal('hide');
                         AIZ.plugins.notify('success', data.message);
                         updateNavCart();
                         $('#cart_items_sidenav').html(parseInt($('#cart_items_sidenav').html())+1);
