@@ -65,11 +65,11 @@ class ConversationController extends Controller
      */
     public function store(Request $request)
     {
-        $user_type = Product::with('user')->findOrFail($request->product_id)->user->user_type;
-        dd($user_type);
+        $user = Product::with('user')->findOrFail($request->product_id);
+        
         $conversation = new Conversation;
         $conversation->sender_id = Auth::user()->id;
-        $conversation->receiver_id = Product::findOrFail($request->product_id)->user->id;
+        $conversation->receiver_id = $user->id;
         $conversation->title = $request->title;
 
         if($conversation->save()) {
@@ -79,7 +79,7 @@ class ConversationController extends Controller
             $message->message = $request->message;
 
             if ($message->save()) {
-                $this->send_message_to_seller($conversation, $message, $user_type);
+                $this->send_message_to_seller($conversation, $message, $user->user_type);
             }
         }
 
