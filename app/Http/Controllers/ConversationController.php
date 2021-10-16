@@ -65,8 +65,8 @@ class ConversationController extends Controller
      */
     public function store(Request $request)
     {
-        $user_type = Product::findOrFail($request->product_id)->user->user_type;
-
+        $user_type = Product::with('user')->findOrFail($request->product_id)->user->user_type;
+        dd($user_type);
         $conversation = new Conversation;
         $conversation->sender_id = Auth::user()->id;
         $conversation->receiver_id = Product::findOrFail($request->product_id)->user->id;
