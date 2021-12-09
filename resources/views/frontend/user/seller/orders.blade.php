@@ -147,6 +147,7 @@
                         <option value="confirmed">{{ translate('Confirmed') }}</option>
                         <option value="on_delivery">{{ translate('On delivery') }}</option>
                         <option value="delivered">{{ translate('Delivered') }}</option>
+                        <option value="cancel">{{ translate('Cancel') }}</option>
                     </select>
                 </div>
 

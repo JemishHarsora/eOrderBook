@@ -123,8 +123,31 @@ class OrderController extends Controller
             $order->update(['delivery_status' => $request->delivery_status]);
         }
 
+        if($request->delivery_status === 'cancel'){
+            $this->cancel_order_mail($order_ids);
+        }
         return response()->json(['success' => true, 'message' => 'Status update successfully.'], 200);
     }
+
+    public function cancel_order_mail($id)
+    {
+        $orders = Order::whereIn('id', $id)->get();
+        foreach($orders as $key =>$order){
+            $array['view'] = 'emails.invoice';
+            $array['subject'] = translate('Your order is canceled') . ' - ' . $order->code;
+            $array['from'] = env('MAIL_USERNAME');
+            $array['order'] = $order;
+
+            try {
+                Mail::to(\App\User::find($order->user_id)->email)->queue(new InvoiceEmailManager($array));
+                Mail::to(\App\User::find($order->seller_id)->email)->queue(new InvoiceEmailManager($array));
+            }
+            catch (\Exception $e) {
+            }
+        }
+        return;
+    }
+
     public function orders_export(Request $request)
     {
         $order_ids = '';
@@ -1015,6 +1038,11 @@ class OrderController extends Controller
                 $orderDetail->delivery_status = $request->status;
                 $orderDetail->save();
             }
+        }
+
+        if($request->status === 'cancel'){
+            $order_ids = [$order->id];
+            $this->cancel_order_mail($order_ids);
         }
 
         if (\App\Addon::where('unique_identifier', 'otp_system')->first() != null && \App\Addon::where('unique_identifier', 'otp_system')->first()->activated && \App\OtpConfiguration::where('type', 'otp_for_delivery_status')->first()->value) {

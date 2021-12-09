@@ -44,7 +44,7 @@
     <div class="row mt-5">
         <div class="offset-lg-2 col-lg-4 col-sm-6">
             <div class="form-group">
-                <select class="form-control aiz-selectpicker form-control-sm"  data-minimum-results-for-search="Infinity" id="update_payment_status">
+                <select class="form-control aiz-selectpicker form-control-sm" data-minimum-results-for-search="Infinity" id="update_payment" onchange="update_payment_status()">
                     <option value="unpaid" @if ($payment_status == 'unpaid') selected @endif>{{ translate('Unpaid')}}</option>
                     <option value="paid" @if ($payment_status == 'paid') selected @endif>{{ translate('Paid')}}</option>
                 </select>
@@ -53,11 +53,12 @@
         </div>
         <div class="col-lg-4 col-sm-6">
             <div class="form-group">
-                <select class="form-control aiz-selectpicker form-control-sm"  data-minimum-results-for-search="Infinity" id="update_delivery_status">
+                <select class="form-control aiz-selectpicker form-control-sm" data-minimum-results-for-search="Infinity" id="update_delivery" onchange="update_delivery_status()">
                     <option value="pending" @if ($status == 'pending') selected @endif>{{ translate('Pending')}}</option>
                     <option value="confirmed" @if ($status == 'confirmed') selected @endif>{{ translate('Confirmed')}}</option>
                     <option value="on_delivery" @if ($status == 'on_delivery') selected @endif>{{ translate('On delivery')}}</option>
                     <option value="delivered" @if ($status == 'delivered') selected @endif>{{ translate('Delivered')}}</option>
+                    <option value="cancel" @if ($status == 'cancel') selected @endif>{{ translate('Cancel')}}</option>
                 </select>
                 <label>{{ translate('Delivery Status')}}</label>
             </div>
@@ -380,26 +381,26 @@ $htmlSelectProduct = '<tr>
 
 
 <script type="text/javascript">
-    $('#update_delivery_status').on('change', function(){
+    function update_delivery_status() {
         var order_id = {{ $order->id }};
-        var status = $('#update_delivery_status').val();
+        var status = $('#update_delivery').val();
+        console.log('status',status);
         $.post('{{ route('orders.update_delivery_status') }}', {_token:'{{ @csrf_token() }}',order_id:order_id,status:status}, function(data){
             $('#order_details').modal('hide');
             AIZ.plugins.notify('success', '{{ translate('Order status has been updated') }}');
             location.reload().setTimeOut(500);
         });
-    });
+    }
 
-    $('#update_payment_status').on('change', function(){
+    function update_payment_status() {
         var order_id = {{ $order->id }};
-        var status = $('#update_payment_status').val();
+        var status = $('#update_payment').val();
         $.post('{{ route('orders.update_payment_status') }}', {_token:'{{ @csrf_token() }}',order_id:order_id,status:status}, function(data){
             $('#order_details').modal('hide');
-            //console.log(data);
             AIZ.plugins.notify('success', '{{ translate('Payment status has been updated') }}');
             location.reload().setTimeOut(500);
         });
-    });
+    }
 
     $('#add-item-button').click(function() {
         var html = '{!! $htmlSelectProduct !!}';
