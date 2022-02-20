@@ -142,6 +142,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            {{dd('ddf')}}
                             <hr>
 
                             @if (home_price($detailedProduct->id) != home_discounted_price($detailedProduct->id))
