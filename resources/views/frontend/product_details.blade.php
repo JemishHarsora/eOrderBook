@@ -143,7 +143,7 @@
                                 </div>
                             </div>
                             <hr>
-
+                            {{dd('df')}}
                             @if (home_price($detailedProduct->id) != home_discounted_price($detailedProduct->id))
 
                                 <div class="row no-gutters mt-3">
@@ -321,7 +321,7 @@
                                     </button>
                                 @endif
                             </div>
-                            {{dd('df')}}
+                            
                             <div class="d-table width-100 mt-3">
                                 <div class="d-table-cell">
                                     <!-- Add to wishlist button -->
