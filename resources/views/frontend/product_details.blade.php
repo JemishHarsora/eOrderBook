@@ -44,6 +44,7 @@
                             @php
                                 $photos = explode(',', $detailedProduct->product->photos);
                             @endphp
+                            {{dd('ddf')}}
                             <div class="col order-1 order-md-2">
                                 <div class="aiz-carousel product-gallery" data-nav-for='.product-gallery-thumb' data-fade='true'>
                                     @foreach ($photos as $key => $photo)
@@ -143,7 +144,6 @@
                                 </div>
                             </div>
 
-                            {{dd('ddf')}}
                             <hr>
 
                             @if (home_price($detailedProduct->id) != home_discounted_price($detailedProduct->id))
