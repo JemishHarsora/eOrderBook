@@ -321,7 +321,7 @@
                                     </button>
                                 @endif
                             </div>
-
+                            {{dd('df')}}
                             <div class="d-table width-100 mt-3">
                                 <div class="d-table-cell">
                                     <!-- Add to wishlist button -->
@@ -439,7 +439,6 @@
                                 <div class="opacity-60 fs-12">({{ $total }} {{ translate('customer reviews') }})</div>
                             </div>
                         </div>
-                        {{dd('df')}}
                         @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
                             <div class="row no-gutters align-items-center border-top">
                                 <div class="col">
