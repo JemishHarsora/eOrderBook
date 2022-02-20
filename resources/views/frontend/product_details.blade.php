@@ -425,8 +425,7 @@
                                     $rating += $seller_product->reviews->sum('rating');
                                 }
                             @endphp
-                            {{dd('ddf')}}
-
+                            
                             <div class="text-center border rounded p-2 mt-3">
                                 <div class="rating">
                                     @if ($total > 0)
@@ -470,6 +469,7 @@
                             </div>
                         @endif
                     </div>
+                    {{dd('ddf')}}
                     <div class="bg-white rounded shadow-sm mb-3">
                         <div class="p-3 border-bottom fs-16 fw-600">
                             {{ translate('Top Selling Products') }}
