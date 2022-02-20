@@ -469,7 +469,7 @@
                             </div>
                         @endif
                     </div>
-                    {{dd('ddf')}}
+                    
                     <div class="bg-white rounded shadow-sm mb-3">
                         <div class="p-3 border-bottom fs-16 fw-600">
                             {{ translate('Top Selling Products') }}
@@ -537,6 +537,7 @@
                         </div>
                     </div>
                 </div>
+                {{dd('ddf')}}
                 <div class="col-xl-9 order-0 order-xl-1">
                     <div class="bg-white mb-3 shadow-sm rounded">
                         <div class="nav border-bottom aiz-nav-tabs">
