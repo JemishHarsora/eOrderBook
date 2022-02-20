@@ -346,7 +346,6 @@ class HomeController extends Controller
 
     public function product(Request $request, $slug)
     {
-        dd($request->all(),$slug);
         $isblock = '';
         $sellersData = [];
         $detailedProduct  = ProductPrice::with(['product','user','orderDetails'])->where('slug', $slug)->first();
@@ -364,6 +363,7 @@ class HomeController extends Controller
             }
         }
 
+        dd('he');
         if ($detailedProduct != null && $detailedProduct->published) {
             //updateCartSetup();
             if ($request->has('product_referral_code')) {
