@@ -385,7 +385,7 @@
             </div>
         </div>
     </section>
-    {{dd('ddf')}}
+    
     <section class="mb-4">
         <div class="container-fluid">
             <div class="row gutters-10">
@@ -425,6 +425,7 @@
                                     $rating += $seller_product->reviews->sum('rating');
                                 }
                             @endphp
+                            {{dd('ddf')}}
 
                             <div class="text-center border rounded p-2 mt-3">
                                 <div class="rating">
