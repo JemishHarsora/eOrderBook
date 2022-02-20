@@ -774,13 +774,13 @@
                 </div>
             </div>
         </div>
-        {{dd('ddf')}}
+       
     </section>
 
 @endsection
 
 @section('modal')
-    <div class="modal fade" id="moreSellerModal" tabindex="-1" role="dialog" aria-labelledby="moreSellerModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="moreSellerModal" tabindex="-1" role="dialog" aria-labelledby="moreSellerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-zoom product-modal" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -892,7 +892,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Modal -->
     <div class="modal fade" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
