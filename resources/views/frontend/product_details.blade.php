@@ -122,12 +122,13 @@
                                                 {{ translate('Inhouse product') }}
                                             @endif
                                         </div>
+                                        {{dd('dsf')}}
                                         @if (\App\BusinessSetting::where('type', 'conversation_system')->first()->value == 1)
                                             <div class="seller-info">
                                                 <button class="btn btn-sm btn-soft-primary" onclick="show_chat_modal()">{{ translate('Message Seller') }}</button>
                                             </div>
                                         @endif
-                                        {{dd('dsf')}}
+                                        
                                         @if (count($sellersData) > 1)
                                             <div class="seller-info">
                                                 <button class="btn btn-sm btn-soft-primary" data-toggle="modal" data-target="#moreSellerModal">{{ translate('More Seller') }}</button>
