@@ -207,7 +207,6 @@
                                     </div>
                                 </div>
                             @endif
-{{dd('fd')}}
                             <hr>
 
                             <form id="option-choice-form">
@@ -267,7 +266,7 @@
 
                                     <hr>
                                 @endif
-
+{{dd('ddf')}}
                                 <!-- Quantity + Add to cart -->
                                 <div class="row no-gutters">
                                     <div class="col-sm-2">
