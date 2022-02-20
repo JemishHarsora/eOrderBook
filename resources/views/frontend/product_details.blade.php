@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-
+{{dd('dsf')}}
                     <div class="col-xl-7 col-lg-6">
                         <div class="text-left">
                             <h1 class="mb-2 fs-20 fw-600">
@@ -779,8 +779,8 @@
 @endsection
 
 
-<!-- @section('modal') -->
-    <!-- <div class="modal fade" id="moreSellerModal" tabindex="-1" role="dialog" aria-labelledby="moreSellerModalLabel" aria-hidden="true">
+@section('modal')
+    <div class="modal fade" id="moreSellerModal" tabindex="-1" role="dialog" aria-labelledby="moreSellerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-zoom product-modal" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -891,10 +891,10 @@
                 </form>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <!-- Modal -->
-    <!-- <div class="modal fade" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-zoom" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -976,8 +976,8 @@
                 </div>
             </div>
         </div>
-    </div> -->
-<!-- @endsection -->
+    </div>
+@endsection
 
 
 @section('script')
