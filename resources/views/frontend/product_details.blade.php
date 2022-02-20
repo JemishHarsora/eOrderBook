@@ -387,7 +387,7 @@
             </div>
         </div>
     </section>
-    {{dd('fg')}}
+    
     <section class="mb-4">
         <div class="container-fluid">
             <div class="row gutters-10">
@@ -405,6 +405,7 @@
                                     </svg>
                                 </div>
                             @endif
+                            {{dd('fg')}}
                             <div class="opacity-50 fs-12 border-bottom">{{ translate('Sold By') }}</div>
                             @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
                                 <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="text-reset d-block fw-600">
