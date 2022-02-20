@@ -121,7 +121,6 @@
                                                 {{ translate('Inhouse product') }}
                                             @endif
                                         </div>
-                                        {{dd('ddf')}}
                                         @if (\App\BusinessSetting::where('type', 'conversation_system')->first()->value == 1)
                                             <div class="seller-info">
                                                 <button class="btn btn-sm btn-soft-primary" onclick="show_chat_modal()">{{ translate('Message Seller') }}</button>
@@ -139,6 +138,7 @@
                                                 <img src="{{ uploaded_asset($detailedProduct->product->brand->logo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="{{ $detailedProduct->product->brand->getTranslation('name') }}" height="30">
                                             </div>
                                         @endif
+                                        {{dd('ddf')}}
                                     </div>
                                 </div>
                             </div>
