@@ -387,7 +387,7 @@
             </div>
         </div>
     </section>
-
+    {{dd('fg')}}
     <section class="mb-4">
         <div class="container-fluid">
             <div class="row gutters-10">
@@ -471,7 +471,7 @@
                             </div>
                         @endif
                     </div>
-                    {{dd('fg')}}
+                    
                     <div class="bg-white rounded shadow-sm mb-3">
                         <div class="p-3 border-bottom fs-16 fw-600">
                             {{ translate('Top Selling Products') }}
