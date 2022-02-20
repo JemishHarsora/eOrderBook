@@ -306,7 +306,6 @@
                                 </div>
 
                             </form>
-                            {{dd('fg')}}
                             <div class="mt-3">
                                 @if ($qty > 0)
                                     <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600" {{ !empty($isblock) ? 'disabled' : '' }} onclick="addToCart()">
@@ -472,6 +471,7 @@
                             </div>
                         @endif
                     </div>
+                    {{dd('fg')}}
                     <div class="bg-white rounded shadow-sm mb-3">
                         <div class="p-3 border-bottom fs-16 fw-600">
                             {{ translate('Top Selling Products') }}
