@@ -121,7 +121,6 @@ class HomeController extends Controller
      */
     public function admin_dashboard()
     {
-        dd('here');
         return view('backend.dashboard');
     }
 

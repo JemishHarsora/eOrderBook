@@ -99,7 +99,7 @@
 </div>
 @endif
 
-
+{{dd('her')}}
 @if(Auth::user()->user_type == 'admin' || in_array('1', json_decode(Auth::user()->staff->role->permissions)))
     <div class="row gutters-10">
         <div class="col-md-6">
