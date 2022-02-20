@@ -108,7 +108,6 @@
                                     @endif
                                 </div>
                             </div>
-                            {{dd('ddf')}}
                             <hr>
 
                             <div class="row align-items-center">
@@ -122,6 +121,7 @@
                                                 {{ translate('Inhouse product') }}
                                             @endif
                                         </div>
+                                        {{dd('ddf')}}
                                         @if (\App\BusinessSetting::where('type', 'conversation_system')->first()->value == 1)
                                             <div class="seller-info">
                                                 <button class="btn btn-sm btn-soft-primary" onclick="show_chat_modal()">{{ translate('Message Seller') }}</button>
