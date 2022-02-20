@@ -108,7 +108,7 @@
                                     @endif
                                 </div>
                             </div>
-
+                            {{dd('dsf')}}
                             <hr>
 
                             <div class="row align-items-center">
@@ -143,7 +143,7 @@
                                 </div>
                             </div>
                             <hr>
-                            {{dd('dsf')}}
+                            
                             @if (home_price($detailedProduct->id) != home_discounted_price($detailedProduct->id))
 
                                 <div class="row no-gutters mt-3">
