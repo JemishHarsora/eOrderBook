@@ -131,7 +131,6 @@
     </div>
     <div class="card-body">
         <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="6" data-xl-items="5" data-lg-items="4" data-md-items="3" data-sm-items="2" data-arrows='true'>
-            {{dd(filter_products(\App\ProductPrice::with('product')->where('published', 1)->orderBy('num_of_sale', 'desc'))->limit(12)->get())}}
             @foreach (filter_products(\App\ProductPrice::with('product')->where('published', 1)->orderBy('num_of_sale', 'desc'))->limit(12)->get() as $key => $product)
                 <div class="carousel-box">
                     <div class="aiz-card-box border border-light rounded shadow-sm hov-shadow-md mb-2 has-transition bg-white">
@@ -148,13 +147,13 @@
                         </div>
                         <div class="p-md-3 p-2 text-left">
                             <div class="fs-15">
-                                @if(home_base_price($product->id) != home_discounted_base_price($product->id))
+                                <!-- @if(home_base_price($product->id) != home_discounted_base_price($product->id))
                                     <del class="fw-600 opacity-50 mr-1">{{ home_base_price($product->id) }}</del>
-                                @endif
+                                @endif -->
                                 <span class="fw-700 text-primary">{{ home_discounted_base_price($product->id) }}</span>
                             </div>
                             <div class="rating rating-sm mt-1">
-                                {{ renderStarRating($product->product->rating) }}
+                                <!-- {{ renderStarRating($product->product->rating) }} -->
                             </div>
                             <h3 class="fw-600 fs-13 text-truncate-2 lh-1-4 mb-0">
                                 <a href="{{ route('product', $product->slug) }}" class="d-block text-reset">{{ $product->product->getTranslation('name') }}</a>
