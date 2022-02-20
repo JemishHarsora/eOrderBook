@@ -729,6 +729,7 @@
                                         }
                                     }
                                 @endphp
+                                {{dd('ddf')}}
                                 @foreach ($retated_product as $key => $related_product)
                                 @if($related_product->product !="")
                                     <div class="carousel-box">
@@ -777,7 +778,6 @@
 
 @endsection
 
-{{dd('ddf')}}
 @section('modal')
     <div class="modal fade" id="moreSellerModal" tabindex="-1" role="dialog" aria-labelledby="moreSellerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-zoom product-modal" role="document">
