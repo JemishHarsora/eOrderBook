@@ -554,11 +554,11 @@
                             <div class="tab-pane fade active show" id="tab_default_1">
                                 <div class="p-4">
                                     <div class="mw-100 overflow-hidden text-left">
-                                        {{ $detailedProduct->product->getTranslation('description') }}
+                                        <?php echo $detailedProduct->product->getTranslation('description'); ?>
                                     </div>
                                 </div>
                             </div>
-                            {{dd('ddf')}}
+
                             <div class="tab-pane fade" id="tab_default_2">
                                 <div class="p-4">
                                     <div class="embed-responsive embed-responsive-16by9">
@@ -699,6 +699,7 @@
                                     @endif
                                 </div>
                             </div>
+                            {{dd('ddf')}}
                         </div>
                     </div>
                     <div class="bg-white rounded shadow-sm">
