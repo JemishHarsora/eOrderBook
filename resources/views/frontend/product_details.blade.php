@@ -394,20 +394,22 @@
                 <div class="col-xl-3 order-1 order-xl-0">
                     <div class="bg-white shadow-sm mb-3">
                         <div class="position-relative p-3 text-left">
-                            @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1 && $detailedProduct->user->seller->verification_status == 1)
-                                <div class="absolute-top-right p-2 bg-white z-1">
-                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" viewBox="0 0 287.5 442.2" width="22" height="34">
-                                        <polygon style="fill:#F8B517;" points="223.4,442.2 143.8,376.7 64.1,442.2 64.1,215.3 223.4,215.3 " />
-                                        <circle style="fill:#FBD303;" cx="143.8" cy="143.8" r="143.8" />
-                                        <circle style="fill:#F8B517;" cx="143.8" cy="143.8" r="93.6" />
-                                        <polygon style="fill:#FCFCFD;" points="143.8,55.9 163.4,116.6 227.5,116.6 175.6,154.3 195.6,215.3 143.8,177.7 91.9,215.3 111.9,154.3
-                                                                        60,116.6 124.1,116.6 " />
-                                    </svg>
-                                </div>
+                            @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1 && $detailedProduct->user)
+                                @if($detailedProduct->user->seller->verification_status == 1)
+                                    <div class="absolute-top-right p-2 bg-white z-1">
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" viewBox="0 0 287.5 442.2" width="22" height="34">
+                                            <polygon style="fill:#F8B517;" points="223.4,442.2 143.8,376.7 64.1,442.2 64.1,215.3 223.4,215.3 " />
+                                            <circle style="fill:#FBD303;" cx="143.8" cy="143.8" r="143.8" />
+                                            <circle style="fill:#F8B517;" cx="143.8" cy="143.8" r="93.6" />
+                                            <polygon style="fill:#FCFCFD;" points="143.8,55.9 163.4,116.6 227.5,116.6 175.6,154.3 195.6,215.3 143.8,177.7 91.9,215.3 111.9,154.3
+                                                                            60,116.6 124.1,116.6 " />
+                                        </svg>
+                                    </div>
+                                @endif
                             @endif
-                            {{dd('fg')}}
+                            
                             <div class="opacity-50 fs-12 border-bottom">{{ translate('Sold By') }}</div>
-                            @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
+                            @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1 && $detailedProduct->user)
                                 <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="text-reset d-block fw-600">
                                     {{ $detailedProduct->user->shop->name }}
                                     @if ($detailedProduct->user->seller->verification_status == 1)
@@ -420,6 +422,7 @@
                             @else
                                 <div class="fw-600">{{ env('APP_NAME') }}</div>
                             @endif
+                            {{dd('df')}}
                             @php
                                 $total = 0;
                                 $rating = 0;
