@@ -58,7 +58,6 @@
                                     @endforeach
                                 </div>
                             </div>
-                            {{dd('ddf')}}
                             <div class="col-12 col-md-auto w-md-80px order-2 order-md-1 mt-3 mt-md-0">
                                 <div class="aiz-carousel product-gallery-thumb" data-items='5' data-nav-for='.product-gallery' data-vertical='true' data-vertical-sm='false' data-focus-select='true' data-arrows='true'>
                                     @foreach ($photos as $key => $photo)
@@ -80,7 +79,7 @@
                             <h1 class="mb-2 fs-20 fw-600">
                                 {{ $detailedProduct->product->getTranslation('name') }}
                             </h1>
-
+                            {{dd('ddf')}}
                             <div class="row align-items-center">
                                 <div class="col-6">
                                     @php
