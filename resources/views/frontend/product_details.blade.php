@@ -537,7 +537,6 @@
                         </div>
                     </div>
                 </div>
-                {{dd('ddf')}}
                 <div class="col-xl-9 order-0 order-xl-1">
                     <div class="bg-white mb-3 shadow-sm rounded">
                         <div class="nav border-bottom aiz-nav-tabs">
@@ -555,11 +554,11 @@
                             <div class="tab-pane fade active show" id="tab_default_1">
                                 <div class="p-4">
                                     <div class="mw-100 overflow-hidden text-left">
-                                        <?php echo $detailedProduct->product->getTranslation('description'); ?>
+                                        {{ $detailedProduct->product->getTranslation('description') }}
                                     </div>
                                 </div>
                             </div>
-
+                            {{dd('ddf')}}
                             <div class="tab-pane fade" id="tab_default_2">
                                 <div class="p-4">
                                     <div class="embed-responsive embed-responsive-16by9">
