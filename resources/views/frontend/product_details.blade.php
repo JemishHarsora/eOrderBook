@@ -208,7 +208,7 @@
                                     </div>
                                 </div>
                             @endif
-{{dd('fg')}}
+
                             <hr>
 
                             <form id="option-choice-form">
@@ -306,7 +306,7 @@
                                 </div>
 
                             </form>
-
+                            {{dd('fg')}}
                             <div class="mt-3">
                                 @if ($qty > 0)
                                     <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600" {{ !empty($isblock) ? 'disabled' : '' }} onclick="addToCart()">
