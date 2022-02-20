@@ -781,7 +781,6 @@
                 </div>
             </div>
         </div>
-        {{dd('df')}}
     </section>
 
 @endsection
@@ -815,7 +814,7 @@
                                         <span class="fs-14 opacity-60">{{ $product->product->getTranslation('name') }}</span>
                                         <br>
                                         <span class="fw-600 fs-12">
-                                            @if ($product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
+                                            @if ($product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1 && $product->user)
                                                 <a href="{{ route('shop.visit', $product->user->shop->slug) }}">{{ $product->user->shop->name }}</a>
                                             @else
                                                 {{ translate('Inhouse product') }}
