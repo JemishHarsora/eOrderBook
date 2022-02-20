@@ -124,7 +124,7 @@
         </div>
     </div>
 @endif
-
+{{dd('her')}}
 <div class="card">
     <div class="card-header">
         <h6 class="mb-0">{{ translate('Top 12 Products') }}</h6>
@@ -165,7 +165,7 @@
         </div>
     </div>
 </div>
-{{dd('her')}}
+
 @endsection
 @section('script')
 <script type="text/javascript">
