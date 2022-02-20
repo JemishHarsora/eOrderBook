@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-{{dd('dsf')}}
+
                     <div class="col-xl-7 col-lg-6">
                         <div class="text-left">
                             <h1 class="mb-2 fs-20 fw-600">
@@ -143,7 +143,7 @@
                                 </div>
                             </div>
                             <hr>
-
+                            {{dd('dsf')}}
                             @if (home_price($detailedProduct->id) != home_discounted_price($detailedProduct->id))
 
                                 <div class="row no-gutters mt-3">
