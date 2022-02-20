@@ -44,7 +44,7 @@
                             @php
                                 $photos = explode(',', $detailedProduct->product->photos);
                             @endphp
-                            {{dd('ddf')}}
+                            
                             <div class="col order-1 order-md-2">
                                 <div class="aiz-carousel product-gallery" data-nav-for='.product-gallery-thumb' data-fade='true'>
                                     @foreach ($photos as $key => $photo)
@@ -58,6 +58,7 @@
                                     @endforeach
                                 </div>
                             </div>
+                            {{dd('ddf')}}
                             <div class="col-12 col-md-auto w-md-80px order-2 order-md-1 mt-3 mt-md-0">
                                 <div class="aiz-carousel product-gallery-thumb" data-items='5' data-nav-for='.product-gallery' data-vertical='true' data-vertical-sm='false' data-focus-select='true' data-arrows='true'>
                                     @foreach ($photos as $key => $photo)
