@@ -363,13 +363,13 @@ class HomeController extends Controller
             }
         }
 
-        dd('he');
         if ($detailedProduct != null && $detailedProduct->published) {
             //updateCartSetup();
             if ($request->has('product_referral_code')) {
                 Cookie::queue('product_referral_code', $request->product_referral_code, 43200);
                 Cookie::queue('referred_product_id', $detailedProduct->id, 43200);
             }
+            dd($detailedProduct->product);
             if ($detailedProduct->product->digital == 1) {
                 return view('frontend.digital_product_details', compact('detailedProduct', 'isblock', 'sellersData'));
             } else {
