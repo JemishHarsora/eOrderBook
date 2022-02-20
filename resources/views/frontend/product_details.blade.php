@@ -79,7 +79,6 @@
                             <h1 class="mb-2 fs-20 fw-600">
                                 {{ $detailedProduct->product->getTranslation('name') }}
                             </h1>
-                            {{dd('ddf')}}
                             <div class="row align-items-center">
                                 <div class="col-6">
                                     @php
@@ -109,7 +108,7 @@
                                     @endif
                                 </div>
                             </div>
-
+                            {{dd('ddf')}}
                             <hr>
 
                             <div class="row align-items-center">
