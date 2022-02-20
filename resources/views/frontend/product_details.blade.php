@@ -266,7 +266,6 @@
 
                                     <hr>
                                 @endif
-{{dd('ddf')}}
                                 <!-- Quantity + Add to cart -->
                                 <div class="row no-gutters">
                                     <div class="col-sm-2">
