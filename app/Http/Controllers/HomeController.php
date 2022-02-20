@@ -372,7 +372,7 @@ class HomeController extends Controller
             if ($detailedProduct->product->digital == 1) {
                 return view('frontend.digital_product_details', compact('detailedProduct', 'isblock', 'sellersData'));
             } else {
-                dd($detailedProduct,$isblock,$sellersData);
+                // dd($detailedProduct,$isblock,$sellersData);
                 return view('frontend.product_details', compact('detailedProduct', 'isblock', 'sellersData'));
             }
             // return view('frontend.product_details', compact('detailedProduct'));
