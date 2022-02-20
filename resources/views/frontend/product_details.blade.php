@@ -793,7 +793,6 @@
                     <form id="option-choice-form">
                         <ul class="list-group list-group-flush">
                             @foreach($sellersData as $product)
-                            {{dd($product->product)}}
                                 @if($product->product)
                                     <li class="list-group-item px-0 px-lg-3">
                                         <div class="row">
@@ -866,7 +865,7 @@
             </div>
         </div>
     </div>
-
+<!-- 
     <div class="modal fade" id="chat_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-zoom product-modal" id="modal-size" role="document">
             <div class="modal-content position-relative">
@@ -894,10 +893,10 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Modal -->
-    <div class="modal fade" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-zoom" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -979,7 +978,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 @endsection
 
 
