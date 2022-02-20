@@ -702,6 +702,7 @@
                             </div>
                         </div>
                     </div>
+                    {{dd('df')}}
                     <div class="bg-white rounded shadow-sm">
                         <div class="border-bottom p-3">
                             <h3 class="fs-16 fw-600 mb-0">
@@ -772,7 +773,7 @@
                         </div>
                     </div>
                 </div>
-                {{dd('df')}}
+                
             </div>
         </div>
         
