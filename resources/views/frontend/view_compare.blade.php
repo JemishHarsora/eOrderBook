@@ -55,7 +55,7 @@
                                     @foreach (Session::get('compare') as $key => $item)
                                         <td>
                                             @php $thumb = \App\ProductPrice::with(['product'])->find($item); @endphp
-                                            <img loading="lazy" src="{{ uploaded_asset($thumb->thumbnail_img) }}" alt="{{ translate('Product Image') }}" class="img-fluid py-4"
+                                            <img loading="lazy" src="{{ uploaded_asset($thumb->product->thumbnail_img) }}" alt="{{ translate('Product Image') }}" class="img-fluid py-4"
                                             onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                         </td>
                                     @endforeach
