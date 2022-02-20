@@ -117,12 +117,13 @@
                                         <div class="seller-info">
                                             <small class="mr-2 opacity-50">{{ translate('Sold by') }}: </small><br>
                                             @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
-                                                <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="text-reset">{{ $detailedProduct->user->shop->name }}</a>
+                                            {{dd('dsf')}}
+                                            <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="text-reset">{{ $detailedProduct->user->shop->name }}</a>
                                             @else
                                                 {{ translate('Inhouse product') }}
                                             @endif
                                         </div>
-                                        {{dd('dsf')}}
+                                        
                                         @if (\App\BusinessSetting::where('type', 'conversation_system')->first()->value == 1)
                                             <div class="seller-info">
                                                 <button class="btn btn-sm btn-soft-primary" onclick="show_chat_modal()">{{ translate('Message Seller') }}</button>
