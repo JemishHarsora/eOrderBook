@@ -774,6 +774,7 @@
                 </div>
             </div>
         </div>
+        {{dd('ddf')}}
     </section>
 
 @endsection
@@ -859,7 +860,7 @@
                             @endforeach
                         </ul>
                     </form>
-                    {{dd('ddf')}}
+                   
                 </div>
             </div>
         </div>
