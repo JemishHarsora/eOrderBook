@@ -709,7 +709,6 @@
                             </div>
                         </div>
                     </div>
-                    {{dd('dfd')}}
                     <div class="bg-white rounded shadow-sm">
                         <div class="border-bottom p-3">
                             <h3 class="fs-16 fw-600 mb-0">
@@ -719,17 +718,17 @@
                         <div class="p-3">
                             <div class="aiz-carousel gutters-5 half-outside-arrow" data-items="5" data-xl-items="3" data-lg-items="4" data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='true'>
                                 @php
-                                    $retated_product = [];
+                                    $retated_products = [];
                                     if ($area_seller['seller_ids'] != null) {
                                         $products = \App\Product::where('category_id', $detailedProduct->product->category_id)->pluck('id');
                                         if ($area_seller['seller_ids']['0'] != null) {
-                                            $retated_product = filter_products(
+                                            $retated_products = filter_products(
                                                 \App\ProductPrice::with(['product'])->where('id', '!=', $detailedProduct->id)
                                                     ->whereIn('seller_id', $area_seller->seller_ids)
                                                     ->whereIn('product_id', $products),
                                             )->limit(10)->get();
                                         } else {
-                                            $retated_product = filter_products(
+                                            $retated_products = filter_products(
                                                 \App\ProductPrice::with(['product'])
                                                     ->whereIn('product_id', $products)
                                                     ->where('seller_id', $area_seller['seller_ids']['0'])
@@ -738,7 +737,7 @@
                                         }
                                     }
                                 @endphp
-                                @foreach ($retated_product as $key => $related_product)
+                                @foreach ($retated_products as $key => $related_product)
                                 @if($related_product->product !="")
                                     <div class="carousel-box">
                                         <div class="aiz-card-box border border-light rounded hov-shadow-md my-2 has-transition">
@@ -782,6 +781,7 @@
                 </div>
             </div>
         </div>
+        {{dd('df')}}
     </section>
 
 @endsection
