@@ -116,9 +116,8 @@
                                     <div class="seller-btn-info">
                                         <div class="seller-info">
                                             <small class="mr-2 opacity-50">{{ translate('Sold by') }}: </small><br>
-                                            @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
-                                            {{dd('dsf',$detailedProduct->user)}}
-                                            <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="text-reset">{{ $detailedProduct->user->shop->name }}</a>
+                                            @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1 && $detailedProduct->user)
+                                                <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="text-reset">{{ $detailedProduct->user->shop->name }}</a>
                                             @else
                                                 {{ translate('Inhouse product') }}
                                             @endif
