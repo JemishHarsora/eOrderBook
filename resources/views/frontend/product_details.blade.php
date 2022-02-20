@@ -584,7 +584,7 @@
                                     <a target="_blank" href="{{ uploaded_asset($detailedProduct->product->pdf) }}" class="btn btn-primary">{{ translate('Download') }}</a>
                                 </div>
                             </div>
-                            {{dd('fg')}}
+                            
                             <div class="tab-pane fade" id="tab_default_4">
                                 <div class="p-4">
                                     <ul class="list-group list-group-flush">
