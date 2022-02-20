@@ -422,16 +422,17 @@
                             @else
                                 <div class="fw-600">{{ env('APP_NAME') }}</div>
                             @endif
-                            {{dd('df')}}
+                            
                             @php
                                 $total = 0;
                                 $rating = 0;
-                                foreach ($detailedProduct->user->products as $key => $seller_product) {
-                                    $total += $seller_product->reviews->count();
-                                    $rating += $seller_product->reviews->sum('rating');
+                                if($detailedProduct->user){
+                                    foreach ($detailedProduct->user->products as $key => $seller_product) {
+                                        $total += $seller_product->reviews->count();
+                                        $rating += $seller_product->reviews->sum('rating');
+                                    }
                                 }
                             @endphp
-
                             <div class="text-center border rounded p-2 mt-3">
                                 <div class="rating">
                                     @if ($total > 0)
@@ -443,7 +444,7 @@
                                 <div class="opacity-60 fs-12">({{ $total }} {{ translate('customer reviews') }})</div>
                             </div>
                         </div>
-                        @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
+                        @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1 && $detailedProduct->user)
                             <div class="row no-gutters align-items-center border-top">
                                 <div class="col">
                                     <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="d-block btn btn-soft-primary rounded-0">{{ translate('Visit Store') }}</a>
@@ -583,6 +584,7 @@
                                     <a target="_blank" href="{{ uploaded_asset($detailedProduct->product->pdf) }}" class="btn btn-primary">{{ translate('Download') }}</a>
                                 </div>
                             </div>
+                            {{dd('fg')}}
                             <div class="tab-pane fade" id="tab_default_4">
                                 <div class="p-4">
                                     <ul class="list-group list-group-flush">
