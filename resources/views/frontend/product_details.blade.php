@@ -439,6 +439,7 @@
                                 <div class="opacity-60 fs-12">({{ $total }} {{ translate('customer reviews') }})</div>
                             </div>
                         </div>
+                        {{dd('df')}}
                         @if ($detailedProduct->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
                             <div class="row no-gutters align-items-center border-top">
                                 <div class="col">
@@ -702,7 +703,7 @@
                             </div>
                         </div>
                     </div>
-                    {{dd('df')}}
+                    
                     <div class="bg-white rounded shadow-sm">
                         <div class="border-bottom p-3">
                             <h3 class="fs-16 fw-600 mb-0">
