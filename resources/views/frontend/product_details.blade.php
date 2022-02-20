@@ -138,7 +138,6 @@
                                                 <img src="{{ uploaded_asset($detailedProduct->product->brand->logo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';" alt="{{ $detailedProduct->product->brand->getTranslation('name') }}" height="30">
                                             </div>
                                         @endif
-                                        {{dd('ddf')}}
                                     </div>
                                 </div>
                             </div>
@@ -208,7 +207,7 @@
                                     </div>
                                 </div>
                             @endif
-
+{{dd('fd')}}
                             <hr>
 
                             <form id="option-choice-form">
