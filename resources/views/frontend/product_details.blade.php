@@ -729,7 +729,7 @@
                                         }
                                     }
                                 @endphp
-                                {{dd('ddf')}}
+                                
                                 @foreach ($retated_product as $key => $related_product)
                                 @if($related_product->product !="")
                                     <div class="carousel-box">
@@ -768,6 +768,7 @@
                                     </div>
                                     @endif
                                 @endforeach
+                                {{dd('ddf')}}
                             </div>
                         </div>
                     </div>
