@@ -44,7 +44,7 @@
                 <div class="row align-items-center">
                     <div class="col-auto">
                         <small class="mr-2 opacity-50">{{ translate('Sold by') }}: </small><br>
-                        @if ($product->product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
+                        @if ($product->product->added_by == 'seller' && \App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1 && $product->product->user)
                             <a href="{{ route('shop.visit', $product->product->user->shop->slug) }}" class="text-reset">{{ $product->product->user->shop->name }}</a>
                         @else
                             {{ translate('Inhouse product') }}
