@@ -788,6 +788,7 @@
                     <form id="option-choice-form">
                         <ul class="list-group list-group-flush">
                             @foreach($sellersData as $product)
+                            {{dd($product)}}
                             @if($product->product)
                             <li class="list-group-item px-0 px-lg-3">
                                 <div class="row">
