@@ -33,6 +33,7 @@ class ProductImport implements ToCollection
         // dd($collection,$this->category,$this->brand);
         //
         foreach ($collection as $key => $importData) {
+            dd($importData);
             if ($key != 0 && $importData[0] != null) {
                 $products = Product::where('barcode', $importData[1])->first();
                 if (Auth::user()->user_type = 'seller') {
