@@ -34,7 +34,6 @@ class ProductImport implements ToCollection
         //
         foreach ($collection as $key => $importData) {
             if ($key != 0 && $importData[0] != null) {
-            
                 $products = Product::where('barcode', $importData[1])->first();
                 if (Auth::user()->user_type = 'seller') {
                     $seller_id  = Auth::user()->id;
@@ -94,8 +93,6 @@ class ProductImport implements ToCollection
                     // $product_stock->price       = $importData[3];
                     // $product_stock->qty         = $importData[6];
                     // $product_stock->save();
-
-                    dd('if',$productPrice,$product,$importData);
                 } else {
 
                     $product = ProductPrice::where('seller_id', $seller_id)->where('product_id', $products->id)->first();
@@ -134,9 +131,6 @@ class ProductImport implements ToCollection
                         $product->photos = $importData[11];
                         $product->thumbnail_img = $importData[11];
                         $product->save();
-
-                        dd('else',$productPrice,$product,$importData);
-                        
                     }
                 }
             }
