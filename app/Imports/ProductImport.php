@@ -93,6 +93,8 @@ class ProductImport implements ToCollection
                     // $product_stock->price       = $importData[3];
                     // $product_stock->qty         = $importData[6];
                     // $product_stock->save();
+
+                    dd('if',$productPrice,$product);
                 } else {
 
                     $product = ProductPrice::where('seller_id', $seller_id)->where('product_id', $products->id)->first();
@@ -128,7 +130,11 @@ class ProductImport implements ToCollection
                         $product->product_id = $products->id;
                         $product->shipping_type = 'free';
                         $product->shipping_cost = '0.00';
+                        $product->photos = $importData[11];
+                        $product->thumbnail_img = $importData[11];
                         $product->save();
+
+                        dd('else',$productPrice,$product);
                     }
                 }
             }
