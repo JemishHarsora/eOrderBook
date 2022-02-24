@@ -27,6 +27,7 @@ class ProductStockUpdate implements ToCollection
                 //     $products = ProductPrice::where('seller_id', Auth::user()->id)->where('barcode', $importData[1])->first();
                 // } else {
                 $products = ProductPrice::where('seller_id', Auth::user()->id)->where('sku', $importData[1])->first();
+                dd($products,$importData);
                 // }
 
                 if ($products) {
