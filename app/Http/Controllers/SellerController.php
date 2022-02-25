@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Seller;
 use App\User;
 use App\Shop;
-use App\Product;
 use App\ProductPrice;
 use App\Order;
 use App\OrderDetail;
@@ -146,7 +145,7 @@ class SellerController extends Controller
     {
         $seller = Seller::findOrFail($id);
         Shop::where('user_id', $seller->user_id)->delete();
-        Product::where('user_id', $seller->user_id)->delete();
+        ProductPrice::where('seller_id', $seller->user_id)->delete();
         Order::where('user_id', $seller->user_id)->delete();
         OrderDetail::where('seller_id', $seller->user_id)->delete();
         $blockUsers = DB::select("SELECT `block_users`.* FROM `block_users` WHERE `user_id` =" . $seller->user_id . " OR `blocker_id` =" . $seller->user_id);
