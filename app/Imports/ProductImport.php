@@ -30,7 +30,7 @@ class ProductImport implements ToCollection
      */
     public function collection(Collection $collection)
     {
-        // dd($collection,$this->category,$this->brand);
+        dd($collection,$this->category,$this->brand);
         //
         foreach ($collection as $key => $importData) {
             if ($key != 0 && $importData[0] != null) {
