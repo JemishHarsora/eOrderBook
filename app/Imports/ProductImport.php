@@ -93,7 +93,7 @@ class ProductImport implements ToCollection
                     // $product_stock->price       = $importData[3];
                     // $product_stock->qty         = $importData[6];
                     // $product_stock->save();
-                    dd('if',$product,$productPrice);
+                    // dd('if',$product,$productPrice);
                 } else {
 
                     $product = ProductPrice::where('seller_id', $seller_id)->where('product_id', $products->id)->first();
@@ -133,7 +133,7 @@ class ProductImport implements ToCollection
                         $product->thumbnail_img = $importData[11];
                         $product->save();
                     }
-                    dd('else',$product,$productPrice);
+                    // dd('else',$product,$productPrice);
                 }
             }
         }
