@@ -59,8 +59,8 @@ class ProductImport implements ToCollection
                     // $product->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $importData[2])) . '-' . Str::random(5);
                     $product->mfd_by = $importData[9];
                     $product->marketed_by = $importData[10];
-                    $product->photos = intval($importData[11]);
-                    $product->thumbnail_img = intval($importData[11]);
+                    $product->photos = $importData[11];
+                    $product->thumbnail_img = $importData[11];
                     $product->category_id = $this->category;
                     $product->brand_id = $this->brand;
 
@@ -129,8 +129,6 @@ class ProductImport implements ToCollection
                         $product->product_id = $products->id;
                         $product->shipping_type = 'free';
                         $product->shipping_cost = '0.00';
-                        $product->photos = intval($importData[11]);
-                        $product->thumbnail_img = intval($importData[11]);
                         $product->save();
                     }
                     // dd('else',$product,$productPrice);
