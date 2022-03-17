@@ -869,10 +869,10 @@ if (!function_exists('getBaseURL')) {
 if (!function_exists('getFileBaseURL')) {
     function getFileBaseURL()
     {
-        dd(env('FILESYSTEM_DRIVER'));
         if (env('FILESYSTEM_DRIVER') == 's3') {
             return env('AWS_URL') . '/';
         }else if (env('FILESYSTEM_DRIVER') == 'spaces') {
+        dd('here',env('DO_URL'));
             return env('DO_URL') . '/';
         }  
         else {
