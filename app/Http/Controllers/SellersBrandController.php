@@ -81,7 +81,6 @@ class SellersBrandController extends Controller
         }
 
         $products = Product::where('brand_id', $request->brand_id)->get();
-        dd($products);
         foreach ($products as $key => $product) {
             $price = ProductPrice::where('product_id', $product->id)->first();
             if($price){
