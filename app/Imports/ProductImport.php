@@ -60,7 +60,7 @@ class ProductImport implements ToCollection
                     $product->mfd_by = $importData[9];
                     $product->marketed_by = $importData[10];
                     $product->photos = $importData[11];
-                    $product->thumbnail_img = $importData[11];
+                    $product->thumbnail_img = $importData[15];
                     $product->category_id = $this->category;
                     $product->brand_id = $this->brand;
 
