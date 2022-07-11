@@ -35,6 +35,7 @@
         $total = 0;
         $rating = 0;
         foreach ($shop->user->priceproduct as $key => $seller_product) {
+        @dd($seller_product->product->reviews);
             $total += $seller_product->product->reviews->count();
             $rating += $seller_product->product->reviews->sum('rating');
         }
