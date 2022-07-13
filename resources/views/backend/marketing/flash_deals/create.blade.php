@@ -59,7 +59,9 @@
                     <div class="col-sm-9">
                         <select name="products[]" id="products" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Products') }}" data-live-search="true" data-selected-text-format="count">
                             @foreach(\App\ProductPrice::with(['product'])->orderBy('created_at', 'desc')->groupBy('product_id')->get() as $product)
+                            @if($product->product)
                                 <option value="{{$product->id}}">{{ $product->product->getTranslation('name') }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
