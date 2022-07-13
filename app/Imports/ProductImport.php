@@ -66,8 +66,6 @@ class ProductImport implements ToCollection
 
                     $product->tags = $importData[13];
                     $product->hsn_code = $importData[14];
-
-dd($product,$$importData[11]);
                     $product->save();
 
                     $productPrice = new ProductPrice();
