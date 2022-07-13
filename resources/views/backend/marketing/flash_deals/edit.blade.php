@@ -27,7 +27,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="name">{{translate('Title')}} <i class="las la-language text-danger" title="{{translate('Translatable')}}"></i></label>
                     {{-- <div class="col-sm-9">
-                    @dd($flash_deal)
+                    
                       <input type="text" placeholder="{{translate('Title')}}" id="name" name="title" value="{{ $flash_deal->getTranslation('title', $lang) }}" class="form-control" required>
                     </div>--}}
                 </div>
@@ -73,19 +73,15 @@
                       <input type="text" class="form-control aiz-date-range" value="{{ $start_date.' to '.$end_date }}" name="date_range" placeholder="Select Date" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off">
                     </div>
                 </div>
-                 <div class="form-group row">
-                    <label class="col-sm-3 col-from-label" for="products">{{translate('Products')}}</label>
-                    <div class="col-sm-9">
-                        <select name="products[]" id="products" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Products') }}" data-live-search="true" data-selected-text-format="count">
-                            @foreach(\App\ProductPrice::with(['product'])->groupBy('product_id')->get() as $product)
-                                @php
-                                    $flash_deal_product = \App\FlashDealProduct::where('flash_deal_id', $flash_deal->id)->where('product_id', $product->id)->first();
-                                @endphp
-                                <option value="{{$product->id}}" <?php if($flash_deal_product != null) echo "selected";?> >{{ $product->product->getTranslation('name') }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>  
+              
+              
+              
+              
+              
+              
+              
+              
+              
                 <br>
                 <div class="form-group row" id="discount_table">
 
