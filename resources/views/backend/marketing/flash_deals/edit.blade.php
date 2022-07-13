@@ -74,25 +74,17 @@
                     </div>
                 </div>
               
-                @foreach(\App\ProductPrice::with(['product'])->groupBy('product_id')->get() as $product)
-                    @php
-                        $flash_deal_product = \App\FlashDealProduct::where('flash_deal_id', $flash_deal->id)->where('product_id', $product->id)->first();
-                    @endphp
-                    {{ $product->product->getTranslation('name') }}
-                    <option value="{{$product->id}}" <?php if($flash_deal_product != null) echo "selected";?> >{{ $product->product->getTranslation('name') }}</option>
-                @endforeach
-
-                
-              
-              <div class="form-group row">
+                <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="products">{{translate('Products')}}</label>
                     <div class="col-sm-9">
                         <select name="products[]" id="products" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Products') }}" data-live-search="true" data-selected-text-format="count">
                             @foreach(\App\ProductPrice::with(['product'])->groupBy('product_id')->get() as $product)
+                            @if($product->product)
                                 @php
                                     $flash_deal_product = \App\FlashDealProduct::where('flash_deal_id', $flash_deal->id)->where('product_id', $product->id)->first();
                                 @endphp
                                 <option value="{{$product->id}}" <?php if($flash_deal_product != null) echo "selected";?> >{{ $product->product->getTranslation('name') }}</option>
+                            @endif
                             @endforeach
                         </select>
                     </div>
