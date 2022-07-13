@@ -73,7 +73,7 @@
                       <input type="text" class="form-control aiz-date-range" value="{{ $start_date.' to '.$end_date }}" name="date_range" placeholder="Select Date" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off">
                     </div>
                 </div>
-               {{--  <div class="form-group row">
+                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="products">{{translate('Products')}}</label>
                     <div class="col-sm-9">
                         <select name="products[]" id="products" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Products') }}" data-live-search="true" data-selected-text-format="count">
@@ -85,7 +85,7 @@
                             @endforeach
                         </select>
                     </div>
-                </div>  --}}
+                </div>  
                 <br>
                 <div class="form-group row" id="discount_table">
 
