@@ -76,7 +76,7 @@
               
                 @foreach(\App\ProductPrice::with(['product'])->groupBy('product_id')->get() as $product)
                     @php
-                    dd($product);
+                    dd($product->product->getTranslation('name'));
                         $flash_deal_product = \App\FlashDealProduct::where('flash_deal_id', $flash_deal->id)->where('product_id', $product->id)->first();
                     @endphp
                     <option value="{{$product->id}}" <?php if($flash_deal_product != null) echo "selected";?> >{{ $product->product->getTranslation('name') }}</option>
