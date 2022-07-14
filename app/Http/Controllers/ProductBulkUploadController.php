@@ -124,8 +124,8 @@ class ProductBulkUploadController extends Controller
         if($request->hasFile('bulk_file')){
             Excel::import(new ProductImport($request->category_id, $request->brand_id), request()->file('bulk_file'));
         }
-        flash(translate('Products imported successfully'))->success();
-        return back();
+//         flash(translate('Products imported successfully'))->success();
+//         return back();
     }
 
 }
