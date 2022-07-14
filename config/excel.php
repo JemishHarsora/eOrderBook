@@ -65,11 +65,12 @@ return [
         | CSV Settings
         |--------------------------------------------------------------------------
         |
-        | Configure e.g. delimiter, enclosure and line ending for CSV imports.
+        | Configure e.g. 
+        , enclosure and line ending for CSV imports.
         |
         */
         'csv'         => [
-            'delimiter'              => ',',
+            'delimiter'              => '|',
             'enclosure'              => '"',
             'escape_character'       => '\\',
             'contiguous'             => false,
