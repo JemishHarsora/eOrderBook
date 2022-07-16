@@ -60,7 +60,7 @@ class ProductImport implements ToCollection
                     // $product->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $importData[2])) . '-' . Str::random(5);
                     $product->mfd_by = $importData[9];
                     $product->marketed_by = $importData[10];
-                    $product->photos = $importData[11];
+                    $product->photos = str_replace('.', ',', $importData[11]);
                     $product->thumbnail_img = $importData[15];
                     $product->category_id = $this->category;
                     $product->brand_id = $this->brand;
