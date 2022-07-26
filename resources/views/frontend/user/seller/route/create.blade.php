@@ -76,7 +76,7 @@
                                     <div class="col-md-8">
                                         <select class="form-control aiz-selectpicker" multiple name="date[]" data-live-search="true"
                                             required>
-                                            @for ($aaa = 1; $aaa <= 30; $aaa++)
+                                            @for ($aaa = 1; $aaa <= 31; $aaa++)
                                                 <option value="{{ $aaa }}">{{ $aaa }}</option>
                                             @endfor
                                         </select>
