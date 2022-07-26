@@ -177,7 +177,6 @@ return [
         MehediIitdu\CoreComponentRepository\CoreComponentRepositoryServiceProvider::class,
         Laracon21\Combinations\CombinationsServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Anand\LaravelPaytmWallet\PaytmWalletServiceProvider::class,
         \Laravel\Passport\PassportServiceProvider::class,
         KingFlamez\Rave\RaveServiceProvider::class,
         /*
@@ -246,7 +245,6 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Paystack' => Unicodeveloper\Paystack\Facades\Paystack::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'PaytmWallet' => Anand\LaravelPaytmWallet\Facades\PaytmWallet::class,
         'Str' => Illuminate\Support\Str::class,
         'Rave' => KingFlamez\Rave\Facades\Rave::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
