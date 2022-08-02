@@ -257,8 +257,7 @@
                                         <div class="mb-3">
                                             <label class="aiz-checkbox">
                                                 <input type="checkbox" name="terms" required>
-                                                <span
-                                                    class=opacity-60>{{ translate('By signing up you agree to our terms and conditions.') }}</span>
+                                                <span class=opacity-60>{{  translate('By signing up you agree to our') }} <a href="https://eorderbook.com/terms"> Terms and Conditions </a></span>
                                                 <span class="aiz-square-check"></span>
                                             </label>
                                         </div>
