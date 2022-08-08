@@ -152,6 +152,13 @@
                                 <span class="opacity-60 fs-15">{{ translate('Grand Total') }}</span>
                                 <span class="fw-600 fs-17">{{ single_price($total) }}</span>
                             </div>
+                        <form action="{{ route('orders.add_order') }}">
+                            @csrf
+                            <div class="px-3 py-2 mb-4 border-top d-flex justify-content-between">
+                                <span class="opacity-60 fs-15 mt-2">{{ translate('Note') }}</span>
+                                <input type="text" class="form-control ml-4" name="note" value="">
+                            </div>
+
                             <div class="row align-items-center">
                                 <div class="col-md-6 text-center text-md-left order-1 order-md-0">
                                     <a href="{{ route('home') }}" class="btn btn-link">
@@ -161,15 +168,16 @@
                                 </div>
                                 <div class="col-md-6 text-center text-md-right">
                                     @if (Auth::check())
-                                        {{-- <a href="{{ route('checkout.shipping_info') }}" class="btn btn-primary fw-600">{{ translate('Continue to Shipping')}}</a> --}}
-                                        <a href="{{ route('orders.add_order') }}"
-                                            class="btn btn-primary fw-600">{{ translate('Place Order') }}</a>
+                                        <!-- <a href="{{ route('orders.add_order') }}"
+                                            class="btn btn-primary fw-600">{{ translate('Place Order') }}</a> -->
+                                            <button class="btn btn-primary fw-600" type="submit">{{ translate('Place Order') }}</button>
                                     @else
                                         <button class="btn btn-primary fw-600"
                                             onclick="showCheckoutModal()">{{ translate('Continue to Shipping') }}</button>
                                     @endif
                                 </div>
                             </div>
+                                        </form>
                         </div>
                     </div>
                 </div>
