@@ -113,6 +113,10 @@
                                 {{-- , {{ json_decode($order->shipping_address)->country }} --}}
                             </td>
                         </tr>
+                        <tr>
+                            <td class="w-50 fw-600">{{ translate('Note')}}:</td>
+                            <td>{{ ucfirst(str_replace('_', ' ', $order->note)) }}</td>
+                        </tr>
                     </table>
                 </div>
                 <div class="col-lg-6">
@@ -138,6 +142,7 @@
                             <td>{{ ucfirst(str_replace('_', ' ', $order->payment_type)) }}</td>
                         </tr>
                     </table>
+                    
                 </div>
             </div>
         </div>

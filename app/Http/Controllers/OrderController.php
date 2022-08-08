@@ -629,7 +629,7 @@ class OrderController extends Controller
             $order->payment_status_viewed = '0';
             $order->code = date('Ymd-His') . rand(10, 99);
             $order->date = strtotime('now');
-
+            $order->note = $request->note;            
             if ($order->save()) {
                 $subtotal = 0;
                 $tax = 0;

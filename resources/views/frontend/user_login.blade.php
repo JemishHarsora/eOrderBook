@@ -33,6 +33,13 @@
                                         </div>
 
                                         <div class="row mb-2">
+                                            <div class="col-12">
+                                                <label class="aiz-checkbox">
+                                                    <input type="checkbox" name="terms">
+                                                    <span class=opacity-60>{{  translate('I agree with the') }} <a href="https://eorderbook.com/terms"> Terms and Conditions </a></span>
+                                                    <span class="aiz-square-check"></span>
+                                                </label>
+                                            </div>
                                             <div class="col-6">
                                                 <label class="aiz-checkbox">
                                                     <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
