@@ -46,8 +46,7 @@
                                 <div class="form-group row" id="brand">
                                     <label class="col-md-3 col-from-label">{{ translate('Brand') }}</label>
                                     <div class="col-md-8">
-                                        <select class="form-control aiz-selectpicker" name="brand_id" id="brand_id" data-live-search="true">
-                                            <option value="">{{ 'Select Brand' }}</option>
+                                        <select class="form-control aiz-selectpicker" name="brand_id" id="brand_id" data-live-search="true" required>
                                             @foreach ($brands as $brand)
                                                 <option value="{{ $brand->id }}">{{ $brand->getTranslation('name') }}</option>
                                             @endforeach
