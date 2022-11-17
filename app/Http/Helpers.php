@@ -356,7 +356,7 @@ if (!function_exists('home_discounted_price')) {
         $product = ProductPrice::where('id', $id)->first();
         $lowest_price = $product->purchase_price;
         $highest_price = $product->purchase_price;
-
+        // Test comment
         // if ($product->variant_product) {
         //     foreach ($product->stocks as $key => $stock) {
         //         if ($lowest_price > $stock->price) {
