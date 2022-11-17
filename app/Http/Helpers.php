@@ -330,13 +330,13 @@ if (!function_exists('home_price')) {
             }
         }
 
-        if ($product->tax_type == 'percent') {
-            $lowest_price += ($lowest_price * $product->tax) / 100;
-            $highest_price += ($highest_price * $product->tax) / 100;
-        } elseif ($product->tax_type == 'amount') {
-            $lowest_price += $product->tax;
-            $highest_price += $product->tax;
-        }
+        // if ($product->tax_type == 'percent') {
+        //     $lowest_price += ($lowest_price * $product->tax) / 100;
+        //     $highest_price += ($highest_price * $product->tax) / 100;
+        // } elseif ($product->tax_type == 'amount') {
+        //     $lowest_price += $product->tax;
+        //     $highest_price += $product->tax;
+        // }
 
         $lowest_price = convert_price($lowest_price);
         $highest_price = convert_price($highest_price);
@@ -419,11 +419,11 @@ if (!function_exists('home_base_price')) {
     {
         $product = ProductPrice::findOrFail($id);
         $price = $product->unit_price;
-        if ($product->tax_type == 'percent') {
-            $price += ($price * $product->tax) / 100;
-        } elseif ($product->tax_type == 'amount') {
-            $price += $product->tax;
-        }
+        // if ($product->tax_type == 'percent') {
+        //     $price += ($price * $product->tax) / 100;
+        // } elseif ($product->tax_type == 'amount') {
+        //     $price += $product->tax;
+        // }
         return format_price(convert_price($price));
     }
 }
